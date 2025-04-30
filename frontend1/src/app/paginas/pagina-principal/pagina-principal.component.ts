@@ -114,6 +114,7 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy {
   }
 
   onRegister() {
+    this.router.navigate(['/register']);
   }
 
   toggleLike(salon: Salon) {
