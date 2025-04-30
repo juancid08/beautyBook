@@ -1,4 +1,3 @@
-// pagina-principal.component.ts
 import {
   Component,
   OnInit,
@@ -11,6 +10,7 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 interface Salon {
   id: number;
@@ -59,8 +59,9 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy {
 
 
   ];
-
-  constructor(@Inject(PLATFORM_ID) private platformId: any) {}
+  
+  constructor(@Inject(PLATFORM_ID) private platformId: any, private router: Router) {}
+  @ViewChild('cardsContainer') cardsContainer!: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
@@ -109,7 +110,7 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy {
   }
 
   onLogin() {
-
+    this.router.navigate(['/login']);
   }
 
   onRegister() {
@@ -117,5 +118,20 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy {
 
   toggleLike(salon: Salon) {
     salon.liked = !salon.liked;
+  }
+  scrollLeft() {
+    const container = this.cardsContainer.nativeElement;
+    container.scrollBy({
+      left: -300,
+      behavior: 'smooth'
+    });
+  }
+
+  scrollRight() {
+    const container = this.cardsContainer.nativeElement;
+    container.scrollBy({
+      left: 300,
+      behavior: 'smooth'
+    });
   }
 }
