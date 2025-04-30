@@ -52,7 +52,10 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy {
     { id: 2, name: 'Barbería B', street: 'Calle Luna 23', rating: 4.0, imageUrl: '/assets/image/salon2.webp', liked: false },
     { id: 3, name: 'Nails & Spa', street: 'Calle Sol 45', rating: 5.0, imageUrl: '/assets/image/salon3.webp', liked: false },
     { id: 4, name: 'Moreno Stilistas', street: 'Calle Mercurio 9', rating: 5.0, imageUrl: '/assets/image/salon4.webp', liked: true },
-    { id: 5, name: 'Rose Skin Barbershop', street: 'Calle Sondalezas 37', rating: 4.65, imageUrl: '/assets/image/salon5.webp', liked: false }
+    { id: 5, name: 'Rose Skin Barbershop', street: 'Calle Sondalezas 37', rating: 4.65, imageUrl: '/assets/image/salon5.webp', liked: false },
+    { id: 6, name: 'Rasec Barbershop', street: 'Calle Montería 20', rating: 4.9, imageUrl: '/assets/image/salon6.webp', liked: false },
+    { id: 7, name: 'No Limits Hair Studio', street: 'Calle Vicavaro 37', rating: 4.8, imageUrl: '/assets/image/salon7.webp', liked: false },
+    { id: 8, name: 'Jonhy García Barber`S', street: 'Calle Virgen de la montaña 37', rating: 4.2, imageUrl: '/assets/image/salon8.webp', liked: false }
 
 
   ];
