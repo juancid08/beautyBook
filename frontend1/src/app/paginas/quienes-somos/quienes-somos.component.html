@@ -1,78 +1,131 @@
-<!-- NAVBAR COMPLETA -->
-<nav class="bg-[#2D2D2D] text-white font-sans">
-    <!-- Parte superior -->
-    <div class="px-6 py-3 flex items-center justify-between gap-6">
-      <!-- Logo -->
-      <div class="text-white text-2xl font-playfair whitespace-nowrap">
-        BeautyBook
+<!-- NAVBAR IMPORTADO-->
+<app-navbar></app-navbar>
+
+<!-- CONTENEDOR GENERAL (DEBAJO DEL NAVBAR) -->
+<div class="flex mt-4 px-6">
+  <!-- Accordion Izquierdo -->
+  <div class="w-64 mr-6">
+    <nav class="bg-gray-100 rounded-lg shadow text-black divide-y">
+      <!-- Enlace "Quiénes Somos" -->
+      <a 
+        routerLink="/quienesSomos"
+        routerLinkActive="!text-black text-blue-600"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="group flex items-center px-4 py-3 font-semibold hover:bg-gray-200 relative"
+      >
+        <span
+          class="absolute left-0 top-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition-opacity"
+          [class.opacity-100]="isActive('/quienes-somos')"
+        ></span>
+        Quiénes Somos
+      </a>
+
+      <!-- Enlace "Política de privacidad" -->
+      <a 
+        routerLink="/politica-de-privacidad"
+        routerLinkActive="!text-black text-blue-600"
+        class="group flex items-center px-4 py-3 font-semibold hover:bg-gray-200 relative"
+      >
+        <span
+          class="absolute left-0 top-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition-opacity"
+          [class.opacity-100]="isActive('/politica-de-privacidad')"
+        ></span>
+        Política de privacidad
+      </a>
+
+      <!-- Enlace "Contacto" -->
+      <a 
+        routerLink="/contacto"
+        routerLinkActive="!text-black text-blue-600"
+        class="group flex items-center px-4 py-3 font-semibold hover:bg-gray-200 relative"
+      >
+        <span
+          class="absolute left-0 top-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition-opacity"
+          [class.opacity-100]="isActive('/contacto')"
+        ></span>
+        Contacto
+      </a>
+
+      <!-- Enlace "Preguntas frecuentes" -->
+      <a 
+        routerLink="/preguntas-frecuentes"
+        routerLinkActive="!text-black text-blue-600"
+        class="group flex items-center px-4 py-3 font-semibold hover:bg-gray-200 relative"
+      >
+        <span
+          class="absolute left-0 top-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition-opacity"
+          [class.opacity-100]="isActive('/preguntas-frecuentes')"
+        ></span>
+        Preguntas frecuentes
+      </a>
+    </nav>
+  </div>
+
+<!-- Contenido principal con ancho reducido -->
+<div class="flex-1">
+  <div class="max-w-screen-lg mx-auto space-y-12">
+
+    <!-- 1ª sección -->
+    <div class="flex flex-col md:flex-row items-center gap-8">
+      <!-- Texto izquierda -->
+      <div class="md:w-1/2">
+        <h2 class="text-2xl font-bold mb-2">¿Qué es BeautyBook?</h2>
+        <p class="text-gray-700">
+          Una plataforma inteligente y gratuita que te conecta con profesionales de belleza cercanos a ti. Desde un corte de cabello, una limpieza facial, hasta un masaje relajante, lo encontrás en segundos.
+        </p>
       </div>
-  
-      <!-- Buscador principal -->
-      <div class="flex-1 max-w-[30%]">
-        <div class="relative">
-          <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
-            <i class="fas fa-search"></i>
-          </span>
-          <input
-            type="text"
-            placeholder="Consultar negocios y servicios disponibles"
-            class="w-full py-2 pl-10 pr-4 rounded-md bg-white text-black placeholder-gray-500 focus:outline-none"
-          />
-        </div>
-      </div>
-  
-      <!-- Buscador de ubicación -->
-      <div class="max-w-[20%]">
-        <div class="relative">
-          <input
-            type="text"
-            placeholder="¿Dónde?"
-            class="w-full py-2 pl-10 pr-10 rounded-md bg-white text-black placeholder-gray-500 focus:outline-none"
-          />
-          <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
-            📍
-          </span>
-        </div>
-      </div>
-  
-      <!-- Botones -->
-      <div class="flex items-center gap-3">
-        <!-- Iniciar sesión -->
-        <div class="flex flex-col items-center text-sm">
-          <button class="flex items-center gap-2 px-3 py-1.5 rounded bg-white text-black hover:bg-gray-200 transition">
-            <i class="fas fa-sign-in-alt"></i>
-            <div class="text-left leading-tight">
-              <span class="block text-xs font-medium">Iniciar</span>
-              <span class="block text-xs">Sesión/Registrarse</span>
-            </div>
-          </button>
-        </div>
-  
-        <!-- Selector de idioma -->
-        <div class="relative group">
-          <button class="flex items-center gap-1 text-sm hover:underline">
-            🇪🇸 <span class="ml-1">ES</span>
-          </button>
-          <div class="absolute hidden group-hover:block bg-white text-black shadow rounded mt-1 right-0 min-w-[80px] z-10">
-            <button class="flex items-center gap-2 px-2 py-1 hover:bg-gray-100 w-full text-left">
-              🇬🇧 <span>EN</span>
-            </button>
-          </div>
-        </div>
+      <!-- Imagen derecha (más pequeña) -->
+      <div class="md:w-1/2 flex justify-center">
+        <img src="URL-DE-TU-IMAGEN-1" alt="¿Qué es BeautyBook?" class="w-1/2 rounded shadow" />
       </div>
     </div>
-  
-    <!-- Línea blanca separadora -->
-    <div class="h-[2px] w-[96%] bg-white mx-auto my-2 opacity-40 items-center"></div>
-  
-    <!-- Categorías -->
-    <div class="categorias-quienes-somos flex justify-center gap-11 text-white font-semibold py-4">
-        <a href="javascript:void(0)">Peluquería</a>
-        <a href="javascript:void(0)">Barbería</a>
-        <a href="javascript:void(0)">Salón de uñas</a>
-        <a href="javascript:void(0)">Depilación</a>
-        <a href="javascript:void(0)">Cejas y pestañas</a>
+
+    <!-- 2ª sección -->
+    <div class="flex flex-col-reverse md:flex-row items-center gap-8">
+      <!-- Imagen izquierda (más pequeña) -->
+      <div class="md:w-1/2 flex justify-center">
+        <img src="URL-DE-TU-IMAGEN-2" alt="Reserva sin complicaciones" class="w-1/2 rounded shadow" />
       </div>
-      
-  </nav>
-  
+      <!-- Texto derecha -->
+      <div class="md:w-1/2">
+        <h2 class="text-2xl font-bold mb-2">Reserva sin complicaciones</h2>
+        <p class="text-gray-700">
+          Olvidate de las llamadas o mensajes. Con BeautyBook podés reservar online las 24 horas del día, todos los días de la semana, estés donde estés.
+        </p>
+      </div>
+    </div>
+
+    <!-- 3ª sección -->
+    <div class="flex flex-col md:flex-row items-center gap-8">
+      <!-- Texto izquierda -->
+      <div class="md:w-1/2">
+        <h2 class="text-2xl font-bold mb-2">Impulsamos negocios locales</h2>
+        <p class="text-gray-700">
+          Ayudamos a profesionales y salones a gestionar mejor sus agendas y a llegar a más clientes. Porque creemos en una industria de la belleza más conectada, eficiente y digital.
+        </p>
+      </div>
+      <!-- Imagen derecha (más pequeña) -->
+      <div class="md:w-1/2 flex justify-center">
+        <img src="URL-DE-TU-IMAGEN-3" alt="Impulsamos negocios locales" class="w-1/2 rounded shadow" />
+      </div>
+    </div>
+
+    <!-- 4ª sección -->
+    <div class="flex flex-col-reverse md:flex-row items-center gap-8">
+      <!-- Imagen izquierda (más pequeña) -->
+      <div class="md:w-1/2 flex justify-center">
+        <img src="URL-DE-TU-IMAGEN-4" alt="Nuestra misión" class="w-1/2 rounded shadow" />
+      </div>
+      <!-- Texto derecha -->
+      <div class="md:w-1/2">
+        <h2 class="text-2xl font-bold mb-2">Nuestra misión</h2>
+        <p class="text-gray-700">
+          Crear una experiencia fluida y accesible tanto para quienes ofrecen servicios como para quienes los disfrutan. En BeautyBook, cada cita es una oportunidad para sentirte y verte mejor.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div>
