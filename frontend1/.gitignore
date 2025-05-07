@@ -1,0 +1,43 @@
+# --- Laravel ---
+/vendor
+/node_modules
+/public/storage
+/storage/*.key
+/.env
+/.env.*
+Homestead.yaml
+Homestead.json
+/.idea
+/.vscode
+/.phpunit.result.cache
+.phpunit.result.cache
+
+# Laravel logs
+/storage/logs/*
+!.gitignore
+
+# Laravel cache
+/bootstrap/cache/*
+!.gitignore
+
+# Laravel sail
+docker-compose.override.yml
+
+# --- Angular ---
+/node_modules
+/dist
+/.angular/cache
+/.angular/*
+/.angular
+
+# IDEs / OS files
+.DS_Store
+Thumbs.db
+*.log
+*.sublime-workspace
+*.sublime-project
+*.code-workspace
+
+# --- Environment files ---
+.env
+.env.*.local

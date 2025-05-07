@@ -1,78 +1,72 @@
 <!-- NAVBAR COMPLETA -->
 <nav class="bg-[#2D2D2D] text-white font-sans">
-    <!-- Parte superior -->
-    <div class="px-6 py-3 flex items-center justify-between gap-6">
-      <!-- Logo -->
-      <div class="text-white text-2xl font-playfair whitespace-nowrap">
-        BeautyBook
+  <!-- Parte superior -->
+  <div class="px-6 py-3 flex items-center justify-between gap-6">
+    <!-- Logo -->
+    <div class="text-white text-2xl font-playfair whitespace-nowrap">
+      BeautyBook
+    </div>
+
+    <!-- Buscador principal -->
+    <div class="flex-1 max-w-[30%]">
+      <div class="relative">
+        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+          <i class="fas fa-search"></i>
+        </span>
+        <input type="text" placeholder="Consultar negocios y servicios disponibles"
+          class="w-full py-2 pl-10 pr-4 rounded-md bg-white text-black placeholder-gray-500 focus:outline-none" />
       </div>
-  
-      <!-- Buscador principal -->
-      <div class="flex-1 max-w-[30%]">
-        <div class="relative">
-          <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
-            <i class="fas fa-search"></i>
-          </span>
-          <input
-            type="text"
-            placeholder="Consultar negocios y servicios disponibles"
-            class="w-full py-2 pl-10 pr-4 rounded-md bg-white text-black placeholder-gray-500 focus:outline-none"
-          />
-        </div>
+    </div>
+
+    <!-- Buscador de ubicación -->
+    <div class="max-w-[20%]">
+      <div class="relative">
+        <input type="text" placeholder="¿Dónde?"
+          class="w-full py-2 pl-10 pr-10 rounded-md bg-white text-black placeholder-gray-500 focus:outline-none" />
+        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+          📍
+        </span>
       </div>
-  
-      <!-- Buscador de ubicación -->
-      <div class="max-w-[20%]">
-        <div class="relative">
-          <input
-            type="text"
-            placeholder="¿Dónde?"
-            class="w-full py-2 pl-10 pr-10 rounded-md bg-white text-black placeholder-gray-500 focus:outline-none"
-          />
-          <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
-            📍
-          </span>
-        </div>
-      </div>
-  
-      <!-- Botones -->
-      <div class="flex items-center gap-3">
-        <!-- Iniciar sesión -->
-        <div class="flex flex-col items-center text-sm">
-          <button class="flex items-center gap-2 px-3 py-1.5 rounded bg-white text-black hover:bg-gray-200 transition">
-            <i class="fas fa-sign-in-alt"></i>
-            <div class="text-left leading-tight">
-              <span class="block text-xs font-medium">Iniciar</span>
-              <span class="block text-xs">Sesión/Registrarse</span>
-            </div>
-          </button>
-        </div>
-  
-        <!-- Selector de idioma -->
-        <div class="relative group">
-          <button class="flex items-center gap-1 text-sm hover:underline">
-            🇪🇸 <span class="ml-1">ES</span>
-          </button>
-          <div class="absolute hidden group-hover:block bg-white text-black shadow rounded mt-1 right-0 min-w-[80px] z-10">
-            <button class="flex items-center gap-2 px-2 py-1 hover:bg-gray-100 w-full text-left">
-              🇬🇧 <span>EN</span>
-            </button>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex items-center gap-3">
+      <!-- Iniciar sesión -->
+      <div class="flex flex-col items-center text-sm">
+        <button class="flex items-center gap-2 px-3 py-1.5 rounded bg-white text-black hover:bg-gray-200 transition">
+          <i class="fas fa-sign-in-alt"></i>
+          <div class="text-left leading-tight">
+            <span class="block text-xs font-medium">Iniciar</span>
+            <span class="block text-xs">Sesión/Registrarse</span>
           </div>
+        </button>
+      </div>
+
+      <!-- Selector de idioma -->
+      <div class="relative group">
+        <button class="flex items-center gap-1 text-sm hover:underline">
+          🇪🇸 <span class="ml-1">ES</span>
+        </button>
+        <div
+          class="absolute hidden group-hover:block bg-white text-black shadow rounded mt-1 right-0 min-w-[80px] z-10">
+          <button class="flex items-center gap-2 px-2 py-1 hover:bg-gray-100 w-full text-left">
+            🇬🇧 <span>EN</span>
+          </button>
         </div>
       </div>
     </div>
-  
-    <!-- Línea blanca separadora -->
-    <div class="h-[2px] w-[96%] bg-white mx-auto my-2 opacity-40 items-center"></div>
-  
-    <!-- Categorías -->
-    <div class="categorias-quienes-somos flex justify-center gap-11 text-white font-semibold py-4">
-        <a href="javascript:void(0)">Peluquería</a>
-        <a href="javascript:void(0)">Barbería</a>
-        <a href="javascript:void(0)">Salón de uñas</a>
-        <a href="javascript:void(0)">Depilación</a>
-        <a href="javascript:void(0)">Cejas y pestañas</a>
-      </div>
-      
-  </nav>
-  
+  </div>
+
+  <!-- Línea blanca separadora -->
+  <div class="h-[2px] w-[96%] bg-white mx-auto my-2 opacity-40 items-center"></div>
+
+  <!-- Categorías -->
+  <div class="categorias-quienes-somos flex justify-center gap-11 text-white font-semibold py-4">
+    <a href="javascript:void(0)">Peluquería</a>
+    <a href="javascript:void(0)">Barbería</a>
+    <a href="javascript:void(0)">Salón de uñas</a>
+    <a href="javascript:void(0)">Depilación</a>
+    <a href="javascript:void(0)">Cejas y pestañas</a>
+  </div>
+
+</nav>

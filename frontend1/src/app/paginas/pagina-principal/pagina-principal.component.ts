@@ -37,7 +37,7 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy {
 
   phrases = [
     'Encuentra tu estilista ideal cerca de ti.',
-    'Reserva tu cita en un clic.',
+    'Reserva tu cita en un click.',
     'Expertos en belleza y bienestar.'
   ];
 
@@ -99,6 +99,10 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy {
     if (this.bgVideo) {
       this.bgVideo.nativeElement.currentTime = 0;
     }
+  }
+
+  goBarberShopDetails(){
+    this.router.navigate(['/detallesBarberia']);
   }
 
   onSearch() {

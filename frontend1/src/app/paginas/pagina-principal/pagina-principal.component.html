@@ -56,14 +56,14 @@
     <button class="nav-arrow left" (click)="scrollLeft()">
       <i class="fas fa-chevron-left"></i>
     </button>
-    <div #cardsContainer class="cards-container">
-      <div class="card" *ngFor="let salon of salons">
+    <div #cardsContainer class="cards-container" >
+      <div class="card" *ngFor="let salon of salons" (click)="goBarberShopDetails()">
         <div class="image-wrapper">
           <img [src]="salon.imageUrl" [alt]="salon.name" />
           <div class="rating">{{ salon.rating.toFixed(1) }} ★</div>
         </div>
         <div class="card-body">
-          <h2 class="salon-name">{{ salon.name }}</h2>
+          <h2 class="salon-name" >{{ salon.name }}</h2>
           <p class="salon-street">{{ salon.street }}</p>
           <button class="like-btn" (click)="toggleLike(salon)">
             <i class="fas" [ngClass]="salon.liked ? 'fa-heart' : 'fa-heart-o'"></i>

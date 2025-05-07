@@ -1,0 +1,197 @@
+<!-- NAVBAR COMPLETA -->
+<nav class="bg-[#2D2D2D] text-white font-sans">
+  <!-- Parte superior -->
+  <div class="px-6 py-3 flex items-center justify-between gap-6">
+    <!-- Logo -->
+    <div class="text-white text-2xl font-playfair whitespace-nowrap">
+     <a href=""> BeautyBook</a>
+    </div>
+
+    <!-- Buscador principal -->
+    <div class="flex-1 max-w-[30%]">
+      <div class="relative">
+        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+          <i class="fas fa-search"></i>
+        </span>
+        <input
+          type="text"
+          placeholder="Consultar negocios y servicios disponibles"
+          class="w-full py-2 pl-10 pr-4 rounded-md bg-white text-black placeholder-gray-500 focus:outline-none"
+        />
+      </div>
+    </div>
+
+    <!-- Buscador de ubicación -->
+    <div class="max-w-[20%]">
+      <div class="relative">
+        <input
+          type="text"
+          placeholder="¿Dónde?"
+          class="w-full py-2 pl-10 pr-10 rounded-md bg-white text-black placeholder-gray-500 focus:outline-none"
+        />
+        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+          📍
+        </span>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex items-center gap-3">
+      <!-- Iniciar sesión -->
+      <div class="flex flex-col items-center text-sm">
+        <button class="flex items-center gap-2 px-3 py-1.5 rounded bg-white text-black hover:bg-gray-200 transition">
+          <i class="fas fa-sign-in-alt"></i>
+          <div class="text-left leading-tight">
+            <span class="block text-xs font-medium">Iniciar</span>
+            <span class="block text-xs">Sesión/Registrarse</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Selector de idioma -->
+      <div class="relative group">
+        <button class="flex items-center gap-1 text-sm hover:underline">
+          🇪🇸 <span class="ml-1">ES</span>
+        </button>
+        <div class="absolute hidden group-hover:block bg-white text-black shadow rounded mt-1 right-0 min-w-[80px] z-10">
+          <button class="flex items-center gap-2 px-2 py-1 hover:bg-gray-100 w-full text-left">
+            🇬🇧 <span>EN</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Línea blanca separadora -->
+  <div class="h-[2px] w-[96%] bg-white mx-auto my-2 opacity-40 items-center"></div>
+
+  <!-- Categorías -->
+  <div class="categorias-quienes-somos flex justify-center gap-11 text-white font-semibold py-4">
+      <a href="javascript:void(0)">Peluquería</a>
+      <a href="javascript:void(0)">Barbería</a>
+      <a href="javascript:void(0)">Salón de uñas</a>
+      <a href="javascript:void(0)">Depilación</a>
+      <a href="javascript:void(0)">Cejas y pestañas</a>
+    </div>
+</nav>
+
+
+<main class="max-w-screen-xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <!-- Imagen del local con slider -->
+  <div class="lg:col-span-2">
+    <div class="relative">
+      <img src="/assets/image/salon1.webp" alt="Imagen local" class="rounded-lg w-full shadow" />
+      <!-- Botones izquierda/derecha para slider -->
+      <button class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Información del local -->
+    <div class="mt-4">
+      <h2 class="text-xl font-bold">Johnny García Barber'S</h2>
+      <p class="text-sm text-gray-600">AVDA.Virgen de la Montaña 13, 15, 10002. Cáceres</p>
+    </div>
+
+    <!-- Servicios -->
+    <section class="mt-6">
+      <h3 class="text-lg font-semibold mb-2">Servicios</h3>
+
+      <div class="mb-4">
+        <h4 class="font-medium">Estética</h4>
+        <ul class="space-y-2 mt-1">
+          <li class="flex justify-between border-b py-1">
+            <span>Extensiones de pestañas híbridas</span>
+            <button class="text-sm bg-blue-500 text-white px-3 py-1 rounded">6,50€ Reservar</button>
+          </li>
+          <!-- ... -->
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-medium">Barbería</h4>
+        <ul class="space-y-2 mt-1">
+          <li class="flex justify-between border-b py-1">
+            <span>Corte + Barba + Cejas</span>
+            <button class="text-sm bg-blue-500 text-white px-3 py-1 rounded">8,50€ Reservar</button>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Reseñas -->
+    <section class="mt-6">
+      <h3 class="text-lg font-semibold mb-2">Reseñas</h3>
+      <p class="text-sm text-gray-700 italic">“Excelente servicio...”</p>
+      <div class="text-yellow-400 text-xl">
+        ★★★★★
+      </div>
+    </section>
+  </div>
+
+  <!-- Columna lateral: mapa, empleados y horarios -->
+  <aside class="lg:col-span-1 space-y-6">
+    <!-- Mapa + contacto -->
+    <div class="bg-white rounded shadow p-4">
+      <img src="/assets/image/mapa.png" alt="Mapa" class="w-full h-40 rounded" />
+      <div class="mt-2 text-sm">
+        <strong>Johnny García Barber'S</strong><br />
+        Cáceres
+      </div>
+    </div>
+
+    <!-- Empleados -->
+    <div class="bg-white rounded shadow p-4">
+      <h4 class="font-semibold mb-2">Empleados</h4>
+      <div class="flex flex-wrap gap-2">
+        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" />
+        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" />
+        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" />
+        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" />
+        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" />
+        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" />
+        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" />
+        
+        <!-- más empleados -->
+      </div>
+    </div>
+
+    <!-- Horario -->
+    <div class="bg-white rounded shadow p-4">
+      <h4 class="font-semibold mb-2">Horario de apertura</h4>
+      <ul class="text-sm">
+        <strong><li class="flex justify-between"><span>Lunes</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li></strong>
+        <li class="flex justify-between"><span>Martes    </span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
+        <li class="flex justify-between"><span>Miércoles </span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
+        <li class="flex justify-between"><span>Jueves    </span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
+        <li class="flex justify-between"><span>Viernes   </span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
+        <li class="flex justify-between"><span>Sabado    </span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
+        <li class="flex justify-between"><span>Domingo   </span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
+        <!-- más días -->
+      </ul>
+    </div>
+  </aside>
+</main>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="preguntas">
+    <a href="#quienesSomos">Quiénes Somos</a>
+    <a href="#PreguntasFrecuentes">Preguntas Frecuentes</a>
+    <a href="#politicaPrivacidad">Política de privacidad</a>
+    <a href="#Contacto">Contacto</a>
+  </div>
+
+  <div class="footer-inferior">
+    <div class="redes-sociales">
+      <a href="https://www.facebook.com/BeautyBook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com/BeautyBook" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://twitter.com/BeautyBook" target="_blank"><i class="fab fa-twitter"></i></a>
+    </div>
+    <p>&copy; 2025 BeautyBook. Todos los derechos reservados.</p>
+    <p>BeautyBook</p>
+  </div>
+</div>
