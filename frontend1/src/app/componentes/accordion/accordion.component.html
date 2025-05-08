@@ -1,0 +1,59 @@
+<!-- CONTENEDOR GENERAL (DEBAJO DEL NAVBAR) -->
+<div class="flex mt-4 px-6">
+    <!-- Accordion Izquierdo -->
+    <div class="w-64 mr-6">
+      <nav class="bg-gray-100 rounded-lg shadow text-black divide-y">
+        <!-- Enlace "Quiénes Somos" -->
+        <a 
+          routerLink="/quienesSomos"
+          routerLinkActive="!text-black text-blue-600"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="group flex items-center px-4 py-3 font-semibold hover:bg-gray-200 relative"
+        >
+          <span
+            class="absolute left-0 top-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition-opacity"
+            [class.opacity-100]="isActive('/quienes-somos')"
+          ></span>
+          Quiénes Somos
+        </a>
+  
+        <!-- Enlace "Política de privacidad" -->
+        <a 
+          routerLink="/politica-de-privacidad"
+          routerLinkActive="!text-black text-blue-600"
+          class="group flex items-center px-4 py-3 font-semibold hover:bg-gray-200 relative"
+        >
+          <span
+            class="absolute left-0 top-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition-opacity"
+            [class.opacity-100]="isActive('/politica-de-privacidad')"
+          ></span>
+          Política de privacidad
+        </a>
+  
+        <!-- Enlace "Contacto" -->
+        <a 
+          routerLink="/contacto"
+          routerLinkActive="!text-black text-blue-600"
+          class="group flex items-center px-4 py-3 font-semibold hover:bg-gray-200 relative"
+        >
+          <span
+            class="absolute left-0 top-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition-opacity"
+            [class.opacity-100]="isActive('/contacto')"
+          ></span>
+          Contacto
+        </a>
+  
+        <!-- Enlace "Preguntas frecuentes" -->
+        <a 
+          routerLink="/preguntas-frecuentes"
+          routerLinkActive="!text-black text-blue-600"
+          class="group flex items-center px-4 py-3 font-semibold hover:bg-gray-200 relative"
+        >
+          <span
+            class="absolute left-0 top-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition-opacity"
+            [class.opacity-100]="isActive('/preguntas-frecuentes')"
+          ></span>
+          Preguntas frecuentes
+        </a>
+      </nav>
+    </div>
