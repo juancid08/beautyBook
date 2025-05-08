@@ -1,0 +1,89 @@
+.footer {
+    background-color: #303030;
+    color: #fff;
+    padding: 2rem 5%;               
+    font-family: sans-serif;
+    margin-bottom: 0;
+    .preguntas {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+      
+      a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.9rem;
+        position: relative;
+        padding-bottom: 0.2rem;
+  
+        &:hover {
+          color: #f1c40f;
+        }
+      }
+  
+      &::after {
+        content: "";
+        display: block;
+        width: 90%;              
+        height: 1px;
+        background: #fff;
+        margin: 0.75rem auto 0;    
+      }
+    }
+  
+    .footer-inferior {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+  
+      p:last-child {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin: 0;
+        order: 1;
+      }
+  
+      p:first-of-type {
+        font-size: 0.9rem;
+        margin: 0;
+        order: 2;
+      }
+  
+      .redes-sociales {
+        display: flex;
+        gap: 0.75rem;
+        order: 3;
+  
+        a {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border: 1px solid #fff;
+          border-radius: 50%;
+          background: #fff;
+          text-decoration: none;
+  
+          i {
+            color: #000;
+            font-size: 0.9rem;
+          }
+  
+          &:hover {
+            background: #f1c40f;
+            border-color: #f1c40f;
+  
+            i {
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+  }
+    

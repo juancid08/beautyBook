@@ -11,6 +11,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { FooterComponent } from "../../componentes/footer/footer.component";
 
 interface Salon {
   id: number;
@@ -24,7 +25,7 @@ interface Salon {
 @Component({
   selector: 'app-pagina-principal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FooterComponent],
   templateUrl: './pagina-principal.component.html',
   styleUrls: ['./pagina-principal.component.scss']
 })
