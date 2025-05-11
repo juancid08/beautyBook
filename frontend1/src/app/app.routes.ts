@@ -5,7 +5,8 @@ import { RegisterComponent } from './paginas/register/register.component';
 import { QuienesSomosComponent } from './paginas/quienes-somos/quienes-somos.component'
 import { DetallesBarberiaComponent } from './paginas/detalles-barberia/detalles-barberia.component';
 import { PreguntasFrecuentesComponent} from './paginas/preguntas-frecuentes/preguntas-frecuentes.component';
-
+import { ContactoComponent } from './paginas/contacto/contacto.component';
+import { PoliticaDePrivacidadComponent } from './paginas/politica-de-privacidad/politica-de-privacidad.component';
 export const routes: Routes = [{
     path: '',
     component: PaginaPrincipalComponent
@@ -29,5 +30,13 @@ export const routes: Routes = [{
     {
        path: 'preguntasFrecuentes',
        component: PreguntasFrecuentesComponent 
-    }
+    },
+    {
+        path: 'contacto',
+        component: ContactoComponent
+    },
+    {
+        path:'politicaDePrivacidad',
+        component: PoliticaDePrivacidadComponent
+    },
 ];
