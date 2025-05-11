@@ -115,3 +115,12 @@
       }
     }
   }
+// Ocultar el scroll del slider
+.no-scrollbar {
+  -ms-overflow-style: none;  
+  scrollbar-width: none;    
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;             
+}

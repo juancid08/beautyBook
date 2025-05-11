@@ -1,7 +1,6 @@
 <!-- NAVBAR COMPLETA -->
 <app-navbar></app-navbar>
 
-
 <main class="max-w-screen-xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
   <!-- Imagen del local con slider -->
   <div class="lg:col-span-2">
@@ -31,9 +30,10 @@
         <ul class="space-y-2 mt-1">
           <li class="flex justify-between border-b py-1">
             <span>Extensiones de pestañas híbridas</span>
-            <button class="text-sm bg-blue-500 text-white px-3 py-1 rounded">6,50€ Reservar</button>
+            <button (click)="abrirPopup()" class="text-sm bg-blue-500 text-white px-3 py-1 rounded">
+              6,50€ Reservar
+            </button>
           </li>
-          <!-- ... -->
         </ul>
       </div>
 
@@ -42,7 +42,9 @@
         <ul class="space-y-2 mt-1">
           <li class="flex justify-between border-b py-1">
             <span>Corte + Barba + Cejas</span>
-            <button class="text-sm bg-blue-500 text-white px-3 py-1 rounded">8,50€ Reservar</button>
+            <button (click)="abrirPopup()" class="text-sm bg-blue-500 text-white px-3 py-1 rounded">
+              8,50€ Reservar
+            </button>
           </li>
         </ul>
       </div>
@@ -52,20 +54,17 @@
     <section class="mt-6">
       <h3 class="text-lg font-semibold mb-2">Reseñas</h3>
       <p class="text-sm text-gray-700 italic">“Excelente servicio...”</p>
-      <div class="text-yellow-400 text-xl">
-        ★★★★★
-      </div>
+      <div class="text-yellow-400 text-xl">★★★★★</div>
     </section>
   </div>
 
-  <!-- Columna lateral: mapa, empleados y horarios -->
+  <!-- Columna lateral -->
   <aside class="lg:col-span-1 space-y-6">
-    <!-- Mapa + contacto -->
+    <!-- Mapa -->
     <div class="bg-white rounded shadow p-4">
       <img src="/assets/image/mapa.png" alt="Mapa" class="w-full h-40 rounded" />
       <div class="mt-2 text-sm">
-        <strong>Johnny García Barber'S</strong><br />
-        Cáceres
+        <strong>Johnny García Barber'S</strong><br />Cáceres
       </div>
     </div>
 
@@ -73,15 +72,7 @@
     <div class="bg-white rounded shadow p-4">
       <h4 class="font-semibold mb-2">Empleados</h4>
       <div class="flex flex-wrap gap-2">
-        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" />
-        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" />
-        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" />
-        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" />
-        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" />
-        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" />
-        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" />
-        
-        <!-- más empleados -->
+        <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" *ngFor="let empleado of empleados" (click)="seleccionarEmpleado(empleado)" />
       </div>
     </div>
 
@@ -90,34 +81,103 @@
       <h4 class="font-semibold mb-2">Horario de apertura</h4>
       <ul class="text-sm">
         <strong><li class="flex justify-between"><span>Lunes</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li></strong>
-        <li class="flex justify-between"><span>Martes    </span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
-        <li class="flex justify-between"><span>Miércoles </span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
-        <li class="flex justify-between"><span>Jueves    </span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
-        <li class="flex justify-between"><span>Viernes   </span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
-        <li class="flex justify-between"><span>Sabado    </span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
-        <li class="flex justify-between"><span>Domingo   </span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
-        <!-- más días -->
+        <li class="flex justify-between"><span>Martes</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
+        <li class="flex justify-between"><span>Miércoles</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
+        <li class="flex justify-between"><span>Jueves</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
+        <li class="flex justify-between"><span>Viernes</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
+        <li class="flex justify-between"><span>Sábado</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
+        <li class="flex justify-between"><span>Domingo</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
       </ul>
     </div>
   </aside>
 </main>
 
-<!-- Footer -->
-<div class="footer">
-  <div class="preguntas">
-    <a href="#quienesSomos">Quiénes Somos</a>
-    <a href="#PreguntasFrecuentes">Preguntas Frecuentes</a>
-    <a href="#politicaPrivacidad">Política de privacidad</a>
-    <a href="#Contacto">Contacto</a>
-  </div>
+<!-- POPUP DE RESERVA -->
+<div *ngIf="mostrarPopup" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+  <div class="bg-white w-full max-w-4xl rounded-2xl shadow-xl p-8 relative">
+    
+    <!-- Botón cerrar -->
+    <button (click)="cerrarPopup()" class="absolute top-4 right-4 text-gray-500 hover:text-black text-3xl">&times;</button>
 
-  <div class="footer-inferior">
-    <div class="redes-sociales">
-      <a href="https://www.facebook.com/BeautyBook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-      <a href="https://www.instagram.com/BeautyBook" target="_blank"><i class="fab fa-instagram"></i></a>
-      <a href="https://twitter.com/BeautyBook" target="_blank"><i class="fab fa-twitter"></i></a>
+    <!-- SLIDER de días -->
+    <div class="flex gap-4 overflow-x-auto mb-8 no-scrollbar">
+      <div
+        *ngFor="let dia of diasDisponibles"
+        (click)="seleccionarDia(dia)"
+        class="min-w-[80px] h-40 flex flex-col items-center justify-center border rounded-xl cursor-pointer transition
+               duration-200 shadow-sm hover:shadow-md"
+        [class.bg-gray-900]="dia === diaSeleccionado"
+        [class.text-white]="dia === diaSeleccionado"
+      >
+        <span class="text-sm capitalize">{{ dia.dia }}</span>
+        <span class="text-4xl font-bold">{{ dia.numero }}</span>
+        <span class="text-sm uppercase">{{ dia.mes }}</span>
+      </div>
     </div>
-    <p>&copy; 2025 BeautyBook. Todos los derechos reservados.</p>
-    <p>BeautyBook</p>
+
+    <!-- Turnos -->
+    <div class="text-center mb-6">
+      <h3 class="text-lg font-semibold mb-4">Selecciona un turno</h3>
+      <div class="flex justify-center gap-6">
+        <button
+          *ngFor="let turno of ['Mañana', 'Tarde', 'Noche']"
+          (click)="seleccionarTurno(turno)"
+          class="px-5 py-2 border rounded-full hover:bg-gray-100"
+          [class.bg-black]="turno === turnoSeleccionado"
+          [class.text-white]="turno === turnoSeleccionado"
+        >
+          {{ turno }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Horas -->
+    <div *ngIf="horasDisponibles.length" class="text-center mb-8">
+      <h3 class="text-lg font-semibold mb-4">Horas disponibles</h3>
+      <div class="flex flex-wrap justify-center gap-3">
+        <button
+          *ngFor="let hora of horasDisponibles"
+          (click)="seleccionarHora(hora)"
+          class="px-4 py-2 border rounded-full"
+          [class.bg-black]="hora === horaSeleccionada"
+          [class.text-white]="hora === horaSeleccionada"
+        >
+          {{ hora }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Empleados -->
+    <div class="text-center mb-8">
+      <h3 class="text-lg font-semibold mb-4">Selecciona al empleado</h3>
+      <div class="flex flex-wrap justify-center gap-6">
+        <div
+          *ngFor="let empleado of empleados"
+          (click)="seleccionarEmpleado(empleado)"
+          class="flex items-center gap-4 p-4 rounded-lg shadow-sm cursor-pointer w-64 border transition hover:shadow-md"
+          [class.bg-black]="empleado === empleadoSeleccionado"
+          [class.text-white]="empleado === empleadoSeleccionado"
+        >
+          <img [src]="empleado.foto" alt="{{ empleado.nombre }}" class="w-12 h-12 rounded-full object-cover">
+          <span class="text-base font-medium">{{ empleado.nombre }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmar -->
+    <div class="text-center mt-6">
+      <button
+        class="bg-black text-white px-8 py-2 rounded-full disabled:opacity-50"
+        [disabled]="!horaSeleccionada || !empleadoSeleccionado"
+      >
+        Confirmar Reserva
+      </button>
+    </div>
   </div>
 </div>
+
+
+
+
+<!-- Footer -->
+<app-footer></app-footer>
