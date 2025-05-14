@@ -23,8 +23,7 @@ return new class extends Migration
 
 
             # Clave FK de salon
-            $table->foreign('id_cadena_salon')->constrained('cadena_salon','id_cadena_salon')
-            ->onDelete('cascade');        
+            $table->foreign('id_cadena_salon')->constrained('cadena_salon','id_cadena_salon');
         });
     }
 

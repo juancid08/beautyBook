@@ -28,6 +28,7 @@ return new class extends Migration
             # Clave FK de empleado
             $table->foreign('id_empleado')->constrained('empleado','id_empleado')
             ->onDelete('cascade');
+            
             $table->timestamps();
         });
     }
