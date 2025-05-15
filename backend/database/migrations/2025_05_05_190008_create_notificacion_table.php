@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
 
             # Clave FK de usuario
-            $table->foreign('id_usuario')->constrained('usuario','id_usuario')
+            $table->foreignId('id_usuario')->constrained('usuario','id_usuario')
                   ->onDelete('cascade');
         
         });

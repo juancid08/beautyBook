@@ -18,11 +18,11 @@ return new class extends Migration
             $table->date('fecha_resena');
 
             # Clave FK de usuario
-            $table->foreign('id_usuario')->constrained('usuario','id_usuario')
+            $table->foreignId('id_usuario')->constrained('usuario','id_usuario')
             ->onDelete('cascade');
 
             # Clave FK de servicio
-            $table->foreign('id_servicio')->constrained('servicio','id_servicio')
+            $table->foreignId('id_servicio')->constrained('servicio','id_servicio')
             ->onDelete('cascade');
         });
     }

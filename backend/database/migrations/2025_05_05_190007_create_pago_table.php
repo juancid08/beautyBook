@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('estado_pago');  
 
             # Clave FK de cita
-            $table->foreign('id_cita')->constrained('cita','id_cita')
+            $table->foreignId('id_cita')->constrained('cita','id_cita')
                   ->onDelete('cascade');
             $table->timestamps();
         });

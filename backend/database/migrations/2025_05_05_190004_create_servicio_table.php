@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('duracion');
 
             # Clave FK de salon
-            $table->foreign('id_salon')->constrained('salon','id_salon')
+            $table->foreignId('id_salon')->constrained('salon','id_salon')
             ->onDelete('cascade');        
         });
     }
