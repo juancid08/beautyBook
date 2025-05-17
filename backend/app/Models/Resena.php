@@ -2,8 +2,11 @@
 
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Resena extends Model {
+    use HasFactory ;
+    
     protected $table = 'resena';
     protected $primaryKey = 'id_resena';
     public $timestamps = false;
