@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UsuarioController;
+use App\Http\Controllers\Api\AuthController;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -26,3 +28,7 @@ Route::apiResource('resenas', ResenaController::class);
 Route::get('salones/{id}/empleados', [EmpleadoController::class, 'porSalon']);
 Route::get('usuarios/{id}/citas', [CitaController::class, 'porUsuario']);
 Route::get('servicios/{id}/resenas', [ResenaController::class, 'porServicio']);
+
+// Ruta para la autenticación
+Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
