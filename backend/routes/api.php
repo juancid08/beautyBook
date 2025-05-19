@@ -3,6 +3,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UsuarioController;
+use App\Http\Controllers\Api\CadenaSalonController;
+use App\Http\Controllers\Api\SalonController;
+use App\Http\Controllers\Api\EmpleadoController;
+use App\Http\Controllers\Api\ServicioController;
+use App\Http\Controllers\Api\CitaController;
+use App\Http\Controllers\Api\ResenaController;
 use App\Http\Controllers\Api\AuthController;
 
 
