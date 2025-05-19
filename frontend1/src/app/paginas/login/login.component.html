@@ -26,6 +26,12 @@
             required
           />
         </div>
+
+        <!-- Mensaje de error de login -->
+        <div *ngIf="errorMsg" class="error-message">
+          {{ errorMsg }}
+        </div>
+
         <button type="submit" [disabled]="!loginForm.valid">Iniciar Sesión</button>
       </form>
 

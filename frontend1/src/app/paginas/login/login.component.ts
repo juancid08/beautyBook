@@ -1,27 +1,41 @@
+// src/app/login/login.component.ts
 import { Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule }                  from '@angular/common';
-import { FormsModule, NgForm }           from '@angular/forms';
-import { Router }                        from '@angular/router';
+import { FormsModule, NgForm }          from '@angular/forms';
+import { HttpClientModule }             from '@angular/common/http';
+import { Router }                       from '@angular/router';
+import { AuthService }                  from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ CommonModule, FormsModule ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    HttpClientModule
+  ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  encapsulation: ViewEncapsulation.None    
+  encapsulation: ViewEncapsulation.None
 })
 export class LoginComponent {
-  email: string    = '';
-  password: string = '';
+  email = '';
+  password = '';
+  errorMsg = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   onLogin(form: NgForm) {
-    if (form.valid) {
-      console.log('Login con', this.email, this.password);
-      this.router.navigate(['/']);
-    }
+    if (!form.valid) return;
+
+    this.authService.login(this.email, this.password)
+      .subscribe({
+        next: () => this.router.navigate(['/']),
+        error: err => this.errorMsg = err.error?.email || 'Error en el inicio de sesión'
+      });
   }
 
   onRegister() {
