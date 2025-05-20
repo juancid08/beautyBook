@@ -37,4 +37,5 @@ Route::get('servicios/{id}/resenas', [ResenaController::class, 'porServicio']);
 
 // Ruta para la autenticación
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);               
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);

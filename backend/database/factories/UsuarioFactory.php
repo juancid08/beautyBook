@@ -25,6 +25,7 @@ class UsuarioFactory extends Factory
     {
         return [
             'nombre'       => $this->faker->name(),
+            'apellidos'    => $this->faker->lastName(),
             'email'        => $this->faker->unique()->safeEmail(),
             'password'     => Hash::make('password'), 
             'telefono'     => $this->faker->phoneNumber(),

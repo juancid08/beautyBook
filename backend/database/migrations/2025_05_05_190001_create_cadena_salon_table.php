@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('telefono');
             $table->string('correo_contacto');
             $table->string('website');
-            $table->string('descripcion');
+            $table->text('descripcion');
 
             
         });
