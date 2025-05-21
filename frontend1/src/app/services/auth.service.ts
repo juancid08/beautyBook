@@ -5,7 +5,11 @@ import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environments';
 
-interface LoginResponse {
+export interface LoginResponse {
+  usuario: any;
+  token: string;
+}
+export interface RegisterResponse {
   usuario: any;
   token: string;
 }
@@ -36,6 +40,27 @@ export class AuthService {
       })
     );
   }
+
+ register(
+  nombre: string,
+  apellidos: string,
+  email: string,
+  password: string,
+  password_confirmation: string
+): Observable<RegisterResponse> {
+  return this.http.post<RegisterResponse>(
+  `${environment.apiUrl}/register`,
+  { nombre, apellidos, email, password, password_confirmation }
+)
+.pipe(
+    tap(resp => {
+      localStorage.setItem('token', resp.token);
+      localStorage.setItem('usuario', JSON.stringify(resp.usuario));
+      this.currentUserSubject.next(resp.usuario);
+    })
+  );
+}
+
 
   logout() {
     const token = localStorage.getItem('token');
