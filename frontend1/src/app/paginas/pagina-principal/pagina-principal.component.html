@@ -7,7 +7,16 @@
   <div class="navbar-superior">
     <a (click)="goHome()" class="logo">BeautyBook</a>
 
-    <div class="botones">
+  <div class="botones">
+    <ng-container *ngIf="usuarioActual; else noLogin">
+      <div class="bienvenida">
+        <span>Bienvenido/ a, {{ usuarioActual.nombre }}</span>
+      </div>
+      <img src="/assets/image/icono_empleados.png" class="foto-perfil w-10 h-10 rounded-full" (click)="goPerfil()"/>
+
+    </ng-container>
+    
+    <ng-template #noLogin>
       <button class="login-btn" (click)="onLogin()">
         <i class="fas fa-sign-in-alt"></i>
         <div class="text-lines">
@@ -16,7 +25,8 @@
         </div>
       </button>
       <button class="registrar" (click)="onRegister()">Registra tu negocio</button>
-    </div> 
+    </ng-template>
+  </div>
   </div>
 
   <div class="navbar-medio">

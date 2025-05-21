@@ -15,6 +15,10 @@ html, body {
   padding: 0;
   overflow: hidden;
 
+  .foto-perfil{
+    cursor: pointer;
+  }
+
   .navbar-video {
     position: absolute;
     top: 0;
@@ -33,6 +37,11 @@ html, body {
     justify-content: space-between;
     padding: 1rem 2rem;
     height: auto;
+
+    .bienvenida{
+      color:white;
+      margin-right: 10px;
+    }
 
     a {
       color: white;

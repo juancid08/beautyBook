@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { PaginaPrincipalComponent } from './paginas/pagina-principal/pagina-principal.component';
 import { LoginComponent } from './paginas/login/login.component';
 import { RegisterComponent } from './paginas/register/register.component';
+import { PerfilComponent } from './paginas/perfil/perfil.component';
 import { QuienesSomosComponent } from './paginas/quienes-somos/quienes-somos.component'
 import { DetallesBarberiaComponent } from './paginas/detalles-barberia/detalles-barberia.component';
 import { PreguntasFrecuentesComponent} from './paginas/preguntas-frecuentes/preguntas-frecuentes.component';
@@ -18,6 +19,10 @@ export const routes: Routes = [{
     {
         path: 'register',
         component: RegisterComponent
+    },
+    {
+        path: 'perfil',
+        component: PerfilComponent
     },
     {
         path: 'quienesSomos',

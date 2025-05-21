@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FooterComponent } from "../../componentes/footer/footer.component";
 
+import { AuthService } from '../../services/auth.service';
+
 interface Salon {
   id: number;
   name: string;
@@ -61,13 +63,25 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy {
 
   ];
   
-  constructor(@Inject(PLATFORM_ID) private platformId: any, private router: Router) {}
+  constructor(@Inject(PLATFORM_ID) 
+    private platformId: any, 
+    private router: Router,
+    private authSvc: AuthService
+  ) {}
   @ViewChild('cardsContainer') cardsContainer!: ElementRef<HTMLDivElement>;
+
+  // Variable para Usuario logueado
+  usuarioActual: any = "";
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.startTyping();
     }
+
+    //obtengo el usuario con el que se ha iniciado sesión
+    this.authSvc.currentUser$.subscribe(usuario => {
+      this.usuarioActual = usuario;
+    });
   }
 
   ngOnDestroy() {
@@ -104,6 +118,10 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy {
 
   goBarberShopDetails(){
     this.router.navigate(['/detallesBarberia']);
+  }
+
+  goPerfil(){
+    this.router.navigate(['/perfil']);
   }
 
   onSearch() {

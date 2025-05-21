@@ -61,8 +61,15 @@ class UsuarioController extends Controller
             'password'   => 'nullable|string|min:6',
             'telefono'   => 'nullable|string|max:20',
             'rol'        => 'sometimes|required|in:cliente,administrador',
-            'foto_perfil'=> 'nullable|string',
+            'foto_perfil' => $request->hasFile('foto_perfil')
+                ? 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
+                : 'nullable|string'
         ]);
+
+        if ($request->hasFile('foto_perfil')) {
+            $path = $request->file('foto_perfil')->store('perfiles', 'public');
+            $validated['foto_perfil'] = asset('storage/' . $path);
+        }
 
         if (!empty($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
