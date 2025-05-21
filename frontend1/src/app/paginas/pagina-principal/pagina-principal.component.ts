@@ -2,6 +2,7 @@ import {
   Component,
   OnInit,
   OnDestroy,
+  AfterViewInit,
   Inject,
   PLATFORM_ID,
   ViewChild,
@@ -12,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FooterComponent } from "../../componentes/footer/footer.component";
+import anime from 'animejs/lib/anime.es.js';
 
 interface Salon {
   id: number;
@@ -29,8 +31,10 @@ interface Salon {
   templateUrl: './pagina-principal.component.html',
   styleUrls: ['./pagina-principal.component.scss']
 })
-export class PaginaPrincipalComponent implements OnInit, OnDestroy {
+export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('bgVideo') bgVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('logoSvg') logoSvg!: ElementRef<SVGSVGElement>;
+  @ViewChild('cardsContainer') cardsContainer!: ElementRef<HTMLDivElement>;
 
   searchTerm = '';
   categories = ['Peluquería', 'Barbería', 'Salón de uñas', 'Depilación', 'Cejas y pestañas'];
@@ -57,16 +61,19 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy {
     { id: 6, name: 'Rasec Barbershop', street: 'Calle Montería 20', rating: 4.9, imageUrl: '/assets/image/salon6.webp', liked: false },
     { id: 7, name: 'No Limits Hair Studio', street: 'Calle Vicavaro 37', rating: 4.8, imageUrl: '/assets/image/salon7.webp', liked: false },
     { id: 8, name: 'Jonhy García Barber`S', street: 'Calle Virgen de la montaña 37', rating: 4.2, imageUrl: '/assets/image/salon8.webp', liked: false }
-
-
   ];
   
   constructor(@Inject(PLATFORM_ID) private platformId: any, private router: Router) {}
-  @ViewChild('cardsContainer') cardsContainer!: ElementRef<HTMLDivElement>;
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.startTyping();
+    }
+  }
+
+  ngAfterViewInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.animateLogo();
     }
   }
 
@@ -106,8 +113,7 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy {
     this.router.navigate(['/detallesBarberia']);
   }
 
-  onSearch() {
-  }
+  onSearch() {}
 
   filterBy(cat: string) {
     this.selectedCategory = cat;
@@ -125,6 +131,7 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy {
   toggleLike(salon: Salon) {
     salon.liked = !salon.liked;
   }
+
   scrollLeft() {
     const container = this.cardsContainer.nativeElement;
     container.scrollBy({
@@ -139,5 +146,26 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy {
       left: 300,
       behavior: 'smooth'
     });
+  }
+
+  private animateLogo() {
+    if (!this.logoSvg) return;
+
+    anime.timeline({ loop: false })
+      .add({
+        targets: this.logoSvg.nativeElement.querySelectorAll('text'),
+        translateY: [-20, 0],
+        opacity: [0, 1],
+        easing: 'easeOutExpo',
+        duration: 1200,
+        delay: anime.stagger(300)
+      })
+      .add({
+        targets: this.logoSvg.nativeElement.querySelector('path'),
+        strokeDashoffset: [anime.setDashoffset, 0],
+        easing: 'easeInOutSine',
+        duration: 1500,
+        delay: 200
+      });
   }
 }

@@ -11,9 +11,10 @@ class Usuario extends Authenticatable {
 
     protected $table = 'usuario';
     protected $primaryKey = 'id_usuario';
-    protected $fillable = ['nombre','apellidos','email','password'];
+    protected $fillable = ['nombre', 'apellidos', 'email', 'password', 'telefono', 'rol', 'foto_perfil'];
     protected $hidden = ['password'];
     public $timestamps = false;
+    
     
     public function citas()     { return $this->hasMany(Cita::class,'id_usuario'); }
     public function reseñas()   { return $this->hasMany(Resena::class,'id_usuario'); }

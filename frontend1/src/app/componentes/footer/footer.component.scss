@@ -34,56 +34,57 @@
     }
   
     .footer-inferior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+
+  p:first-of-type {
+    font-size: 0.9rem;
+    margin: 0;
+    order: 2;
+  }
+
+  .logo-svg {
+    order: 1;
+    svg {
+      height: 60px;
+      width: auto;
+    }
+  }
+
+  .redes-sociales {
+    display: flex;
+    gap: 0.75rem;
+    order: 3;
+
+    a {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      margin-top: 2rem;
-  
-      p:last-child {
-        font-size: 1.8rem;
-        font-weight: bold;
-        margin: 0;
-        order: 1;
-      }
-  
-      p:first-of-type {
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      background: #fff;
+      text-decoration: none;
+
+      i {
+        color: #000;
         font-size: 0.9rem;
-        margin: 0;
-        order: 2;
       }
-  
-      .redes-sociales {
-        display: flex;
-        gap: 0.75rem;
-        order: 3;
-  
-        a {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 32px;
-          height: 32px;
-          border: 1px solid #fff;
-          border-radius: 50%;
-          background: #fff;
-          text-decoration: none;
-  
-          i {
-            color: #000;
-            font-size: 0.9rem;
-          }
-  
-          &:hover {
-            background: #f1c40f;
-            border-color: #f1c40f;
-  
-            i {
-              color: #fff;
-            }
-          }
+
+      &:hover {
+        background: #f1c40f;
+        border-color: #f1c40f;
+
+        i {
+          color: #fff;
         }
       }
     }
   }
-    
+}
+
+      }

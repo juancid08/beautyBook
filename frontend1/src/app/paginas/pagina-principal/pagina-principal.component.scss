@@ -9,8 +9,8 @@ html, body {
   position: flex;
   top: 0;
   left: 0;
-  width: 100%;    
-  height: 100vh; 
+  width: 100%;
+  height: 100vh;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -19,8 +19,8 @@ html, body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;    
-    height: 99%;   
+    width: 100%;
+    height: 99%;
     object-fit: cover;
     z-index: 1;
     filter: brightness(0.4);
@@ -31,14 +31,25 @@ html, body {
     z-index: 2;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 1rem 2rem;
     height: auto;
 
-    a {
-      color: white;
-      font-size: 1.8rem;
-      text-decoration: none;
-      font-weight: bold;
+    .logo {
+      display: inline-block;
+      height: 60px;
+      width: auto;
+      cursor: pointer;
+
+      svg {
+        height: 100%;
+        width: auto;
+        display: block;
+      }
+
+      &:hover {
+        opacity: 0.9;
+      }
     }
 
     .botones {
@@ -124,7 +135,7 @@ html, body {
       border-radius: 50px;
       overflow: hidden;
       background-color: rgba(255, 255, 255, 0.9);
-      
+
       input {
         flex: 1;
         padding: 0.8rem 1.2rem;
@@ -238,7 +249,7 @@ html, body {
     display: flex;
     flex-direction: column;
     cursor: pointer;
-    
+
     .image-wrapper {
       position: relative;
 
@@ -336,13 +347,16 @@ html, body {
   background-color: #f9f9f9;
   margin-left: 5%;
   margin-right: 5%;
+
   .texto {
     flex: 1;
+
     h4 {
       font-weight: bold;
       font-size: 1.5rem;
       margin-bottom: 1rem;
     }
+
     p {
       font-size: 1rem;
       line-height: 1.6;
@@ -351,6 +365,7 @@ html, body {
 
   .imagen {
     flex: 1;
+
     img {
       width: 100%;
       max-width: 500px;
@@ -374,7 +389,7 @@ html, body {
     }
   }
 }
- 
+
 // Animación de la página
 @keyframes blink {
   from, to { opacity: 0; }
