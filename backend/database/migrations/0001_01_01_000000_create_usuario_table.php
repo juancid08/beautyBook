@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('apellidos')->nullable();
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('telefono');
-            $table->string('rol');
-            $table->string('foto_perfil');
+            $table->string('telefono')->nullable();
+            $table->string('rol')->nullable();
+            $table->string('foto_perfil')->nullable();
         });
 
     }

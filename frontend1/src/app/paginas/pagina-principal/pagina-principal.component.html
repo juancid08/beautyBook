@@ -5,28 +5,73 @@
   </video>
 
   <div class="navbar-superior">
-    <a (click)="goHome()" class="logo">BeautyBook</a>
+    <a (click)="goHome()" class="logo" aria-label="BeautyBook">
+      <svg
+        #logoSvg
+        width="320"
+        height="100"
+        viewBox="0 0 320 100"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <text
+          x="0"
+          y="55"
+          font-family="'Poppins', sans-serif"
+          font-size="36"
+          font-weight="600"
+          fill="#fff"
+          opacity="0"
+        >
+          Beauty
+        </text>
+        <text
+          x="140"
+          y="55"
+          font-family="'Poppins', sans-serif"
+          font-size="36"
+          font-weight="700"
+          fill="#f1c40f"
+          stroke="#fff"
+          stroke-width="1"
+          opacity="0"
+        >
+          Book
+        </text>
+        <path
+          d="M0 65 Q80 85 160 65"
+          stroke="#f1c40f"
+          stroke-width="2"
+          fill="none"
+          stroke-dasharray="300"
+          stroke-dashoffset="300"
+        />
+      </svg>
+    </a>
 
-  <div class="botones">
-    <ng-container *ngIf="usuarioActual; else noLogin">
-      <div class="bienvenida">
-        <span>Bienvenido/ a, {{ usuarioActual.nombre }}</span>
-      </div>
-      <img src="/assets/image/icono_empleados.png" class="foto-perfil w-10 h-10 rounded-full" (click)="goPerfil()"/>
-
-    </ng-container>
-    
-    <ng-template #noLogin>
-      <button class="login-btn" (click)="onLogin()">
-        <i class="fas fa-sign-in-alt"></i>
-        <div class="text-lines">
-          <span>Iniciar</span>
-          <span>Sesión/Registrarse</span>
+    <div class="botones">
+      <ng-container *ngIf="usuarioActual; else noLogin">
+        <div class="bienvenida">
+          <span>Bienvenido/a, {{ usuarioActual.nombre }}</span>
         </div>
-      </button>
-      <button class="registrar" (click)="onRegister()">Registra tu negocio</button>
-    </ng-template>
-  </div>
+        <img
+          src="/assets/image/icono_empleados.png"
+          class="foto-perfil w-10 h-10 rounded-full cursor-pointer"
+          (click)="goPerfil()"
+        />
+      </ng-container>
+
+      <ng-template #noLogin>
+        <button class="login-btn" (click)="onLogin()">
+          <i class="fas fa-sign-in-alt"></i>
+          <div class="text-lines">
+            <span>Iniciar</span>
+            <span>Sesión/Registrarse</span>
+          </div>
+        </button>
+        <button class="registrar" (click)="onRegister()">Registra tu negocio</button>
+      </ng-template>
+    </div>
   </div>
 
   <div class="navbar-medio">
@@ -45,7 +90,7 @@
       </button>
     </div>
   </div>
-  
+
   <div class="navbar-inferior">
     <div class="categorias">
       <a
@@ -66,16 +111,16 @@
     <button class="nav-arrow left" (click)="scrollLeft()">
       <i class="fas fa-chevron-left"></i>
     </button>
-    <div #cardsContainer class="cards-container" >
+    <div #cardsContainer class="cards-container">
       <div class="card" *ngFor="let salon of salons" (click)="goBarberShopDetails()">
         <div class="image-wrapper">
           <img [src]="salon.imageUrl" [alt]="salon.name" />
           <div class="rating">{{ salon.rating.toFixed(1) }} ★</div>
         </div>
         <div class="card-body">
-          <h2 class="salon-name" >{{ salon.name }}</h2>
+          <h2 class="salon-name">{{ salon.name }}</h2>
           <p class="salon-street">{{ salon.street }}</p>
-          <button class="like-btn" (click)="toggleLike(salon)">
+          <button class="like-btn" (click)="toggleLike(salon); $event.stopPropagation()">
             <i class="fas" [ngClass]="salon.liked ? 'fa-heart' : 'fa-heart-o'"></i>
           </button>
         </div>
@@ -87,22 +132,20 @@
   </div>
 </div>
 
-
 <div class="pre-footer">
   <div class="texto">
     <h4><strong>Tu cita de belleza, más fácil que nunca</strong></h4>
     <p>
       ¿Buscas a un barbero, peluquero, masajista o manicurista cerca de ti? ¿Te gustaría agendar una sesión para darle forma a tu barba, definir tus cejas o disfrutar de un masaje profundo?
-      <br><br>
+      <br /><br />
       Con BeautyBook, una app gratuita pensada para el mundo de la belleza y el bienestar, podrás agendar tu cita en segundos. Olvídate de las llamadas telefónicas: reserva cuando quieras, las 24 horas del día, los 7 días de la semana, desde donde estés.
-      <br><br>
+      <br /><br />
       <strong>Descubre los mejores profesionales de tu zona y agenda al instante con BeautyBook.</strong>
     </p>
   </div>
   <div class="imagen">
-    <img src="/assets/image/pagina1.webp" alt="Foto de contenido principal">
+    <img src="/assets/image/pagina1.webp" alt="Foto de contenido principal" />
   </div>
 </div>
+
 <app-footer></app-footer>
-
-
