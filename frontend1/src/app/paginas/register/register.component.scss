@@ -54,7 +54,7 @@ html, body {
 .logo {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #e91e63;
+  color: #f1c40f;
 
   span {
     color: #333;
@@ -87,7 +87,7 @@ h2 {
     background-color: #fafafa;
 
     &:focus {
-      border-color: #e91e63;
+      border-color: #ba9810;
       background-color: #fff;
     }
   }
@@ -99,14 +99,14 @@ button[type="submit"] {
   font-size: 1rem;
   font-weight: bold;
   color: white;
-  background-color: #e91e63;
+  background-color: #f1c40f;
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
   &:hover:not(:disabled) {
-    background-color: #d81b60;
+    background-color: #ba9810;
   }
 
   &:disabled {
@@ -129,7 +129,7 @@ button[type="submit"] {
   z-index: 1;
 
   &:hover {
-    color: #e91e63;
+    color: #ba9810;
   }
 }
 

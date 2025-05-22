@@ -34,6 +34,7 @@ export class DetallesBarberiaComponent {
   constructor(private router: Router) {
     this.generarFechas();
     this.diaSeleccionado = this.diasDisponibles[0];
+
   }
 
   abrirPopup() {

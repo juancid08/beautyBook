@@ -105,6 +105,37 @@ html, body {
         }
       }
 
+      .logout {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #ffffff;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      .logout i {
+        font-size: 18px;
+      }
+
+      .logout:hover {
+        color: #e74c3c;   
+        transform: scale(1.03);
+      }
+
+      .logout:active {
+        transform: scale(0.97);
+      }
+
+      .logout:focus {
+        outline: none;
+      }
+
       .registrar {
         background-color: #f1c40f;
         color: black;

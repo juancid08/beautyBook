@@ -75,7 +75,7 @@
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
     this.currentUserSubject.next(null);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
 
   getToken(): string | null {

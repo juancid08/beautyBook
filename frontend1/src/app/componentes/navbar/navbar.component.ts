@@ -28,4 +28,8 @@ export class NavbarComponent {
   onRegister() {
     this.router.navigate(['/register']);
   }
+
+  logout(){
+    this.authSvc.logout();
+  }
 }

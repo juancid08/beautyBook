@@ -145,6 +145,11 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
     this.router.navigate(['/register']);
   }
 
+  
+  logout(){
+    this.authSvc.logout();
+  }
+
   toggleLike(salon: Salon) {
     salon.liked = !salon.liked;
   }
@@ -185,4 +190,5 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
         delay: 200
       });
   }
+
 }
