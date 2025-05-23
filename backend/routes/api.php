@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UsuarioController;
-use App\Http\Controllers\Api\CadenaSalonController;
 use App\Http\Controllers\Api\SalonController;
 use App\Http\Controllers\Api\EmpleadoController;
 use App\Http\Controllers\Api\ServicioController;
@@ -18,7 +17,6 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource('usuarios', UsuarioController::class);
 
-Route::apiResource('cadenas', CadenaSalonController::class);
 Route::apiResource('salones', SalonController::class);
 
 Route::apiResource('empleados', EmpleadoController::class);

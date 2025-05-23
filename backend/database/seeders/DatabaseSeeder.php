@@ -4,14 +4,12 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Usuario;
-use App\Models\CadenaSalon;
 use App\Models\Salon;
 use App\Models\Empleado;
 use App\Models\Servicio;
 use App\Models\Cita;
 use App\Models\Resena;
 use App\Models\Pago;
-use App\Models\Notificacion;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,8 +19,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         Usuario::factory(10)->create();
-
-        CadenaSalon::factory(5)->create();
 
         Salon::factory(15)->create();
 
@@ -36,6 +32,5 @@ class DatabaseSeeder extends Seeder
 
         Pago::factory(50)->create();
 
-        Notificacion::factory(20)->create();
     }
 }

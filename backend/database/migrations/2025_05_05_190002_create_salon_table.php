@@ -21,9 +21,14 @@ return new class extends Migration
             $table->string('descripcion');
             $table->string('foto');
 
+            $table->enum('especializacion', [
+                'Peluquería',
+                'Barbería',
+                'Salón de uñas',
+                'Depilación',
+                'Cejas y pestañas'
+            ]);
 
-            # Clave FK de salon
-            $table->foreignId('id_cadena_salon')->constrained('cadena_salon','id_cadena_salon');
         });
     }
 

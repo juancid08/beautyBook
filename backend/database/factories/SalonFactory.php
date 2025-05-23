@@ -19,7 +19,13 @@ class SalonFactory extends Factory
             'horario_cierre'     => $this->faker->time('H:i'),
             'descripcion'        => $this->faker->sentence(),
             'foto'               => $this->faker->imageUrl(640, 480, 'business'),
-            'id_cadena_salon'    => CadenaSalon::factory(),
+            'especializacion'    => $this->faker->randomElement([
+                'Peluquería',
+                'Barbería',
+                'Salón de uñas',
+                'Depilación',
+                'Cejas y pestañas'
+            ]),
         ];
     }
 }

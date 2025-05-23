@@ -9,7 +9,7 @@ class Salon extends Model {
     
     protected $table = 'salon';
     protected $primaryKey = 'id_salon';
-    protected $fillable = ['nombre','direccion','telefono','horario_apertura','horario_cierre','descripcion','foto','id_cadena_salon'];
+    protected $fillable = ['nombre','direccion','telefono','horario_apertura','horario_cierre','descripcion','foto','especializacion','id_cadena_salon'];
     public $timestamps = false;
 
     public function cadena()    { return $this->belongsTo(CadenaSalon::class,'id_cadena_salon'); }
