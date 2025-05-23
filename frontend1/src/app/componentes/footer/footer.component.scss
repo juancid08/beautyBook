@@ -1,90 +1,89 @@
-.footer {
-    background-color: #303030;
-    color: #fff;
-    padding: 2rem 5%;               
-    font-family: sans-serif;
-    margin-bottom: 0;
-    .preguntas {
-      display: flex;
-      gap: 2rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-      
-      a {
-        color: #fff;
-        text-decoration: none;
-        font-size: 0.9rem;
-        position: relative;
-        padding-bottom: 0.2rem;
-  
-        &:hover {
-          color: #f1c40f;
+  .footer {
+      background-color: #37403E;
+      color: #fff;
+      padding: 2rem 5%;               
+      font-family: sans-serif;
+      margin-bottom: 0;
+      .preguntas {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+        
+        a {
+          color: #fff;
+          text-decoration: none;
+          font-size: 0.9rem;
+          position: relative;
+          padding-bottom: 0.2rem;
+    
+          &:hover {
+            color: #E0C060;
+          }
+        }
+    
+        &::after {
+          content: "";
+          display: block;
+          width: 90%;              
+          height: 1px;
+          background: #fff;
+          margin: 0.75rem auto 0;    
         }
       }
-  
-      &::after {
-        content: "";
-        display: block;
-        width: 90%;              
-        height: 1px;
-        background: #fff;
-        margin: 0.75rem auto 0;    
-      }
-    }
-  
-    .footer-inferior {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  margin-top: 2rem;
-
-  p:first-of-type {
-    font-size: 0.9rem;
-    margin: 0;
-    order: 2;
-  }
-
-  .logo-svg {
-    order: 1;
-    svg {
-      height: 60px;
-      width: auto;
-    }
-  }
-
-  .redes-sociales {
+    
+      .footer-inferior {
     display: flex;
-    gap: 0.75rem;
-    order: 3;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 2rem;
 
-    a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border: 1px solid #fff;
-      border-radius: 50%;
-      background: #fff;
-      text-decoration: none;
+    p:first-of-type {
+      font-size: 0.9rem;
+      margin: 0;
+      order: 2;
+    }
 
-      i {
-        color: #000;
-        font-size: 0.9rem;
+    .logo-svg {
+      order: 1;
+      svg {
+        height: 60px;
+        width: auto;
       }
+    }
 
-      &:hover {
-        background: #f1c40f;
-        border-color: #f1c40f;
+    .redes-sociales {
+      display: flex;
+      gap: 0.75rem;
+      order: 3;
+
+      a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border: 1px solid #fff;
+        border-radius: 50%;
+        background: #fff;
+        text-decoration: none;
 
         i {
-          color: #fff;
+          color: #000;
+          font-size: 0.9rem;
+        }
+
+        &:hover {
+          background: #E0C060;
+          border-color: #E0C060;
+
+          i {
+            color: #fff;
+          }
         }
       }
     }
   }
 }
-
-      }

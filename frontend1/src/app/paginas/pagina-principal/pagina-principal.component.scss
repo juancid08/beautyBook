@@ -137,7 +137,7 @@ html, body {
       }
 
       .registrar {
-        background-color: #f1c40f;
+        background-color: #E0C060;
         color: black;
 
         &:hover {
@@ -197,7 +197,7 @@ html, body {
         justify-content: center;
         padding: 0 1.5rem;
         border: none;
-        background-color: #f1c40f;
+        background-color: #E0C060;
         cursor: pointer;
         transition: background-color 0.3s ease;
 
@@ -235,7 +235,7 @@ html, body {
         transition: color 0.2s ease;
 
         &:hover {
-          color: #f1c40f;
+          color: #E0C060;
         }
 
         &::after {
@@ -245,7 +245,7 @@ html, body {
           left: 0;
           width: 0;
           height: 2px;
-          background-color: #f1c40f;
+          background-color: #E0C060;
           transition: width 0.3s ease;
         }
 

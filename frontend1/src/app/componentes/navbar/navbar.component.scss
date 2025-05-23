@@ -7,7 +7,7 @@
     transition: color 0.2s ease;
   
     &:hover {
-      color: #f1c40f;
+      color: #E0C060;
     }
   
     &::after {
@@ -17,7 +17,7 @@
       left: 0;
       width: 0;
       height: 2px;
-      background-color: #f1c40f;
+      background-color: #E0C060;
       transition: width 0.3s ease;
     }
   
@@ -25,4 +25,28 @@
       width: 100%;
     }
   }
+
+.btn-login {
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.btn-login:hover {
+  box-shadow: inset 0 10px 15px rgba(0, 0, 0, 0.25);
+  transform: scale(0.99); 
+}
+
+.buscador-principal,
+.buscador-ubicacion {
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.buscador-principal:hover,
+.buscador-principal:focus-within,
+.buscador-ubicacion:hover,
+.buscador-ubicacion:focus-within {
+  box-shadow: inset 0 10px 15px rgba(0, 0, 0, 0.25);
+  transform: scale(0.99); 
+}
   
