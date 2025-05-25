@@ -13,6 +13,7 @@ export interface Salon {
   especializacion: string;
   foto: string;
   foto_url?: string;
+  rating?:number;
   liked?: boolean;
 }
 

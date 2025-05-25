@@ -16,7 +16,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::apiResource('usuarios', UsuarioController::class);
-
+// Ruta de salon.
 Route::apiResource('salones', SalonController::class);
 
 Route::apiResource('empleados', EmpleadoController::class);

@@ -9,16 +9,7 @@ import { Router } from '@angular/router';
 import { FooterComponent } from "../../componentes/footer/footer.component";
 import anime from 'animejs/lib/anime.es.js';
 import { AuthService } from '../../services/auth.service';
-import { HttpClient } from '@angular/common/http';
-
-interface Salon {
-  id_salon: number;
-  nombre: string;
-  direccion: string;
-  rating?: number;
-  foto?: string;
-  liked: boolean;
-}
+import { SalonService, Salon } from '../../services/salon.service';
 
 @Component({
   selector: 'app-pagina-principal',
@@ -56,7 +47,7 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
     @Inject(PLATFORM_ID) private platformId: any,
     private router: Router,
     private authSvc: AuthService,
-    private http: HttpClient
+    private salonService: SalonService
   ) {}
 
   ngOnInit() {
@@ -71,18 +62,29 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
     this.fetchSalons();
   }
 
-  fetchSalons() {
-    this.http.get<Salon[]>('http://localhost/api/salones')
-      .subscribe(data => {
-        console.log('salones desde API',data);
-        this.salons = data.map(salon => ({
-          ...salon,
-          rating: Math.random() * (5 - 3.5) + 3.5, // valor temporal para rating
-          foto: salon.foto ? `http://localhost/storage/${salon.foto}` : '/assets/default.webp',
-          liked: false
-        }));
-      });
-  }
+fetchSalons() {
+  this.salonService.getSalones().subscribe(data => {
+    this.salons = data.map(salon => {
+      let fotoUrl = '/assets/default.webp';
+
+      if (salon.foto) {
+          const fileName = salon.foto.split('/').pop() || salon.foto;
+          fotoUrl = `http://localhost/storage/salones/${fileName}`;
+        }
+      
+      return {
+        ...salon,
+        rating: Math.random() * (5 - 3.5) + 3.5,
+        foto: fotoUrl,
+        liked: false
+      };
+    });
+  });
+}
+
+
+
+
 
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
@@ -123,7 +125,6 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   goBarberShopDetails(salon: Salon) {
-    // Por ejemplo, navegar con id del salón
     this.router.navigate(['/detallesBarberia', salon.id_salon]);
   }
 
