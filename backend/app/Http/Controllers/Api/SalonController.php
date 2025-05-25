@@ -13,7 +13,19 @@ class SalonController extends Controller
      */
     public function index()
     {
-        return response()->json(Salon::all());
+        $salones = Salon::all();
+
+        // Modificamos cada salón para incluir la URL completa de la imagen
+        $salones->transform(function($salon) {
+            if ($salon->foto) {
+                $salon->foto = asset('storage/' . $salon->foto);
+            } else {
+                $salon->foto = null; // o alguna imagen por defecto si quieres
+            }
+            return $salon;
+        });
+
+        return response()->json($salones);
     }
 
     /**
@@ -29,6 +41,7 @@ class SalonController extends Controller
             'horario_cierre'    => 'required|string|max:10',
             'descripcion'       => 'nullable|string|max:500',
             'foto'              => 'nullable|string',
+            'especializacion'   => 'required|in:Peluquería,Barbería,Salón de uñas,Depilación,Cejas y pestañas',
             'id_cadena_salon'   => 'required|exists:cadena_salon,id_cadena_salon',
         ]);
 
@@ -43,6 +56,11 @@ class SalonController extends Controller
     public function show(string $id)
     {
         $salon = Salon::findOrFail($id);
+        if ($salon->foto) {
+            $salon->foto = asset('storage/' . $salon->foto);
+        } else {
+            $salon->foto = null;
+        }
         return response()->json($salon);
     }
 
@@ -61,10 +79,17 @@ class SalonController extends Controller
             'horario_cierre'    => 'sometimes|required|string|max:10',
             'descripcion'       => 'nullable|string|max:500',
             'foto'              => 'nullable|string',
+            'especializacion'   => 'required|in:Peluquería,Barbería,Salón de uñas,Depilación,Cejas y pestañas',
             'id_cadena_salon'   => 'sometimes|required|exists:cadena_salon,id_cadena_salon',
         ]);
 
         $salon->update($validated);
+
+        if ($salon->foto) {
+            $salon->foto = asset('storage/' . $salon->foto);
+        } else {
+            $salon->foto = null;
+        }
 
         return response()->json($salon);
     }

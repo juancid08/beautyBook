@@ -12,6 +12,13 @@ class Salon extends Model {
     protected $fillable = ['nombre','direccion','telefono','horario_apertura','horario_cierre','descripcion','foto','especializacion','id_cadena_salon'];
     public $timestamps = false;
 
+   public function getFotoUrlAttribute() {
+        if ($this->foto) {
+            return asset('storage/salones/' . $this->foto);
+        }
+        return null; 
+    }
+
     public function cadena()    { return $this->belongsTo(CadenaSalon::class,'id_cadena_salon'); }
     public function empleados() { return $this->hasMany(Empleado::class,'id_salon'); }
     public function servicios() { return $this->hasMany(Servicio::class,'id_salon'); }

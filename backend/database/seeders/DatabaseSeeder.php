@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void
-    {
+    {        
+        $this->call(SalonSeeder::class);
+
         Usuario::factory(10)->create();
 
         Salon::factory(15)->create();
@@ -31,6 +33,7 @@ class DatabaseSeeder extends Seeder
         Resena::factory(50)->create();
 
         Pago::factory(50)->create();
+
 
     }
 }

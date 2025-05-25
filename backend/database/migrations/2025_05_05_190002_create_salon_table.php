@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('horario_cierre');
             $table->string('descripcion');
             $table->string('foto');
+            $table->decimal('rating', 2, 1)->nullable();
 
             $table->enum('especializacion', [
                 'Peluquería',
