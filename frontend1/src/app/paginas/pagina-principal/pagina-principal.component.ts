@@ -1,12 +1,6 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  AfterViewInit,
-  Inject,
-  PLATFORM_ID,
-  ViewChild,
-  ElementRef
+  Component, OnInit, OnDestroy, AfterViewInit, Inject, PLATFORM_ID,
+  ViewChild, ElementRef
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
@@ -15,13 +9,14 @@ import { Router } from '@angular/router';
 import { FooterComponent } from "../../componentes/footer/footer.component";
 import anime from 'animejs/lib/anime.es.js';
 import { AuthService } from '../../services/auth.service';
+import { HttpClient } from '@angular/common/http';
 
 interface Salon {
-  id: number;
-  name: string;
-  street: string;
-  rating: number;
-  imageUrl: string;
+  id_salon: number;
+  nombre: string;
+  direccion: string;
+  rating?: number;
+  foto?: string;
   liked: boolean;
 }
 
@@ -53,23 +48,15 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
   private typingTimer: any;
   private deletingTimer: any;
 
-  salons: Salon[] = [
-    { id: 1, name: 'BeautySalon A', street: 'Calle Mayor 1', rating: 4.5, imageUrl: '/assets/image/salon1.webp', liked: false },
-    { id: 2, name: 'Barbería B', street: 'Calle Luna 23', rating: 4.0, imageUrl: '/assets/image/salon2.webp', liked: false },
-    { id: 3, name: 'Nails & Spa', street: 'Calle Sol 45', rating: 5.0, imageUrl: '/assets/image/salon3.webp', liked: false },
-    { id: 4, name: 'Moreno Stilistas', street: 'Calle Mercurio 9', rating: 5.0, imageUrl: '/assets/image/salon4.webp', liked: true },
-    { id: 5, name: 'Rose Skin Barbershop', street: 'Calle Sondalezas 37', rating: 4.65, imageUrl: '/assets/image/salon5.webp', liked: false },
-    { id: 6, name: 'Rasec Barbershop', street: 'Calle Montería 20', rating: 4.9, imageUrl: '/assets/image/salon6.webp', liked: false },
-    { id: 7, name: 'No Limits Hair Studio', street: 'Calle Vicavaro 37', rating: 4.8, imageUrl: '/assets/image/salon7.webp', liked: false },
-    { id: 8, name: 'Jonhy García Barber`S', street: 'Calle Virgen de la montaña 37', rating: 4.2, imageUrl: '/assets/image/salon8.webp', liked: false }
-  ];
+  salons: Salon[] = [];
 
   usuarioActual: any = "";
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
     private router: Router,
-    private authSvc: AuthService
+    private authSvc: AuthService,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
@@ -80,6 +67,21 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
     this.authSvc.currentUser$.subscribe(usuario => {
       this.usuarioActual = usuario;
     });
+
+    this.fetchSalons();
+  }
+
+  fetchSalons() {
+    this.http.get<Salon[]>('http://localhost/api/salones')
+      .subscribe(data => {
+        console.log('salones desde API',data);
+        this.salons = data.map(salon => ({
+          ...salon,
+          rating: Math.random() * (5 - 3.5) + 3.5, // valor temporal para rating
+          foto: salon.foto ? `http://localhost/storage/${salon.foto}` : '/assets/default.webp',
+          liked: false
+        }));
+      });
   }
 
   ngAfterViewInit() {
@@ -120,8 +122,9 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
-  goBarberShopDetails() {
-    this.router.navigate(['/detallesBarberia']);
+  goBarberShopDetails(salon: Salon) {
+    // Por ejemplo, navegar con id del salón
+    this.router.navigate(['/detallesBarberia', salon.id_salon]);
   }
 
   goPerfil() {
@@ -145,8 +148,7 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
     this.router.navigate(['/register']);
   }
 
-  
-  logout(){
+  logout() {
     this.authSvc.logout();
   }
 
@@ -190,5 +192,4 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
         delay: 200
       });
   }
-
 }

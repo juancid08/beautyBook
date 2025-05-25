@@ -116,14 +116,14 @@
       <i class="fas fa-chevron-left"></i>
     </button>
     <div #cardsContainer class="cards-container">
-      <div class="card" *ngFor="let salon of salons" (click)="goBarberShopDetails()">
+      <div class="card" *ngFor="let salon of salons" (click)="goBarberShopDetails(salon)">
         <div class="image-wrapper">
-          <img [src]="salon.imageUrl" [alt]="salon.name" />
-          <div class="rating">{{ salon.rating.toFixed(1) }} ★</div>
+          <img [src]="salon.foto || '/assets/image/default-salon.png'" [alt]="salon.nombre" />
+          <div class="rating">{{ salon.rating?.toFixed(1) || 'N/A' }} ★</div>
         </div>
         <div class="card-body">
-          <h2 class="salon-name">{{ salon.name }}</h2>
-          <p class="salon-street">{{ salon.street }}</p>
+          <h2 class="salon-name">{{ salon.nombre }}</h2>
+          <p class="salon-street">{{ salon.direccion }}</p>
           <button class="like-btn" (click)="toggleLike(salon); $event.stopPropagation()">
             <i class="fas" [ngClass]="salon.liked ? 'fa-heart' : 'fa-heart-o'"></i>
           </button>
