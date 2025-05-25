@@ -39,7 +39,7 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
   private typingTimer: any;
   private deletingTimer: any;
 
-  salons: Salon[] = [];
+  salones: Salon[] = [];
 
   usuarioActual: any = "";
 
@@ -59,32 +59,14 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
       this.usuarioActual = usuario;
     });
 
-    this.fetchSalons();
+    this.fetchSalones();
   }
 
-fetchSalons() {
-  this.salonService.getSalones().subscribe(data => {
-    this.salons = data.map(salon => {
-      let fotoUrl = '/assets/default.webp';
-
-      if (salon.foto) {
-          const fileName = salon.foto.split('/').pop() || salon.foto;
-          fotoUrl = `http://localhost/storage/salones/${fileName}`;
-        }
-      
-      return {
-        ...salon,
-        rating: Math.random() * (5 - 3.5) + 3.5,
-        foto: fotoUrl,
-        liked: false
-      };
+  fetchSalones(): void {
+    this.salonService.getSalonesFormateados().subscribe(salones => {
+      this.salones = salones;
     });
-  });
-}
-
-
-
-
+  }
 
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {

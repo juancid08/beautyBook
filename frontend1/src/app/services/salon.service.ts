@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 export interface Salon {
   id_salon: number;
@@ -27,6 +27,28 @@ export class SalonService {
 
   getSalones(): Observable<Salon[]> {
     return this.http.get<Salon[]>(this.baseUrl);
+  }
+
+  getSalonesFormateados(): Observable<Salon[]> {
+    return this.getSalones().pipe(
+      map(salones =>
+        salones.map(salon => {
+          let fotoUrl = '/assets/default.webp';
+
+          if (salon.foto) {
+            const fileName = salon.foto.split('/').pop() || salon.foto;
+            fotoUrl = `http://localhost/storage/salones/${fileName}`;
+          }
+
+          return {
+            ...salon,
+            foto: fotoUrl,
+            rating: Math.random() * (5 - 3.5) + 3.5,
+            liked: false
+          };
+        })
+      )
+    );
   }
 
   getSalon(id: number): Observable<Salon> {

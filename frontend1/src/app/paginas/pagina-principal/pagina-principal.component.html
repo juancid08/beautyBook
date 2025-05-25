@@ -116,7 +116,7 @@
       <i class="fas fa-chevron-left"></i>
     </button>
     <div #cardsContainer class="cards-container">
-      <div class="card" *ngFor="let salon of salons" (click)="goBarberShopDetails(salon)">
+      <div class="card" *ngFor="let salon of salones" (click)="goBarberShopDetails(salon)">
         <div class="image-wrapper">
           <img [src]="salon.foto || '/assets/image/default-salon.png'" [alt]="salon.nombre" />
           <div class="rating">{{ salon.rating?.toFixed(1) || 'N/A' }} ★</div>

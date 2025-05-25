@@ -29,7 +29,7 @@ export const routes: Routes = [{
         component: QuienesSomosComponent
     },
     {
-        path: 'detallesBarberia',
+        path: 'detallesBarberia/:id',
         component: DetallesBarberiaComponent
     },
     {

@@ -1,67 +1,67 @@
 {
-  "hash": "32706c22",
-  "configHash": "7697824a",
+  "hash": "7cdf5eb2",
+  "configHash": "f0ed722a",
   "lockfileHash": "9616ee30",
-  "browserHash": "01bf4ac7",
+  "browserHash": "bfc28cb0",
   "optimized": {
     "@angular/common": {
       "src": "../../../../../../node_modules/@angular/common/fesm2022/common.mjs",
       "file": "@angular_common.js",
-      "fileHash": "4de672b3",
+      "fileHash": "34ce5c9c",
       "needsInterop": false
     },
     "@angular/common/http": {
       "src": "../../../../../../node_modules/@angular/common/fesm2022/http.mjs",
       "file": "@angular_common_http.js",
-      "fileHash": "df8032ef",
+      "fileHash": "0957198f",
       "needsInterop": false
     },
     "@angular/core": {
       "src": "../../../../../../node_modules/@angular/core/fesm2022/core.mjs",
       "file": "@angular_core.js",
-      "fileHash": "52234166",
+      "fileHash": "8e3c1ff5",
       "needsInterop": false
     },
     "@angular/forms": {
       "src": "../../../../../../node_modules/@angular/forms/fesm2022/forms.mjs",
       "file": "@angular_forms.js",
-      "fileHash": "0a6b76a5",
+      "fileHash": "68bf52d3",
       "needsInterop": false
     },
     "@angular/platform-browser": {
       "src": "../../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
       "file": "@angular_platform-browser.js",
-      "fileHash": "d834a491",
+      "fileHash": "b6992fef",
       "needsInterop": false
     },
     "@angular/platform-server": {
       "src": "../../../../../../node_modules/@angular/platform-server/fesm2022/platform-server.mjs",
       "file": "@angular_platform-server.js",
-      "fileHash": "3751d689",
+      "fileHash": "466ac347",
       "needsInterop": false
     },
     "@angular/router": {
       "src": "../../../../../../node_modules/@angular/router/fesm2022/router.mjs",
       "file": "@angular_router.js",
-      "fileHash": "85a6985b",
+      "fileHash": "5a95f4af",
       "needsInterop": false
     },
     "animejs/lib/anime.es.js": {
       "src": "../../../../../../node_modules/animejs/lib/anime.es.js",
       "file": "animejs_lib_anime__es__js.js",
-      "fileHash": "20479d3f",
+      "fileHash": "057608ae",
       "needsInterop": false
     },
     "rxjs": {
       "src": "../../../../../../node_modules/rxjs/dist/cjs/index.js",
       "file": "rxjs.js",
-      "fileHash": "e4a04490",
+      "fileHash": "24328cad",
       "needsInterop": true
     },
     "rxjs/operators": {
       "src": "../../../../../../node_modules/rxjs/dist/cjs/operators/index.js",
       "file": "rxjs_operators.js",
-      "fileHash": "65c14719",
+      "fileHash": "9f79fcae",
       "needsInterop": true
     }
   },
