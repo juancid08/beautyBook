@@ -11,9 +11,15 @@ class ResenaController extends Controller
     /**
      * Listar todas las reseñas (GET /api/resenas)
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Resena::all());
+        // Si se pasa un id_servicio, filtramos por él
+        if ($request->has('id_servicio')) {
+            return Resena::where('id_servicio', $request->id_servicio)->get();
+        }
+
+        // Si no, devolvemos todos los Resenas
+        return Resena::all();
     }
 
     /**
@@ -72,5 +78,12 @@ class ResenaController extends Controller
         $resena->delete();
 
         return response()->json(['message' => 'Reseña eliminada correctamente']);
+    }
+
+    public function porSalon($id)
+    {
+        return \App\Models\Resena::whereHas('servicio', function ($query) use ($id) {
+            $query->where('id_salon', $id);
+        })->get();
     }
 }

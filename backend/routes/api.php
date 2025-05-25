@@ -18,11 +18,13 @@ Route::get('/user', function (Request $request) {
 Route::apiResource('usuarios', UsuarioController::class);
 // Ruta de salon.
 Route::apiResource('salones', SalonController::class);
+Route::get('salones/{id}/resenas', [ResenaController::class, 'porSalon']);
 
 Route::apiResource('empleados', EmpleadoController::class);
 Route::get('salones/{id}/empleados', [EmpleadoController::class, 'porSalon']);
 
 Route::apiResource('servicios', ServicioController::class);
+Route::get('salones/{id}/servicios', [ServicioController::class, 'porSalon']);
 
 Route::apiResource('citas', CitaController::class);
 Route::get('usuarios/{id}/citas', [CitaController::class, 'porUsuario']);

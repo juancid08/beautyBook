@@ -92,4 +92,11 @@ class UsuarioController extends Controller
 
         return response()->json(['message' => 'Usuario eliminado correctamente']);
     }
+
+    public function porSalon($id)
+    {
+        $servicios = Servicio::where('id_salon', $id)->get();
+        return response()->json($servicios);
+
+    }
 }

@@ -11,9 +11,15 @@ class CitaController extends Controller
     /**
      * Listar todas las citas (GET /api/citas)
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Cita::all());
+        // Si se pasa un id_servicio, filtramos por él
+        if ($request->has('id_servicio')) {
+            return Cita::where('id_servicio', $request->id_servicio)->get();
+        }
+
+        // Si no, devolvemos todos los Citas
+        return Cita::all();
     }
 
     /**

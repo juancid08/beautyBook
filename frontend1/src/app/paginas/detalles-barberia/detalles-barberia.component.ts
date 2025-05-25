@@ -5,6 +5,8 @@ import { FooterComponent } from '../../componentes/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Salon, SalonService } from '../../services/salon.service';
+import { Servicio, ServicioService } from '../../services/servicio.service';
+import { Resena, ResenaService } from '../../services/resena.service';
 @Component({
   selector: 'app-detalles-barberia',
   standalone: true,
@@ -32,11 +34,17 @@ export class DetallesBarberiaComponent {
   diaSeleccionado: any;
 
   salon: Salon | undefined;
+  servicio: Servicio | undefined;
+  servicios: Servicio[] = [];
+  resena: Resena | undefined;
+  resenas: Resena[] = [];
 
   constructor(
     private router: Router,
     private route: ActivatedRoute, 
     private salonService: SalonService ,
+    private servicioService: ServicioService,
+    private resenaService: ResenaService
 
   ) {
     this.generarFechas();
@@ -50,11 +58,14 @@ export class DetallesBarberiaComponent {
       if (id) {
         const salonId = +id;
         this.fetchSalon(salonId);
+        this.fetchServicios(salonId);
+        this.fetchResenas(salonId);
       }
     });
+
   }
 
-  fetchSalon(salonId: number){
+  fetchSalon(salonId: number): void{
     this.salonService.getSalon(salonId).subscribe({
       next: salon => {
         this.salon = salon;
@@ -62,6 +73,31 @@ export class DetallesBarberiaComponent {
       },
       error: err => {
         console.error('Error al cargar el salón', err);
+      }
+    });
+  }
+
+  fetchServicios(salonId: number): void {
+    this.servicioService.getServiciosPorSalon(salonId).subscribe({
+      next: servicios => {
+        this.servicios = servicios;
+        console.log('Servicios del salón:', this.servicios);
+        this.fetchResenas(salonId);
+      },
+      error: err => {
+        console.error('Error al cargar los servicios', err);
+      }
+    });
+  }
+
+  fetchResenas(salonId: number): void {
+    this.resenaService.getResenasPorSalon(salonId).subscribe({
+      next: resenas => {
+        this.resenas = resenas;
+        console.log('Reseñas del salón:', this.resenas);
+      },
+      error: err => {
+        console.error('Error al cargar las reseñas:', err);
       }
     });
   }
@@ -78,7 +114,7 @@ export class DetallesBarberiaComponent {
 
   generarFechas() {
     const opciones: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long' };
-    for (let i = 0; i < 30; i++) { // Cambiado de 7 a 30 días
+    for (let i = 0; i < 30; i++) { 
       const fecha = new Date();
       fecha.setDate(fecha.getDate() + i);
       this.diasDisponibles.push({

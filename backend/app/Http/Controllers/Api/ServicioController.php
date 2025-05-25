@@ -11,9 +11,15 @@ class ServicioController extends Controller
     /**
      * Listar todos los servicios (GET /api/servicios)
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Servicio::all());
+        // Si se pasa un id_salon, filtramos por él
+        if ($request->has('id_salon')) {
+            return Servicio::where('id_salon', $request->id_salon)->get();
+        }
+
+        // Si no, devolvemos todos los servicios
+        return Servicio::all();
     }
 
     /**
