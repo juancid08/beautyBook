@@ -62,10 +62,19 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
     this.fetchSalones();
   }
 
-  fetchSalones(): void {
-    this.salonService.getSalonesFormateados().subscribe(salones => {
-      this.salones = salones;
-    });
+  /**
+   * Método para cargar salones, con o sin filtro de especialización
+   */
+  fetchSalones(especializacion?: string): void {
+    if (especializacion) {
+      this.salonService.getSalonesFiltrado(especializacion).subscribe(salones => {
+        this.salones = salones;
+      });
+    } else {
+      this.salonService.getSalonesFormateados().subscribe(salones => {
+        this.salones = salones;
+      });
+    }
   }
 
   ngAfterViewInit() {
@@ -118,10 +127,22 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
     // lógica de búsqueda si es necesaria
   }
 
+  /**
+   * Al hacer clic en una categoría, filtramos por especialización
+   * Si se vuelve a pulsar la misma categoría, quitamos filtro
+   */
   filterBy(cat: string) {
-    this.selectedCategory = cat;
-    this.onSearch();
+    if (this.selectedCategory === cat) {
+      this.selectedCategory = null;
+      this.fetchSalones(); // sin filtro
+    } else {
+      this.selectedCategory = cat;
+      this.fetchSalones(cat);
+    }
   }
+  get tituloCategoria(): string {
+  return this.selectedCategory ? this.selectedCategory : 'Recomendado';
+}
 
   onLogin() {
     this.router.navigate(['/login']);

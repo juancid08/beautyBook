@@ -11,9 +11,17 @@ class SalonController extends Controller
     /**
      * Listar todos los salones (GET /api/salones)
      */
-    public function index()
+    public function index(Request $request)
     {
-        $salones = Salon::all();
+        $especializacion = $request->query('especializacion');
+
+        $query = Salon::query();
+
+        if ($especializacion) {
+            $query->where('especializacion', $especializacion);
+        }
+
+        $salones = $query->get();
 
         // Modificamos cada salón para incluir la URL completa de la imagen
         $salones->transform(function($salon) {
@@ -27,6 +35,7 @@ class SalonController extends Controller
 
         return response()->json($salones);
     }
+
 
     /**
      * Crear un nuevo salón (POST /api/salones)

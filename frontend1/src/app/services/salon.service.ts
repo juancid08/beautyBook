@@ -13,7 +13,7 @@ export interface Salon {
   especializacion: string;
   foto: string;
   foto_url?: string;
-  rating?:number;
+  rating?: number;
   liked?: boolean;
 }
 
@@ -27,6 +27,33 @@ export class SalonService {
 
   getSalones(): Observable<Salon[]> {
     return this.http.get<Salon[]>(this.baseUrl);
+  }
+
+  getSalonesFiltrado(especializacion?: string): Observable<Salon[]> {
+    let url = this.baseUrl;
+    if (especializacion) {
+      url += `?especializacion=${encodeURIComponent(especializacion)}`;
+    }
+
+    return this.http.get<Salon[]>(url).pipe(
+      map(salones =>
+        salones.map(salon => {
+          let fotoUrl = '/assets/default.webp';
+
+          if (salon.foto) {
+            const fileName = salon.foto.split('/').pop() || salon.foto;
+            fotoUrl = `http://localhost/storage/salones/${fileName}`;
+          }
+
+          return {
+            ...salon,
+            foto: fotoUrl,
+            rating: Math.random() * (5 - 3.5) + 3.5,
+            liked: false
+          };
+        })
+      )
+    );
   }
 
   getSalonesFormateados(): Observable<Salon[]> {
