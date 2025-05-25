@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavbarComponent } from "../../componentes/navbar/navbar.component";
 import { FooterComponent } from '../../componentes/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { Salon, SalonService } from '../../services/salon.service';
 @Component({
   selector: 'app-detalles-barberia',
   standalone: true,
@@ -31,10 +31,39 @@ export class DetallesBarberiaComponent {
 
   diaSeleccionado: any;
 
-  constructor(private router: Router) {
+  salon: Salon | undefined;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute, 
+    private salonService: SalonService ,
+
+  ) {
     this.generarFechas();
     this.diaSeleccionado = this.diasDisponibles[0];
 
+  }
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        const salonId = +id;
+        this.fetchSalon(salonId);
+      }
+    });
+  }
+
+  fetchSalon(salonId: number){
+    this.salonService.getSalon(salonId).subscribe({
+      next: salon => {
+        this.salon = salon;
+        console.log('Datos del salón:', this.salon);
+      },
+      error: err => {
+        console.error('Error al cargar el salón', err);
+      }
+    });
   }
 
   abrirPopup() {
