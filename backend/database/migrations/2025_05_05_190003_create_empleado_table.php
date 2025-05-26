@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('id_empleado');
             $table->string('nombre');
             $table->string('telefono');
+            $table->string('foto')->nullable();
 
             # Clave FK de salon
             $table->foreignId('id_salon')->constrained('salon','id_salon')

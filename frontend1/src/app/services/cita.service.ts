@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { map } from 'rxjs/operators';
 export interface Cita {
   id_cita: number;
   id_usuario: number;
@@ -56,4 +56,15 @@ export class CitaService {
     return this.http.get<Cita[]>(`${this.baseUrl}?id_servicio=${idServicio}`);
   }
 
+  getNombreServicio(id: number): Observable<string> {
+    return this.http.get<any>(`http://localhost/api/servicios/${id}`).pipe(
+      map(servicio => servicio.nombre)
+    );
+  }
+
+  getNombreEmpleado(id: number): Observable<string> {
+    return this.http.get<any>(`http://localhost/api/empleados/${id}`).pipe(
+      map(empleado => empleado.nombre)
+    );
+  }
 }

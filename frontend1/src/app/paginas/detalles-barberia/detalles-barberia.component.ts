@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NavbarComponent } from "../../componentes/navbar/navbar.component";
 import { FooterComponent } from '../../componentes/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Salon, SalonService } from '../../services/salon.service';
 import { Servicio, ServicioService } from '../../services/servicio.service';
+import { Empleado, EmpleadoService } from '../../services/empleado.service';
+import { CitaService, Cita } from '../../services/cita.service';
+import { AuthService } from '../../services/auth.service'; // Suponiendo que así se llama tu servicio de auth
 import { Resena, ResenaService } from '../../services/resena.service';
 @Component({
   selector: 'app-detalles-barberia',
@@ -15,6 +18,10 @@ import { Resena, ResenaService } from '../../services/resena.service';
   styleUrls: ['./detalles-barberia.component.scss']
 })
 export class DetallesBarberiaComponent {
+  // Variables de control
+
+  usuarioActual: any;
+
   mostrarPopup = false;
 
   // Generación de fechas próximas
@@ -24,28 +31,27 @@ export class DetallesBarberiaComponent {
   horasDisponibles: string[] = [];
   horaSeleccionada: string | null = null;
 
-  empleados = [
-    { nombre: 'Juan Pérez', foto: '/assets/image/empleados/juan.jpg' },
-    { nombre: 'Carlos García', foto: '/assets/image/empleados/carlos.jpg' },
-    { nombre: 'María López', foto: '/assets/image/empleados/maria.jpg' },
-  ];
-  empleadoSeleccionado = this.empleados[0];
-
   diaSeleccionado: any;
 
   salon: Salon | undefined;
+
   servicio: Servicio | undefined;
   servicios: Servicio[] = [];
+
   resena: Resena | undefined;
   resenas: Resena[] = [];
 
+  empleadoSeleccionado: Empleado | undefined;
+  empleados: Empleado[] = [];
+
   constructor(
-    private router: Router,
     private route: ActivatedRoute, 
+    private authSvc: AuthService,
     private salonService: SalonService ,
     private servicioService: ServicioService,
-    private resenaService: ResenaService
-
+    private empleadoService: EmpleadoService,
+    private resenaService: ResenaService,
+    private citaService: CitaService
   ) {
     this.generarFechas();
     this.diaSeleccionado = this.diasDisponibles[0];
@@ -60,9 +66,13 @@ export class DetallesBarberiaComponent {
         this.fetchSalon(salonId);
         this.fetchServicios(salonId);
         this.fetchResenas(salonId);
+        this.fetchEmpleados(salonId);
       }
     });
 
+    this.authSvc.currentUser$.subscribe(usuario => {
+      this.usuarioActual = usuario;
+    });
   }
 
   fetchSalon(salonId: number): void{
@@ -90,6 +100,19 @@ export class DetallesBarberiaComponent {
     });
   }
 
+  fetchEmpleados(salonId: number): void {
+    this.empleadoService.getEmpleadosPorSalon(salonId).subscribe({
+      next: empleados => {
+        this.empleados = empleados;
+        this.empleadoSeleccionado = empleados[0];
+        console.log('Empleados:', this.empleados);
+      },
+      error: err => {
+        console.error('Error al cargar los empleados:', err);
+      }
+    });
+  }
+
   fetchResenas(salonId: number): void {
     this.resenaService.getResenasPorSalon(salonId).subscribe({
       next: resenas => {
@@ -102,7 +125,8 @@ export class DetallesBarberiaComponent {
     });
   }
 
-  abrirPopup() {
+  abrirPopup(servicio: Servicio) {
+    this.servicio = servicio;
     this.mostrarPopup = true;
   }
 
@@ -110,6 +134,34 @@ export class DetallesBarberiaComponent {
     this.mostrarPopup = false;
     this.turnoSeleccionado = null;
     this.horaSeleccionada = null;
+  }
+
+  confirmarReserva(): void {
+    
+    if (!this.servicio || !this.horaSeleccionada || !this.diaSeleccionado || !this.empleadoSeleccionado || !this.usuarioActual) {
+      console.error('Faltan datos para crear la cita');
+      return;
+    }
+
+    const nuevaCita = {
+      id_usuario: this.usuarioActual.id_usuario,
+      id_servicio: this.servicio.id_servicio,
+      id_empleado: this.empleadoSeleccionado.id_empleado,
+      fecha: this.diaSeleccionado.fecha.toISOString().split('T')[0],
+      hora: this.horaSeleccionada,
+      estado: 'pendiente' as 'pendiente'
+    };
+
+    this.citaService.crearCita(nuevaCita).subscribe({
+      next: () => {
+        alert('Cita reservada con éxito.');
+        this.cerrarPopup();
+      },
+      error: err => {
+        console.error('Error al crear la cita', err);
+        alert('Ocurrió un error al reservar la cita.');
+      }
+    });
   }
 
   generarFechas() {
