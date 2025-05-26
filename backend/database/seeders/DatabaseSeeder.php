@@ -18,22 +18,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {        
-        $this->call(SalonSeeder::class);
+        $this->call([SalonSeeder::class]);
 
-        Usuario::factory(10)->create();
-
-        Salon::factory(15)->create();
-
-        Empleado::factory(30)->create();
-
-        Servicio::factory(30)->create();
-
-        Cita::factory(50)->create();
-
-        Resena::factory(50)->create();
-
-        Pago::factory(50)->create();
-
+        $this->call([
+            UsuarioSeeder::class,   // Luego: usuarios
+            EmpleadoSeeder::class,  // Después: empleados asignados a salones
+            ServicioSeeder::class,  // Luego: servicios asignados a salones
+            CitaSeeder::class,      // Luego: citas usando usuarios, empleados y servicios
+            ResenaSeeder::class,    // Después: reseñas de usuarios sobre servicios
+            PagoSeeder::class,      // Finalmente: pagos asociados a citas
+        ]);
 
     }
 }

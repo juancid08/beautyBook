@@ -15,7 +15,6 @@ class EmpleadoFactory extends Factory
         return [
             'nombre'      => $this->faker->name(),
             'telefono'    => $this->faker->phoneNumber(),
-            'id_salon'    => Salon::factory(),
         ];
     }
 }

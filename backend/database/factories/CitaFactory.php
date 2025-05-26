@@ -4,8 +4,8 @@ namespace Database\Factories;
 
 use App\Models\Cita;
 use App\Models\Usuario;
-use App\Models\Servicio;
 use App\Models\Empleado;
+use App\Models\Servicio;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CitaFactory extends Factory
@@ -18,10 +18,6 @@ class CitaFactory extends Factory
             'fecha'        => $this->faker->date(),
             'hora'         => $this->faker->time('H:i'),
             'estado'       => $this->faker->randomElement(['pendiente', 'confirmada', 'cancelada']),
-            'id_usuario'   => Usuario::factory(),
-            'id_servicio'  => Servicio::factory(),
-            'id_empleado'  => Empleado::factory(),
         ];
     }
 }
-

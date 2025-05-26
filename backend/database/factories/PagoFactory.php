@@ -17,7 +17,6 @@ class PagoFactory extends Factory
             'monto'        => $this->faker->randomFloat(2, 20, 500),
             'metodo_pago'  => $this->faker->randomElement(['efectivo', 'tarjeta', 'transferencia']),
             'estado_pago'  => $this->faker->randomElement(['pendiente', 'pagado', 'fallido']),
-            'id_cita'      => Cita::factory(),
         ];
     }
 }

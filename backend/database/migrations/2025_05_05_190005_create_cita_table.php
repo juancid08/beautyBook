@@ -19,15 +19,15 @@ return new class extends Migration
 
             # Clave FK de usuario
             $table->foreignId('id_usuario')->constrained('usuario','id_usuario')
-            ->onDelete('cascade');
+            ->onDelete('cascade')->nullable();
 
             # Clave FK de servicio
             $table->foreignId('id_servicio')->constrained('servicio','id_servicio')
-            ->onDelete('cascade');
+            ->onDelete('cascade')->nullable();
 
             # Clave FK de empleado
             $table->foreignId('id_empleado')->constrained('empleado','id_empleado')
-            ->onDelete('cascade');
+            ->onDelete('cascade')->nullable();
             
             $table->timestamps();
         });
