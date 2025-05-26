@@ -81,7 +81,10 @@ export class PerfilComponent implements OnInit {
     this.citaService.getCitasPorUsuario(idUsuario).subscribe({
       next: (citas) => {
         this.citas = citas;
-        console.log('Citas del usuario:', citas);
+        citas.forEach(cita => {
+          this.getNombreServicio(cita.id_servicio);
+          this.getNombreEmpleado(cita.id_empleado);
+        });
       },
       error: (err) => {
         console.error('Error al cargar las citas del usuario', err);
@@ -89,23 +92,24 @@ export class PerfilComponent implements OnInit {
     });
   }
 
-  cargarNombresServiciosYEmpleados(): void {
-    const idsServicio = [...new Set(this.citas.map(c => c.id_servicio))];
-    const idsEmpleado = [...new Set(this.citas.map(c => c.id_empleado))];
-
-    idsServicio.forEach(id => {
-      this.citaService.getNombreServicio(id).subscribe(nombre => {
-        this.serviciosMap[id] = nombre;
+  getNombreServicio(id: number): void {
+    if (!this.serviciosMap[id]) {
+      this.citaService.getNombreServicio(id).subscribe({
+        next: nombre => this.serviciosMap[id] = nombre,
+        error: () => this.serviciosMap[id] = 'Desconocido'
       });
-    });
-
-    idsEmpleado.forEach(id => {
-      this.citaService.getNombreEmpleado(id).subscribe(nombre => {
-        this.empleadosMap[id] = nombre;
-      });
-    });
+    }
   }
-  
+
+  getNombreEmpleado(id: number): void {
+    if (!this.empleadosMap[id]) {
+      this.citaService.getNombreEmpleado(id).subscribe({
+        next: nombre => this.empleadosMap[id] = nombre,
+        error: () => this.empleadosMap[id] = 'Desconocido'
+      });
+    }
+  }
+
   private onPerfilActualizado(res: any) {
     console.log('Perfil actualizado', res);
     localStorage.setItem('usuario', JSON.stringify(res));

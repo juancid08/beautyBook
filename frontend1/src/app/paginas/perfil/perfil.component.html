@@ -69,8 +69,8 @@
       <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
       <p><strong>Hora:</strong> {{ cita.hora }}</p>
       <p><strong>Estado:</strong> {{ cita.estado }}</p>
-      <p><strong>Servicio:</strong> {{ serviciosMap[cita.id_servicio] || '...' }}</p>
-      <p><strong>Empleado:</strong> {{ empleadosMap[cita.id_empleado] || '...' }}</p>
+      <p><strong>Servicio:</strong> {{ serviciosMap[cita.id_servicio] || 'Cargando...' }}</p>
+      <p><strong>Empleado:</strong> {{ empleadosMap[cita.id_empleado] || 'Cargando...' }}</p>
     </div>
   </div>
 
