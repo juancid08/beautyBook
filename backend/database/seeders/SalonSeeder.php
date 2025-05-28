@@ -4,11 +4,14 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Salon;
+use App\Models\Usuario;
 
 class SalonSeeder extends Seeder
 {
     public function run()
     {
+        $usuarios = Usuario::all();
+
         $salones = [
             [
                 'nombre' => 'BeautySalon A',
@@ -16,8 +19,8 @@ class SalonSeeder extends Seeder
                 'foto' => 'salon1.webp',
                 'rating' => 4.5,
                 'telefono' => '123456789',
-                'horario_apertura' => '09:00', 
-                'horario_cierre' => '18:00', 
+                'horario_apertura' => '09:00',
+                'horario_cierre' => '18:00',
                 'descripcion' => 'Un salón con servicios de belleza y barbería de alta calidad.',
             ],
             [
@@ -26,8 +29,8 @@ class SalonSeeder extends Seeder
                 'foto' => 'salon2.webp',
                 'rating' => 4.0,
                 'telefono' => '123456789',
-                'horario_apertura' => '09:00', 
-                'horario_cierre' => '18:00', 
+                'horario_apertura' => '09:00',
+                'horario_cierre' => '18:00',
                 'descripcion' => 'Un salón con servicios de belleza y barbería de alta calidad.',
             ],
             [
@@ -36,8 +39,8 @@ class SalonSeeder extends Seeder
                 'foto' => 'salon3.webp',
                 'rating' => 5.0,
                 'telefono' => '123456789',
-                'horario_apertura' => '09:00', 
-                'horario_cierre' => '18:00', 
+                'horario_apertura' => '09:00',
+                'horario_cierre' => '18:00',
                 'descripcion' => 'Un salón con servicios de belleza y barbería de alta calidad.',
             ],
             [
@@ -46,8 +49,8 @@ class SalonSeeder extends Seeder
                 'foto' => 'salon4.webp',
                 'rating' => 5.0,
                 'telefono' => '123456789',
-                'horario_apertura' => '09:00', 
-                'horario_cierre' => '18:00', 
+                'horario_apertura' => '09:00',
+                'horario_cierre' => '18:00',
                 'descripcion' => 'Un salón con servicios de belleza y barbería de alta calidad.',
             ],
             [
@@ -56,8 +59,8 @@ class SalonSeeder extends Seeder
                 'foto' => 'salon5.webp',
                 'rating' => 4.65,
                 'telefono' => '123456789',
-                'horario_apertura' => '09:00', 
-                'horario_cierre' => '18:00', 
+                'horario_apertura' => '09:00',
+                'horario_cierre' => '18:00',
                 'descripcion' => 'Un salón con servicios de belleza y barbería de alta calidad.',
             ],
             [
@@ -66,8 +69,8 @@ class SalonSeeder extends Seeder
                 'foto' => 'salon6.webp',
                 'rating' => 4.9,
                 'telefono' => '123456789',
-                'horario_apertura' => '09:00', 
-                'horario_cierre' => '18:00', 
+                'horario_apertura' => '09:00',
+                'horario_cierre' => '18:00',
                 'descripcion' => 'Un salón con servicios de belleza y barbería de alta calidad.',
             ],
             [
@@ -76,8 +79,8 @@ class SalonSeeder extends Seeder
                 'foto' => 'salon7.webp',
                 'rating' => 4.8,
                 'telefono' => '123456789',
-                'horario_apertura' => '09:00', 
-                'horario_cierre' => '18:00', 
+                'horario_apertura' => '09:00',
+                'horario_cierre' => '18:00',
                 'descripcion' => 'Un salón con servicios de belleza y barbería de alta calidad.',
             ],
             [
@@ -86,13 +89,14 @@ class SalonSeeder extends Seeder
                 'foto' => 'salon8.webp',
                 'rating' => 4.2,
                 'telefono' => '123456789',
-                'horario_apertura' => '09:00', 
-                'horario_cierre' => '18:00', 
+                'horario_apertura' => '09:00',
+                'horario_cierre' => '18:00',
                 'descripcion' => 'Un salón con servicios de belleza y barbería de alta calidad.',
             ],
         ];
 
         foreach ($salones as $salon) {
+            $salon['id_usuario'] = $usuarios->random()->id_usuario;
             Salon::create($salon);
         }
     }

@@ -15,6 +15,7 @@ export interface Salon {
   foto_url?: string;
   rating?: number;
   liked?: boolean;
+  id_usuario: number;
 }
 
 @Injectable({
@@ -27,6 +28,10 @@ export class SalonService {
 
   getSalones(): Observable<Salon[]> {
     return this.http.get<Salon[]>(this.baseUrl);
+  }
+
+  getSalonesPorUsuario(idUsuario: number): Observable<Salon[]> {
+    return this.http.get<Salon[]>(`http://localhost/api/usuarios/${idUsuario}/salones`);
   }
 
   getSalonesFiltrado(especializacion?: string): Observable<Salon[]> {

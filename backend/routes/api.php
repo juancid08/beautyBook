@@ -28,6 +28,7 @@ Route::get('salones/{id}/servicios', [ServicioController::class, 'porSalon']);
 
 Route::apiResource('citas', CitaController::class);
 Route::get('usuarios/{id}/citas', [CitaController::class, 'porUsuario']);
+Route::get('usuarios/{id}/salones', [SalonController::class, 'porUsuario']);
 
 Route::apiResource('resenas', ResenaController::class);
 

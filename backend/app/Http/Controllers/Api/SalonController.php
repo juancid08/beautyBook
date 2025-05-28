@@ -113,4 +113,9 @@ class SalonController extends Controller
 
         return response()->json(['message' => 'Salón eliminado correctamente']);
     }
+
+    public function porUsuario($id)
+    {
+        return Salon::where('id_usuario', $id)->get();
+    }
 }

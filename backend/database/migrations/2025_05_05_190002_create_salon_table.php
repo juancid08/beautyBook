@@ -30,6 +30,9 @@ return new class extends Migration
                 'Cejas y pestañas'
             ]);
 
+            // migration para añadir la relación
+            $table->foreignId('id_usuario')->constrained('usuario', 'id_usuario')->onDelete('cascade')->nullable();
+
         });
     }
 

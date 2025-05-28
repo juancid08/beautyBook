@@ -18,10 +18,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {        
+        $this->call([UsuarioSeeder::class]);
         $this->call([SalonSeeder::class]);
 
         $this->call([
-            UsuarioSeeder::class,   // Luego: usuarios
             EmpleadoSeeder::class,  // Después: empleados asignados a salones
             ServicioSeeder::class,  // Luego: servicios asignados a salones
             CitaSeeder::class,      // Luego: citas usando usuarios, empleados y servicios
