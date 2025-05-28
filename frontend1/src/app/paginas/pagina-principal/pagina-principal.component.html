@@ -73,7 +73,9 @@
             <span>Sesión/Registrarse</span>
           </div>
         </button>
-        <button class="registrar" (click)="onRegister()">Registra tu negocio</button>
+        <button class="registrar" (click)="onRegister()">
+          Registra tu negocio
+        </button>
       </ng-template>
     </div>
   </div>
@@ -82,16 +84,67 @@
     <div class="frases-container">
       <p class="frases">{{ displayedText }}</p>
     </div>
-    <div class="buscador">
+    <div class="buscador" style="position: relative">
       <input
         type="text"
-        placeholder="Consultar negocios y servicios disponibles"
         [(ngModel)]="searchTerm"
+        (input)="onSearchSuggest()"
         (keyup.enter)="onSearch()"
+        placeholder="Consultar negocios y servicios disponibles"
+        class="form-control"
       />
+
+      <!-- Sugerencias dinámicas -->
+      <ul
+        *ngIf="sugerencias.length > 0"
+        class="sugerencias-list"
+        style="
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: white;
+          border: 1px solid #ccc;
+          z-index: 999;
+          max-height: 200px;
+          overflow-y: auto;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        "
+      >
+        <li
+          *ngFor="let sugerencia of sugerencias"
+          (click)="selectSugerencia(sugerencia)"
+          style="padding: 8px; cursor: pointer"
+        >
+          {{ sugerencia }}
+        </li>
+      </ul>
+
+      <!-- Mensaje si no hay sugerencias -->
+      <p
+        *ngIf="sugerencias.length === 0 && searchTerm"
+        style="
+          margin-top: 4px;
+          font-style: italic;
+          color: #eee;
+          background: rgba(0, 0, 0, 0.4);
+          padding: 4px 8px;
+          border-radius: 4px;
+          position: absolute;
+          top: 100%;
+          left: 0;
+        "
+      >
+        No se encontraron resultados para "{{ searchTerm }}"
+      </p>
+
       <button class="buscar" (click)="onSearch()">
         <i class="fas fa-search"></i>
       </button>
+
+      <!-- DEBUG: mostrar en crudo lo que hay en sugerencias -->
     </div>
   </div>
 
@@ -110,22 +163,35 @@
 </div>
 
 <div class="contenido-pagina">
-<h1>{{ tituloCategoria }}</h1>
+  <h1>{{ tituloCategoria }}</h1>
   <div class="slider-wrapper">
     <button class="nav-arrow left" (click)="scrollLeft()">
       <i class="fas fa-chevron-left"></i>
     </button>
     <div #cardsContainer class="cards-container">
-      <div class="card" *ngFor="let salon of salones" (click)="goBarberShopDetails(salon)">
+      <div
+        class="card"
+        *ngFor="let salon of salones"
+        (click)="goBarberShopDetails(salon)"
+      >
         <div class="image-wrapper">
-          <img [src]="salon.foto || '/assets/image/default-salon.png'" [alt]="salon.nombre" />
-          <div class="rating">{{ salon.rating?.toFixed(1) || 'N/A' }} ★</div>
+          <img
+            [src]="salon.foto || '/assets/image/default-salon.png'"
+            [alt]="salon.nombre"
+          />
+          <div class="rating">{{ salon.rating?.toFixed(1) || "N/A" }} ★</div>
         </div>
         <div class="card-body">
           <h2 class="salon-name">{{ salon.nombre }}</h2>
           <p class="salon-street">{{ salon.direccion }}</p>
-          <button class="like-btn" (click)="toggleLike(salon); $event.stopPropagation()">
-            <i class="fas" [ngClass]="salon.liked ? 'fa-heart' : 'fa-heart-o'"></i>
+          <button
+            class="like-btn"
+            (click)="toggleLike(salon); $event.stopPropagation()"
+          >
+            <i
+              class="fas"
+              [ngClass]="salon.liked ? 'fa-heart' : 'fa-heart-o'"
+            ></i>
           </button>
         </div>
       </div>
@@ -140,11 +206,19 @@
   <div class="texto">
     <h4><strong>Tu cita de belleza, más fácil que nunca</strong></h4>
     <p>
-      ¿Buscas a un barbero, peluquero, masajista o manicurista cerca de ti? ¿Te gustaría agendar una sesión para darle forma a tu barba, definir tus cejas o disfrutar de un masaje profundo?
+      ¿Buscas a un barbero, peluquero, masajista o manicurista cerca de ti? ¿Te
+      gustaría agendar una sesión para darle forma a tu barba, definir tus cejas
+      o disfrutar de un masaje profundo?
       <br /><br />
-      Con BeautyBook, una app gratuita pensada para el mundo de la belleza y el bienestar, podrás agendar tu cita en segundos. Olvídate de las llamadas telefónicas: reserva cuando quieras, las 24 horas del día, los 7 días de la semana, desde donde estés.
+      Con BeautyBook, una app gratuita pensada para el mundo de la belleza y el
+      bienestar, podrás agendar tu cita en segundos. Olvídate de las llamadas
+      telefónicas: reserva cuando quieras, las 24 horas del día, los 7 días de
+      la semana, desde donde estés.
       <br /><br />
-      <strong>Descubre los mejores profesionales de tu zona y agenda al instante con BeautyBook.</strong>
+      <strong
+        >Descubre los mejores profesionales de tu zona y agenda al instante con
+        BeautyBook.</strong
+      >
     </p>
   </div>
   <div class="imagen">

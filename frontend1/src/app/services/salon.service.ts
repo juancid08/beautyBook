@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { map, Observable } from "rxjs";
 
 export interface Salon {
   id_salon: number;
@@ -18,10 +18,10 @@ export interface Salon {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class SalonService {
-  private baseUrl = 'http://localhost/api/salones';
+  private baseUrl = "http://localhost/api/salones";
 
   constructor(private http: HttpClient) {}
 
@@ -36,12 +36,12 @@ export class SalonService {
     }
 
     return this.http.get<Salon[]>(url).pipe(
-      map(salones =>
-        salones.map(salon => {
-          let fotoUrl = '/assets/default.webp';
+      map((salones) =>
+        salones.map((salon) => {
+          let fotoUrl = "/assets/default.webp";
 
           if (salon.foto) {
-            const fileName = salon.foto.split('/').pop() || salon.foto;
+            const fileName = salon.foto.split("/").pop() || salon.foto;
             fotoUrl = `http://localhost/storage/salones/${fileName}`;
           }
 
@@ -49,21 +49,23 @@ export class SalonService {
             ...salon,
             foto: fotoUrl,
             rating: Math.random() * (5 - 3.5) + 3.5,
-            liked: false
+            liked: false,
           };
         })
       )
     );
   }
 
-  getSalonesFormateados(): Observable<Salon[]> {
-    return this.getSalones().pipe(
-      map(salones =>
-        salones.map(salon => {
-          let fotoUrl = '/assets/default.webp';
+  buscarSalonesPorNombre(nombre: string): Observable<Salon[]> {
+    const url = `${this.baseUrl}?nombre=${encodeURIComponent(nombre)}`;
+
+    return this.http.get<Salon[]>(url).pipe(
+      map((salones) =>
+        salones.map((salon) => {
+          let fotoUrl = "/assets/default.webp";
 
           if (salon.foto) {
-            const fileName = salon.foto.split('/').pop() || salon.foto;
+            const fileName = salon.foto.split("/").pop() || salon.foto;
             fotoUrl = `http://localhost/storage/salones/${fileName}`;
           }
 
@@ -71,7 +73,35 @@ export class SalonService {
             ...salon,
             foto: fotoUrl,
             rating: Math.random() * (5 - 3.5) + 3.5,
-            liked: false
+            liked: false,
+          };
+        })
+      )
+    );
+  }
+  buscarNombresSugeridos(termino: string): Observable<string[]> {
+    const url = `${this.baseUrl}/sugerencias?nombre=${encodeURIComponent(
+      termino
+    )}`;
+    return this.http.get<string[]>(url);
+  }
+
+  getSalonesFormateados(): Observable<Salon[]> {
+    return this.getSalones().pipe(
+      map((salones) =>
+        salones.map((salon) => {
+          let fotoUrl = "/assets/default.webp";
+
+          if (salon.foto) {
+            const fileName = salon.foto.split("/").pop() || salon.foto;
+            fotoUrl = `http://localhost/storage/salones/${fileName}`;
+          }
+
+          return {
+            ...salon,
+            foto: fotoUrl,
+            rating: Math.random() * (5 - 3.5) + 3.5,
+            liked: false,
           };
         })
       )

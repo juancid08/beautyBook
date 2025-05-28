@@ -1,47 +1,69 @@
 import {
-  Component, OnInit, OnDestroy, AfterViewInit, Inject, PLATFORM_ID,
-  ViewChild, ElementRef
-} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  Inject,
+  PLATFORM_ID,
+  ViewChild,
+  ElementRef,
+} from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { Router } from "@angular/router";
 import { FooterComponent } from "../../componentes/footer/footer.component";
-import anime from 'animejs/lib/anime.es.js';
-import { AuthService } from '../../services/auth.service';
-import { SalonService, Salon } from '../../services/salon.service';
+import anime from "animejs/lib/anime.es.js";
+import { AuthService } from "../../services/auth.service";
+import { SalonService, Salon } from "../../services/salon.service";
+
+// 👇 Añadido para RxJS autocomplete
+import { Subject, Subscription, of } from "rxjs";
+import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
 
 @Component({
-  selector: 'app-pagina-principal',
+  selector: "app-pagina-principal",
   standalone: true,
   imports: [CommonModule, FormsModule, FooterComponent],
-  templateUrl: './pagina-principal.component.html',
-  styleUrls: ['./pagina-principal.component.scss']
+  templateUrl: "./pagina-principal.component.html",
+  styleUrls: ["./pagina-principal.component.scss"],
 })
-export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('bgVideo') bgVideo!: ElementRef<HTMLVideoElement>;
-  @ViewChild('logoSvg') logoSvg!: ElementRef<SVGSVGElement>;
-  @ViewChild('cardsContainer') cardsContainer!: ElementRef<HTMLDivElement>;
+export class PaginaPrincipalComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
+  @ViewChild("bgVideo") bgVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild("logoSvg") logoSvg!: ElementRef<SVGSVGElement>;
+  @ViewChild("cardsContainer") cardsContainer!: ElementRef<HTMLDivElement>;
 
-  searchTerm = '';
-  categories = ['Peluquería', 'Barbería', 'Salón de uñas', 'Depilación', 'Cejas y pestañas'];
+  searchTerm = "";
+  categories = [
+    "Peluquería",
+    "Barbería",
+    "Salón de uñas",
+    "Depilación",
+    "Cejas y pestañas",
+  ];
   selectedCategory: string | null = null;
 
   phrases = [
-    'Encuentra tu estilista ideal cerca de ti.',
-    'Reserva tu cita en un click.',
-    'Expertos en belleza y bienestar.'
+    "Encuentra tu estilista ideal cerca de ti.",
+    "Reserva tu cita en un click.",
+    "Expertos en belleza y bienestar.",
   ];
 
-  displayedText = '';
+  displayedText = "";
   private phraseIndex = 0;
   private charIndex = 0;
   private typingTimer: any;
   private deletingTimer: any;
 
   salones: Salon[] = [];
-
   usuarioActual: any = "";
+
+  // 👇 Autocomplete
+  sugerencias: string[] = [];
+  private searchTerm$ = new Subject<string>();
+  private sugSub!: Subscription;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
@@ -55,26 +77,26 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
       this.startTyping();
     }
 
-    this.authSvc.currentUser$.subscribe(usuario => {
+    this.authSvc.currentUser$.subscribe((usuario) => {
       this.usuarioActual = usuario;
     });
 
     this.fetchSalones();
-  }
 
-  /**
-   * Método para cargar salones, con o sin filtro de especialización
-   */
-  fetchSalones(especializacion?: string): void {
-    if (especializacion) {
-      this.salonService.getSalonesFiltrado(especializacion).subscribe(salones => {
-        this.salones = salones;
+    // 👇 Suscripción para autocomplete
+    this.sugSub = this.searchTerm$
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((term) => {
+          const t = term.trim().toLowerCase();
+          return t ? this.salonService.buscarNombresSugeridos(t) : of([]);
+        })
+      )
+      .subscribe((nombres) => {
+        console.log("🔍 Sugerencias recibidas del servidor:", nombres);
+        this.sugerencias = nombres;
       });
-    } else {
-      this.salonService.getSalonesFormateados().subscribe(salones => {
-        this.salones = salones;
-      });
-    }
   }
 
   ngAfterViewInit() {
@@ -86,6 +108,21 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
   ngOnDestroy() {
     clearTimeout(this.typingTimer);
     clearTimeout(this.deletingTimer);
+    if (this.sugSub) this.sugSub.unsubscribe();
+  }
+
+  fetchSalones(especializacion?: string): void {
+    if (especializacion) {
+      this.salonService
+        .getSalonesFiltrado(especializacion)
+        .subscribe((salones) => {
+          this.salones = salones;
+        });
+    } else {
+      this.salonService.getSalonesFormateados().subscribe((salones) => {
+        this.salones = salones;
+      });
+    }
   }
 
   private startTyping() {
@@ -116,40 +153,62 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   goBarberShopDetails(salon: Salon) {
-    this.router.navigate(['/detallesBarberia', salon.id_salon]);
+    this.router.navigate(["/detallesBarberia", salon.id_salon]);
   }
 
   goPerfil() {
-    this.router.navigate(['/perfil']);
+    this.router.navigate(["/perfil"]);
   }
 
   onSearch() {
-    // lógica de búsqueda si es necesaria
+    const termino = this.searchTerm.trim().toLowerCase();
+    if (!termino) {
+      this.fetchSalones();
+      return;
+    }
+    this.salonService.buscarSalonesPorNombre(termino).subscribe((salones) => {
+      this.salones = salones;
+      this.selectedCategory = null;
+    });
   }
 
-  /**
-   * Al hacer clic en una categoría, filtramos por especialización
-   * Si se vuelve a pulsar la misma categoría, quitamos filtro
-   */
+  onSearchSuggest() {
+    this.searchTerm$.next(this.searchTerm);
+  }
+
+  selectSugerencia(nombre: string) {
+    this.searchTerm = nombre;
+    this.sugerencias = [];
+    // Llamamos al backend para obtener el objeto Salon completo
+    this.salonService
+      .buscarSalonesPorNombre(nombre.toLowerCase())
+      .subscribe((salones) => {
+        if (salones.length > 0) {
+          this.router.navigate(["/detallesBarberia", salones[0].id_salon]);
+        }
+      });
+  }
+
   filterBy(cat: string) {
     if (this.selectedCategory === cat) {
       this.selectedCategory = null;
-      this.fetchSalones(); // sin filtro
+      this.fetchSalones();
     } else {
       this.selectedCategory = cat;
       this.fetchSalones(cat);
     }
   }
+
   get tituloCategoria(): string {
-  return this.selectedCategory ? this.selectedCategory : 'Recomendado';
-}
+    return this.selectedCategory ? this.selectedCategory : "Recomendado";
+  }
 
   onLogin() {
-    this.router.navigate(['/login']);
+    this.router.navigate(["/login"]);
   }
 
   onRegister() {
-    this.router.navigate(['/register']);
+    this.router.navigate(["/register"]);
   }
 
   logout() {
@@ -164,7 +223,7 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
     const container = this.cardsContainer.nativeElement;
     container.scrollBy({
       left: -300,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   }
 
@@ -172,28 +231,28 @@ export class PaginaPrincipalComponent implements OnInit, OnDestroy, AfterViewIni
     const container = this.cardsContainer.nativeElement;
     container.scrollBy({
       left: 300,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   }
 
   private animateLogo() {
     if (!this.logoSvg) return;
-
-    anime.timeline({ loop: false })
+    anime
+      .timeline({ loop: false })
       .add({
-        targets: this.logoSvg.nativeElement.querySelectorAll('text'),
+        targets: this.logoSvg.nativeElement.querySelectorAll("text"),
         translateY: [-20, 0],
         opacity: [0, 1],
-        easing: 'easeOutExpo',
+        easing: "easeOutExpo",
         duration: 1200,
-        delay: anime.stagger(300)
+        delay: anime.stagger(300),
       })
       .add({
-        targets: this.logoSvg.nativeElement.querySelector('path'),
+        targets: this.logoSvg.nativeElement.querySelector("path"),
         strokeDashoffset: [anime.setDashoffset, 0],
-        easing: 'easeInOutSine',
+        easing: "easeInOutSine",
         duration: 1500,
-        delay: 200
+        delay: 200,
       });
   }
 }
