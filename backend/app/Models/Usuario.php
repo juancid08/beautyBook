@@ -26,6 +26,7 @@ class Usuario extends Authenticatable
     protected $hidden = ['password'];
     public $timestamps = false;
 
+    public function salones()       { return $this->hasMany(Salon::class, 'id_usuario');}
     public function citas()         { return $this->hasMany(Cita::class, 'id_usuario'); }
     public function reseñas()       { return $this->hasMany(Resena::class, 'id_usuario'); }
     public function notificaciones(){ return $this->hasMany(Notificacion::class, 'id_usuario'); }

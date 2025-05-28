@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('user', function (Request $request) {
 // Rutas de usuarios
 Route::apiResource('usuarios', UsuarioController::class);
 Route::get('usuarios/{id}/citas', [CitaController::class, 'porUsuario']);
+Route::get('usuarios/{id}/salones', [SalonController::class, 'porUsuario']);
 
 // Rutas de salones
 Route::get('salones/sugerencias', [SalonController::class, 'sugerencias']);

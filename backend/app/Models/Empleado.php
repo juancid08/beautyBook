@@ -9,7 +9,7 @@ class Empleado extends Model {
     
     protected $table = 'empleado';
     protected $primaryKey = 'id_empleado';
-    protected $fillable = ['nombre','telefono','id_salon'];
+    protected $fillable = ['nombre','telefono','foto','id_salon'];
     public $timestamps = false;
 
     public function salon() { return $this->belongsTo(Salon::class,'id_salon'); }

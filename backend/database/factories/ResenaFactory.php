@@ -17,8 +17,6 @@ class ResenaFactory extends Factory
             'comentario'    => $this->faker->sentence(),
             'calificacion'  => $this->faker->numberBetween(1, 5),
             'fecha_resena'  => $this->faker->date(),
-            'id_usuario'    => Usuario::factory(),
-            'id_servicio'   => Servicio::factory(),
         ];
     }
 }

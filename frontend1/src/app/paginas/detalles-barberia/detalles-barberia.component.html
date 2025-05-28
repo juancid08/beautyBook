@@ -32,10 +32,9 @@
               <li class="flex justify-between border-b py-1">
                 <span>{{ servicio.descripcion }}</span>
                 <button 
-                  (click)="abrirPopup()" 
+                  (click)="abrirPopup(servicio)" 
                   class="text-sm text-white px-3 py-1 rounded" 
-                  style="background-color: #46796B;"
-                >
+                  style="background-color: #46796B;">
                   {{ servicio.precio }}€ Reservar
                 </button>
               </li>
@@ -70,8 +69,9 @@
     </div>
 
     <!-- Empleados -->
-    <div class="bg-white rounded shadow p-4">
-      <h4 class="font-semibold mb-2">Empleados</h4>
+    <div class="bg-white rounded shadow p-4" >
+      
+      <h4 class="font-semibold mb-2" >Empleados</h4>
       <div class="flex flex-wrap gap-2">
         <img src="/assets/image/icono_empleados.png" class="w-10 h-10 rounded-full" *ngFor="let empleado of empleados" (click)="seleccionarEmpleado(empleado)" />
       </div>
@@ -159,17 +159,22 @@
           [class.bg-black]="empleado === empleadoSeleccionado"
           [class.text-white]="empleado === empleadoSeleccionado"
         >
-          <img [src]="empleado.foto" alt="{{ empleado.nombre }}" class="w-12 h-12 rounded-full object-cover">
+          <img 
+            [src]="empleado.foto || '/assets/image/icono_empleados.png'" 
+            alt="{{ empleado.nombre }}" 
+            class="w-12 h-12 rounded-full object-cover"
+          >
           <span class="text-base font-medium">{{ empleado.nombre }}</span>
         </div>
       </div>
     </div>
-
+    
     <!-- Confirmar -->
     <div class="text-center mt-6">
       <button
         class="bg-black text-white px-8 py-2 rounded-full disabled:opacity-50"
-        [disabled]="!horaSeleccionada || !empleadoSeleccionado"
+        [disabled]="!horaSeleccionada || !empleadoSeleccionado || !servicio"
+        (click)="confirmarReserva()"
       >
         Confirmar Reserva
       </button>

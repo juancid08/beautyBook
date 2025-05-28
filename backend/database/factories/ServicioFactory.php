@@ -17,7 +17,6 @@ class ServicioFactory extends Factory
             'descripcion' => $this->faker->sentence(),
             'precio'      => $this->faker->randomFloat(2, 10, 200),
             'duracion'    => $this->faker->numberBetween(15, 120),
-            'id_salon'    => Salon::factory(),
         ];
     }
 }

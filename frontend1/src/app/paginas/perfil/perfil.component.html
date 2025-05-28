@@ -59,6 +59,101 @@
       Guardar Cambios
     </button>
   </form>
+
+  <hr class="my-8">
+
+  <h3 class="text-xl font-semibold mb-4">Mis citas</h3>
+
+  <div *ngIf="citas.length > 0; else sinCitas" class="space-y-4">
+    <div *ngFor="let cita of citas" class="p-4 border rounded shadow-sm">
+      <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
+      <p><strong>Hora:</strong> {{ cita.hora }}</p>
+      <p><strong>Estado:</strong> {{ cita.estado }}</p>
+      <p><strong>Servicio:</strong> {{ serviciosMap[cita.id_servicio] || 'Cargando...' }}</p>
+      <p><strong>Empleado:</strong> {{ empleadosMap[cita.id_empleado] || 'Cargando...' }}</p>
+    </div>
+  </div>
+
+  <ng-template #sinCitas>
+    <p class="text-gray-500 italic">No tienes citas registradas aún.</p>
+  </ng-template>
+
+
+  <!--Mi salon-->
+  <hr class="my-8">
+  <h3 class="text-xl font-semibold mb-4">Mi salón</h3>
+
+  <div *ngIf="misSalones.length > 0; else sinSalon" class="space-y-4">
+    <div *ngFor="let salon of misSalones" class="p-4 border rounded shadow-sm">
+      <p><strong>Nombre:</strong> {{ salon.nombre }}</p>
+      <p><strong>Dirección:</strong> {{ salon.direccion }}</p>
+      <p><strong>Teléfono:</strong> {{ salon.telefono }}</p>
+      <p><strong>Descripción:</strong> {{ salon.descripcion }}</p>
+      <p><strong>Horario:</strong> {{ salon.horario_apertura }} - {{ salon.horario_cierre }}</p>
+
+      <button
+        *ngIf="usuario.rol === 'administrador' || usuario.id_usuario === salon.id_usuario"
+        class="bg-yellow-500 text-white px-4 py-1 rounded mt-2 mr-2"
+        (click)="editarSalon(salon)"
+      >
+        Editar
+      </button>
+      <button
+        *ngIf="usuario.rol === 'administrador' || usuario.id_usuario === salon.id_usuario"
+        class="bg-red-500 text-white px-4 py-1 rounded mt-2"
+        (click)="eliminarSalon(salon)"
+      >
+        Eliminar
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal de edición de salón -->
+  <div *ngIf="salonEditando" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
+      <h3 class="text-xl font-semibold mb-4">Editar Salón</h3>
+
+      <form (ngSubmit)="guardarCambiosSalon()" class="space-y-4">
+        <input type="text" [(ngModel)]="salonEditando.nombre" name="nombre" class="w-full border p-2 rounded" placeholder="Nombre" required />
+        <input type="text" [(ngModel)]="salonEditando.direccion" name="direccion" class="w-full border p-2 rounded" placeholder="Dirección" required />
+        <input type="text" [(ngModel)]="salonEditando.telefono" name="telefono" class="w-full border p-2 rounded" placeholder="Teléfono" required />
+        <input type="text" [(ngModel)]="salonEditando.descripcion" name="descripcion" class="w-full border p-2 rounded" placeholder="Descripción" required />
+        <input type="text" [(ngModel)]="salonEditando.especializacion" name="especializacion" class="w-full border p-2 rounded" placeholder="Especialización" required />
+
+        <div class="flex justify-end gap-2 pt-4">
+          <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded" (click)="cerrarModal()">Cancelar</button>
+          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal de confirmación de eliminación -->
+  <div *ngIf="salonAEliminar" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
+      <h3 class="text-xl font-semibold mb-4 text-red-600">Confirmar Eliminación</h3>
+      <p class="mb-4">Para confirmar, escribe el nombre del salón: <strong>{{ salonAEliminar.nombre }}</strong></p>
+
+      <input type="text" [(ngModel)]="nombreConfirmacion" placeholder="Nombre del salón"
+        class="w-full border p-2 rounded mb-4" name="confirmacion" />
+
+      <div class="flex justify-end gap-2">
+        <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded" (click)="cancelarEliminacion()">Cancelar</button>
+        <button
+          class="bg-red-600 text-white px-4 py-2 rounded"
+          [disabled]="nombreConfirmacion !== salonAEliminar.nombre"
+          (click)="confirmarEliminacion()"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #sinSalon>
+    <p class="text-gray-500 italic">No tienes ningún salón registrado.</p>
+  </ng-template>
 </main>
 
 <app-footer></app-footer>

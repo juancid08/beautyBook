@@ -19,7 +19,7 @@ return new class extends Migration
 
             # Clave FK de cita
             $table->foreignId('id_cita')->constrained('cita','id_cita')
-                  ->onDelete('cascade');
+                  ->onDelete('cascade')->nullable();
             $table->timestamps();
         });
     }
