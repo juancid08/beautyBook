@@ -14,6 +14,7 @@ class SalonController extends Controller
     public function index(Request $request)
     {
         $especializacion = $request->query('especializacion');
+        $nombre = $request->query('nombre');
 
         $query = Salon::query();
 
@@ -21,20 +22,43 @@ class SalonController extends Controller
             $query->where('especializacion', $especializacion);
         }
 
+        if ($nombre) {
+            $query->where('nombre', 'LIKE', '%' . $nombre . '%');
+        }
+
         $salones = $query->get();
 
-        // Modificamos cada salón para incluir la URL completa de la imagen
         $salones->transform(function($salon) {
             if ($salon->foto) {
                 $salon->foto = asset('storage/' . $salon->foto);
             } else {
-                $salon->foto = null; // o alguna imagen por defecto si quieres
+                $salon->foto = null;
             }
             return $salon;
         });
 
         return response()->json($salones);
     }
+    /**
+     * Obtener sugerencias de nombres de salones por búsqueda parcial
+     * GET /api/salones/sugerencias?nombre=texto
+     */
+    public function sugerencias(Request $request)
+    {
+        $nombre = $request->query('nombre', '');
+
+        if (empty($nombre)) {
+            return response()->json([], 200);
+        }
+
+        // Solo traemos los primeros 5 nombres que empiezan por $nombre
+        $sugerencias = Salon::where('nombre', 'like', $nombre.'%')
+                            ->limit(5)
+                            ->pluck('nombre');
+
+        return response()->json($sugerencias, 200);
+    }
+
 
 
     /**
