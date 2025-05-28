@@ -8,6 +8,7 @@ import { DetallesBarberiaComponent } from './paginas/detalles-barberia/detalles-
 import { PreguntasFrecuentesComponent} from './paginas/preguntas-frecuentes/preguntas-frecuentes.component';
 import { ContactoComponent } from './paginas/contacto/contacto.component';
 import { PoliticaDePrivacidadComponent } from './paginas/politica-de-privacidad/politica-de-privacidad.component';
+import { RegistrarNegocioComponent } from './paginas/registrar-negocio/registrar-negocio.component';
 export const routes: Routes = [{
     path: '',
     component: PaginaPrincipalComponent
@@ -19,6 +20,10 @@ export const routes: Routes = [{
     {
         path: 'register',
         component: RegisterComponent
+    },
+    {
+        path: 'register-negocio',
+        component: RegistrarNegocioComponent
     },
     {
         path: 'perfil',

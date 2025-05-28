@@ -59,6 +59,7 @@ export class PaginaPrincipalComponent
 
   salones: Salon[] = [];
   usuarioActual: any = "";
+  tieneSalon: boolean | null = null;
 
   // 👇 Autocomplete
   sugerencias: string[] = [];
@@ -79,6 +80,20 @@ export class PaginaPrincipalComponent
 
     this.authSvc.currentUser$.subscribe((usuario) => {
       this.usuarioActual = usuario;
+
+      if (!usuario) {
+        this.tieneSalon = false;
+      } else {
+        this.salonService.getSalonesPorUsuario(usuario.id_usuario).subscribe({
+          next: (salones) => {
+            this.tieneSalon = salones.length > 0;
+          },
+          error: (err) => {
+            console.error('Error al comprobar salones del usuario', err);
+            this.tieneSalon = false;
+          }
+        });
+      }
     });
 
     this.fetchSalones();
@@ -220,6 +235,14 @@ export class PaginaPrincipalComponent
 
   onRegister() {
     this.router.navigate(["/register"]);
+  }
+
+  onRegistrarNegocio() {
+    if (!this.usuarioActual) {
+      this.router.navigate(['/login']);
+    } else {
+      this.router.navigate(['/register-negocio']); 
+    }
   }
 
   logout() {
