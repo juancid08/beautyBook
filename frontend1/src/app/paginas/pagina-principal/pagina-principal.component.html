@@ -94,31 +94,35 @@
         class="form-control"
       />
 
-      <!-- Sugerencias dinámicas -->
-      <ul
-        *ngIf="sugerencias.length > 0"
-        class="sugerencias-list"
-        style="
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          background: white;
-          border: 1px solid #ccc;
-          z-index: 999;
-          max-height: 200px;
-          overflow-y: auto;
-          list-style: none;
-          margin: 0;
-          padding: 0;
-        "
-      >
+      <ul *ngIf="sugerencias.length > 0" class="sugerencias-list">
         <li
           *ngFor="let sugerencia of sugerencias"
-          (click)="selectSugerencia(sugerencia)"
-          style="padding: 8px; cursor: pointer"
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            cursor: pointer;
+          "
         >
-          {{ sugerencia }}
+          <span (click)="selectSugerencia(sugerencia)" style="flex-grow: 1">
+            {{ sugerencia }}
+          </span>
+          <button
+            (click)="setSearchOnly(sugerencia); $event.stopPropagation()"
+            class="btn-sugerencia"
+            [attr.aria-label]="'Copiar ' + sugerencia"
+            style="
+              background-color: transparent;
+              border: none;
+              cursor: pointer;
+              font-size: 1.2rem;
+              color: #e0c060;
+            "
+            title="Copiar texto al buscador"
+          >
+            📋
+          </button>
         </li>
       </ul>
 

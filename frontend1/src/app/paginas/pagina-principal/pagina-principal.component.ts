@@ -166,10 +166,21 @@ export class PaginaPrincipalComponent
       this.fetchSalones();
       return;
     }
+
     this.salonService.buscarSalonesPorNombre(termino).subscribe((salones) => {
-      this.salones = salones;
-      this.selectedCategory = null;
+      if (salones.length === 1) {
+        // Si solo hay un resultado, navegar directamente al detalle del salón
+        this.router.navigate(["/detallesBarberia", salones[0].id_salon]);
+      } else {
+        // Si hay varios o ninguno, mostrar lista o mensaje
+        this.salones = salones;
+        this.selectedCategory = null;
+      }
     });
+  }
+  setSearchOnly(nombre: string) {
+    this.searchTerm = nombre;
+    this.sugerencias = [];
   }
 
   onSearchSuggest() {
