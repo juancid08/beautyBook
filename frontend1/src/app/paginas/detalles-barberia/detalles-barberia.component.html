@@ -5,7 +5,7 @@
   <!-- Imagen del local con slider -->
   <div class="lg:col-span-2" *ngIf="salon">
     <div class="relative">
-      <img src="/assets/image/salon1.webp" alt="Imagen local" class="rounded-lg w-full shadow" />
+      <img [src]="salon.foto || '/assets/image/default-salon.png'" alt="Imagen local" class="rounded-lg w-full shadow" />
       <!-- Botones izquierda/derecha para slider -->
       <button class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow">
         <i class="fas fa-chevron-left"></i>

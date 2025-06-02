@@ -75,10 +75,39 @@ class SalonController extends Controller
             'descripcion'       => 'nullable|string|max:500',
             'foto'              => 'nullable|string',
             'especializacion'   => 'required|in:Peluquería,Barbería,Salón de uñas,Depilación,Cejas y pestañas',
-            'id_cadena_salon'   => 'required|exists:cadena_salon,id_cadena_salon',
+            'id_usuario'        => 'required|exists:usuario,id_usuario',
         ]);
 
+        // Si existe foto y es base64, procesamos para guardarla en disco
+        if (!empty($validated['foto']) && str_starts_with($validated['foto'], 'data:image')) {
+            // Extraer la parte base64 (después de la coma)
+            $base64str = explode(',', $validated['foto'])[1] ?? null;
+            if ($base64str) {
+                $imageData = base64_decode($base64str);
+
+                // Generar nombre único para la imagen
+                $filename = uniqid('salon_') . '.webp'; // o png, jpg según la imagen
+
+                // Guardar imagen en disco public/storage/salones
+                \Storage::disk('public')->put('salones/' . $filename, $imageData);
+
+                // Reemplazar el campo foto con la ruta relativa
+                $validated['foto'] = 'salones/' . $filename;
+            } else {
+                // Si no se pudo extraer base64, eliminar el campo para evitar guardar mal
+                unset($validated['foto']);
+            }
+        } else {
+            // No hay imagen o no es base64, eliminar para evitar guardar texto inútil
+            unset($validated['foto']);
+        }
+
         $salon = Salon::create($validated);
+
+        // Para la respuesta puedes añadir la URL completa de la foto si quieres
+        if ($salon->foto) {
+            $salon->foto = asset('storage/' . $salon->foto);
+        }
 
         return response()->json($salon, 201);
     }
@@ -113,7 +142,7 @@ class SalonController extends Controller
             'descripcion'       => 'nullable|string|max:500',
             'foto'              => 'nullable|string',
             'especializacion'   => 'required|in:Peluquería,Barbería,Salón de uñas,Depilación,Cejas y pestañas',
-            'id_cadena_salon'   => 'sometimes|required|exists:cadena_salon,id_cadena_salon',
+            'id_usuario'        => 'required|exists:usuario,id_usuario',
         ]);
 
         $salon->update($validated);

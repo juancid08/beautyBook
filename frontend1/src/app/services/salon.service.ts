@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { map, Observable } from "rxjs";
+import { AuthService } from "./auth.service";
 
 export interface Salon {
   id_salon: number;
@@ -24,7 +25,9 @@ export interface Salon {
 export class SalonService {
   private baseUrl = "http://localhost/api/salones";
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   getSalones(): Observable<Salon[]> {
     return this.http.get<Salon[]>(this.baseUrl);
@@ -113,12 +116,32 @@ export class SalonService {
     );
   }
 
+  getSalonFormateado(salon: Salon): Salon {
+    let fotoUrl = "/assets/default.webp";
+
+    if (salon.foto) {
+      const fileName = salon.foto.split("/").pop() || salon.foto;
+      fotoUrl = `http://localhost/storage/salones/${fileName}`;
+    }
+
+    return {
+      ...salon,
+      foto: fotoUrl,
+      rating: Math.random() * (5 - 3.5) + 3.5,
+      liked: false,
+    };
+  }
+
   getSalon(id: number): Observable<Salon> {
     return this.http.get<Salon>(`${this.baseUrl}/${id}`);
   }
 
-  crearSalon(data: Partial<Salon>): Observable<Salon> {
-    return this.http.post<Salon>(this.baseUrl, data);
+  crearSalon(data: any): Observable<Salon> {
+    const token = this.authService.getToken(); // o como guardes el token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<Salon>(this.baseUrl, data, { headers });
   }
 
   actualizarSalon(id: number, data: Partial<Salon>): Observable<Salon> {

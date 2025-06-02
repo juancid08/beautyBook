@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('horario_apertura');
             $table->string('horario_cierre');
             $table->string('descripcion');
-            $table->string('foto');
+            $table->longText('foto');
             $table->decimal('rating', 2, 1)->nullable();
 
             $table->enum('especializacion', [

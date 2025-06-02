@@ -74,12 +74,11 @@ export class DetallesBarberiaComponent {
       this.usuarioActual = usuario;
     });
   }
-
-  fetchSalon(salonId: number): void{
+  fetchSalon(salonId: number): void {
     this.salonService.getSalon(salonId).subscribe({
       next: salon => {
-        this.salon = salon;
-        console.log('Datos del salón:', this.salon);
+        this.salon = this.salonService.getSalonFormateado(salon);
+        console.log('Datos del salón formateado:', this.salon);
       },
       error: err => {
         console.error('Error al cargar el salón', err);
