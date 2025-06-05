@@ -5,7 +5,7 @@
   <!-- Imagen del local con slider -->
   <div class="lg:col-span-2" *ngIf="salon">
     <div class="relative">
-      <img [src]="salon.foto || '/assets/image/default-salon.png'" alt="Imagen local" class="rounded-lg w-full shadow" />
+      <img [src]="salon.foto || '/assets/image/default-salon.png'" alt="Imagen local" class="salon-imagen rounded-lg w-full shadow" />
       <!-- Botones izquierda/derecha para slider -->
       <button class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow">
         <i class="fas fa-chevron-left"></i>
@@ -62,9 +62,20 @@
   <aside class="lg:col-span-1 space-y-6">
     <!-- Mapa -->
     <div class="bg-white rounded shadow p-4">
-      <img src="/assets/image/mapa.png" alt="Mapa" class="w-full h-40 rounded" />
+      <iframe
+        *ngIf="mapUrl"
+        [src]="mapUrl"
+        width="100%"
+        height="200"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        class="rounded"
+      ></iframe>
       <div class="mt-2 text-sm">
-        <strong>Johnny García Barber'S</strong><br />Cáceres
+        <strong>{{ salon?.nombre }}</strong><br />
+        {{ salon?.direccion }}
       </div>
     </div>
 
@@ -81,13 +92,13 @@
     <div class="bg-white rounded shadow p-4">
       <h4 class="font-semibold mb-2">Horario de apertura</h4>
       <ul class="text-sm">
-        <strong><li class="flex justify-between"><span>Lunes</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li></strong>
-        <li class="flex justify-between"><span>Martes</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
-        <li class="flex justify-between"><span>Miércoles</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
-        <li class="flex justify-between"><span>Jueves</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
-        <li class="flex justify-between"><span>Viernes</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
-        <li class="flex justify-between"><span>Sábado</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
-        <li class="flex justify-between"><span>Domingo</span><span>10:00 - 14:00 / 16:00 - 21:00</span></li>
+        <li
+          *ngFor="let d of diasSemana"
+          class="flex justify-between border-b py-1"
+        >
+          <span>{{ d.nombre }}</span>
+          <span>{{ d.horario }}</span>
+        </li>
       </ul>
     </div>
   </aside>
@@ -120,8 +131,9 @@
     <div class="text-center mb-6">
       <h3 class="text-lg font-semibold mb-4">Selecciona un turno</h3>
       <div class="flex justify-center gap-6">
+        <!-- Antes: *ngFor="let turno of ['Mañana','Tarde','Noche']" -->
         <button
-          *ngFor="let turno of ['Mañana', 'Tarde', 'Noche']"
+          *ngFor="let turno of turnosDisponibles"
           (click)="seleccionarTurno(turno)"
           class="px-5 py-2 border rounded-full hover:bg-gray-100"
           [class.bg-black]="turno === turnoSeleccionado"

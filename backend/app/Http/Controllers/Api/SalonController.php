@@ -134,23 +134,28 @@ class SalonController extends Controller
         $salon = Salon::findOrFail($id);
 
         $validated = $request->validate([
-            'nombre'            => 'sometimes|required|string|max:255',
-            'direccion'         => 'sometimes|required|string|max:255',
-            'telefono'          => 'sometimes|required|string|max:20',
-            'horario_apertura'  => 'sometimes|required|string|max:10',
-            'horario_cierre'    => 'sometimes|required|string|max:10',
-            'descripcion'       => 'nullable|string|max:500',
-            'foto'              => 'nullable|string',
-            'especializacion'   => 'required|in:Peluquería,Barbería,Salón de uñas,Depilación,Cejas y pestañas',
-            'id_usuario'        => 'required|exists:usuario,id_usuario',
+            'nombre'          => 'sometimes|required|string|max:255',
+            'direccion'       => 'sometimes|required|string|max:255',
+            'telefono'        => 'sometimes|required|string|max:20',
+            'horario_apertura'=> 'nullable|string|max:10',
+            'horario_cierre'  => 'nullable|string|max:10',
+            'descripcion'     => 'nullable|string|max:500',
+            'especializacion' => 'required|in:Peluquería,Barbería,Salón de uñas,Depilación,Cejas y pestañas',
+            'id_usuario'      => 'required|exists:usuario,id_usuario',
         ]);
+
+        // Procesar imagen si viene como archivo (solo si la petición es POST/multipart)
+        if ($request->hasFile('foto')) {
+            $file     = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/salones'), $filename);
+            $validated['foto'] = 'salones/' . $filename;
+        }
 
         $salon->update($validated);
 
         if ($salon->foto) {
             $salon->foto = asset('storage/' . $salon->foto);
-        } else {
-            $salon->foto = null;
         }
 
         return response()->json($salon);

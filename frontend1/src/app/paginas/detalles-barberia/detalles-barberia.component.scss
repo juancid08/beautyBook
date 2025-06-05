@@ -7,3 +7,11 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;             
 }
+
+.salon-imagen {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

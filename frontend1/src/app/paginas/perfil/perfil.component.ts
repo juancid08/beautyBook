@@ -4,8 +4,10 @@ import { FooterComponent } from '../../componentes/footer/footer.component';
 import { AuthService } from '../../services/auth.service';
 import { Cita, CitaService } from '../../services/cita.service';
 import { SalonService, Salon } from '../../services/salon.service';
+import { Servicio, ServicioService } from '../../services/servicio.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Empleado, EmpleadoService } from '../../services/empleado.service';
 
 @Component({
   selector: 'app-perfil',
@@ -15,29 +17,68 @@ import { FormsModule } from '@angular/forms';
   imports: [NavbarComponent, FooterComponent, CommonModule, FormsModule]
 })
 export class PerfilComponent implements OnInit {
-  // Variables de control
+  // --- Perfil de usuario ---
   usuario: any = null;
-  imagenSeleccionada: File | null = null;
-  previewUrl: string | null = null;
+  imagenPerfilSeleccionada: File | null = null;
+  previewUrlPerfil: string | null = null;
+
+  // --- Citas y salones ---
   citas: Cita[] = [];
   misSalones: Salon[] = [];
-  serviciosMap: Record<number, string> = {};
-  empleadosMap: Record<number, string> = {};
+
   salonEditando: Salon | null = null;
   salonAEliminar: Salon | null = null;
+
+  // Mapa auxiliar para almacenar a qué salón pertenece cada cita
+  citaSalonMap: Record<number, number> = {};
+
+  serviciosMap: Record<number, string> = {};
+  empleadosMap: Record<number, string> = {};
+
   nombreConfirmacion: string = '';
 
+  // --- Servicios por salón ---
+  serviciosPorSalon: Record<number, Servicio[]> = {};
+  servicioNuevo: Partial<Servicio> = {
+    id_salon: 0,
+    nombre: '',
+    descripcion: '',
+    precio: 0,
+    duracion_minutos: 0
+  };
+  servicioEditando: Servicio | null = null;
+  showFormCrear: boolean = false;
+  showFormEditar: boolean = false;
+
+  // --- Empleados por salón ---
+  empleadosPorSalon: Record<number, Empleado[]> = {};
+  empleadoNuevo: Partial<Empleado> = {
+    id_salon: 0,
+    nombre: '',
+    telefono: ''
+  };
+  empleadoEditando: Empleado | null = null;
+  showFormCrearEmpleado: boolean = false;
+  showFormEditarEmpleado: boolean = false;
+
+  // --- Imagen del salón / empleado ---
+  imagenSalonSeleccionada: File | null = null;
+  previewUrlSalon: string | null = null;
+  imagenEmpleadoSeleccionada: File | null = null;
+  previewUrlEmpleado: string | null = null;
+
   constructor(
-    private authSvc: AuthService, 
+    private authSvc: AuthService,
     private citaService: CitaService,
-    private salonService: SalonService
+    private salonService: SalonService,
+    private servicioService: ServicioService,
+    private empleadoService: EmpleadoService
   ) {}
 
   ngOnInit(): void {
-    this.authSvc.currentUser$.subscribe((usuario) => {
+    this.authSvc.currentUser$.subscribe(usuario => {
       this.usuario = { ...usuario };
-      this.previewUrl = usuario?.foto_perfil ?? null;
-          
+      this.previewUrlPerfil = usuario?.foto_perfil ?? null;
       if (this.usuario?.id_usuario) {
         this.fetchCitas(this.usuario.id_usuario);
         this.fetchSalon(this.usuario.id_usuario);
@@ -45,32 +86,143 @@ export class PerfilComponent implements OnInit {
     });
   }
 
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.imagenSeleccionada = file;
+  /**
+   * Obtiene los salones del usuario (dueño/administrador). 
+   * Para cada salón, carga sus servicios y empleados.
+   */
+  fetchSalon(idUsuario: number): void {
+    this.salonService.getSalonesPorUsuario(idUsuario).subscribe({
+      next: salones => {
+        this.misSalones = salones;
+        salones.forEach(salon => {
+          this.cargarServiciosDeSalon(salon.id_salon);
+          this.cargarEmpleadosDeSalon(salon.id_salon);
+        });
+      },
+      error: err => console.error('Error al cargar salones:', err)
+    });
+  }
 
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.previewUrl = e.target.result;
-      };
-      reader.readAsDataURL(file);
+  /**
+   * Obtiene las citas del usuario (cliente). 
+   * Para cada cita, obtiene nombre de servicio, nombre de empleado y asigna id_salon en citaSalonMap.
+   */
+  fetchCitas(idUsuario: number): void {
+    this.citaService.getCitasPorUsuario(idUsuario).subscribe({
+      next: citas => {
+        this.citas = citas;
+        citas.forEach(cita => {
+          this.getNombreServicio(cita.id_servicio);
+          this.getNombreEmpleado(cita.id_empleado);
+          // Obtener id_salon a partir del servicio asociado a la cita
+          this.servicioService.getServicio(cita.id_servicio).subscribe({
+            next: serv => {
+              this.citaSalonMap[cita.id_cita] = serv.id_salon;
+              // Si aún no cargamos los empleados de ese salón, haremos:
+              if (!this.empleadosPorSalon[serv.id_salon]) {
+                this.cargarEmpleadosDeSalon(serv.id_salon);
+              }
+            },
+            error: () => {
+              console.warn(`No se pudo obtener id_salon para cita ${cita.id_cita}`);
+            }
+          });
+        });
+      },
+      error: err => console.error('Error al cargar citas:', err)
+    });
+  }
+
+  /**
+   * Carga servicios de un salón para editar/agregar.
+   */
+  cargarServiciosDeSalon(id_salon: number): void {
+    this.servicioService.getServiciosPorSalon(id_salon).subscribe({
+      next: servs => this.serviciosPorSalon[id_salon] = servs,
+      error: err => {
+        console.error(`Error al cargar servicios de salón ${id_salon}:`, err);
+        this.serviciosPorSalon[id_salon] = [];
+      }
+    });
+  }
+
+  /**
+   * Carga empleados de un salón para mostrar en el selector de citas.
+   */
+  cargarEmpleadosDeSalon(id_salon: number): void {
+    this.empleadoService.getEmpleadosPorSalon(id_salon).subscribe({
+      next: emps => this.empleadosPorSalon[id_salon] = emps,
+      error: err => {
+        console.error(`Error al cargar empleados de salón ${id_salon}:`, err);
+        this.empleadosPorSalon[id_salon] = [];
+      }
+    });
+  }
+
+  /**
+   * Obtiene el nombre del servicio y lo almacena en serviciosMap.
+   */
+  getNombreServicio(id: number): void {
+    if (!this.serviciosMap[id]) {
+      this.servicioService.getServicio(id).subscribe({
+        next: serv => this.serviciosMap[id] = serv.nombre,
+        error: () => this.serviciosMap[id] = 'Desconocido'
+      });
     }
+  }
+
+  /**
+   * Obtiene el nombre del empleado y lo almacena en empleadosMap.
+   */
+  getNombreEmpleado(id: number): void {
+    if (!this.empleadosMap[id]) {
+      this.empleadoService.getEmpleado(id).subscribe({
+        next: emp => this.empleadosMap[id] = emp.nombre,
+        error: () => this.empleadosMap[id] = 'Desconocido'
+      });
+    }
+  }
+
+  /**
+   * Maneja la selección de archivos (perfil, salón, empleado).
+   */
+  onFileSelected(event: any, target: 'perfil' | 'salon' | 'empleado'): void {
+    const file: File = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      switch (target) {
+        case 'perfil':
+          this.imagenPerfilSeleccionada = file;
+          this.previewUrlPerfil = e.target.result;
+          break;
+        case 'salon':
+          this.imagenSalonSeleccionada = file;
+          this.previewUrlSalon = e.target.result;
+          break;
+        case 'empleado':
+          this.imagenEmpleadoSeleccionada = file;
+          this.previewUrlEmpleado = e.target.result;
+          break;
+      }
+    };
+    reader.readAsDataURL(file);
   }
 
   guardarCambios(): void {
     const userId = this.usuario.id_usuario;
+    if (!userId) return;
 
-    if (this.imagenSeleccionada) {
+    if (this.imagenPerfilSeleccionada) {
       const formData = new FormData();
       formData.append('nombre', this.usuario.nombre);
       formData.append('email', this.usuario.email);
       formData.append('telefono', this.usuario.telefono);
-      formData.append('foto_perfil', this.imagenSeleccionada);
-
+      formData.append('foto_perfil', this.imagenPerfilSeleccionada);
       this.authSvc.actualizarPerfilConImagen(userId, formData).subscribe({
-        next: (res) => this.onPerfilActualizado(res),
-        error: (err) => this.onError(err)
+        next: res => this.onPerfilActualizado(res),
+        error: err => this.onError(err)
       });
     } else {
       const body = {
@@ -78,125 +230,382 @@ export class PerfilComponent implements OnInit {
         email: this.usuario.email,
         telefono: this.usuario.telefono
       };
-
       this.authSvc.actualizarPerfil(userId, body).subscribe({
-        next: (res) => this.onPerfilActualizado(res),
-        error: (err) => this.onError(err)
+        next: res => this.onPerfilActualizado(res),
+        error: err => this.onError(err)
       });
     }
   }
 
-  fetchSalon(idUsuario: number): void {
-    this.salonService.getSalonesPorUsuario(idUsuario).subscribe({
-      next: salones => {
-        this.misSalones = salones;
+  // —————————— Métodos para eliminar y editar citas ——————————
+
+  /**
+   * Cualquiera (cliente) puede eliminar su propia cita.
+   * Hace DELETE al backend y remueve la cita del array local.
+   */
+  onEliminarCita(cita: Cita): void {
+    if (!confirm('¿Seguro que quieres eliminar esta cita permanentemente?')) return;
+
+    this.citaService.eliminarCita(cita.id_cita).subscribe({
+      next: () => {
+        // Filtrar la lista local para remover la cita eliminada
+        this.citas = this.citas.filter(c => c.id_cita !== cita.id_cita);
+        alert('Cita eliminada correctamente');
       },
       error: err => {
-        console.error('Error al cargar el salón del usuario', err);
+        console.error('Error al eliminar cita:', err);
+        alert('No se pudo eliminar la cita');
       }
     });
   }
 
-  fetchCitas(idUsuario: number): void {
-    this.citaService.getCitasPorUsuario(idUsuario).subscribe({
-      next: (citas) => {
-        this.citas = citas;
-        citas.forEach(cita => {
-          this.getNombreServicio(cita.id_servicio);
-          this.getNombreEmpleado(cita.id_empleado);
-        });
+  /**
+   * Solo dueño de salón o administrador: cambia el estado de la cita
+   */
+  onCambiarEstado(cita: Cita, nuevoEstado: 'pendiente' | 'confirmada' | 'cancelada'): void {
+    this.citaService.actualizarCita(cita.id_cita, { estado: nuevoEstado }).subscribe({
+      next: () => {
+        cita.estado = nuevoEstado;
+        alert('Estado de la cita actualizado');
       },
-      error: (err) => {
-        console.error('Error al cargar las citas del usuario', err);
+      error: err => {
+        console.error('Error al actualizar estado:', err);
+        alert('No se pudo actualizar el estado');
       }
     });
   }
 
-  getNombreServicio(id: number): void {
-    if (!this.serviciosMap[id]) {
-      this.citaService.getNombreServicio(id).subscribe({
-        next: nombre => this.serviciosMap[id] = nombre,
-        error: () => this.serviciosMap[id] = 'Desconocido'
-      });
-    }
+  /**
+   * Solo dueño de salón o administrador: cambia el empleado asignado a la cita.
+   */
+  onCambiarEmpleado(cita: Cita, nuevoEmpleadoId: number): void {
+    this.citaService.actualizarCita(cita.id_cita, { id_empleado: nuevoEmpleadoId }).subscribe({
+      next: () => {
+        cita.id_empleado = nuevoEmpleadoId;
+        this.getNombreEmpleado(nuevoEmpleadoId);
+        alert('Empleado asignado actualizado');
+      },
+      error: err => {
+        console.error('Error al cambiar empleado:', err);
+        alert('No se pudo cambiar el empleado');
+      }
+    });
   }
 
-  getNombreEmpleado(id: number): void {
-    if (!this.empleadosMap[id]) {
-      this.citaService.getNombreEmpleado(id).subscribe({
-        next: nombre => this.empleadosMap[id] = nombre,
-        error: () => this.empleadosMap[id] = 'Desconocido'
-      });
-    }
+  /**
+   * Devuelve true si el usuario logueado es dueño de ese salón o es administrador.
+   */
+  esDuenoOSuper(cita: Cita): boolean {
+    const idSalon = this.citaSalonMap[cita.id_cita];
+    const salon = this.misSalones.find(s => s.id_salon === idSalon);
+    const esDueno = salon && salon.id_usuario === this.usuario.id_usuario;
+    const esAdmin = this.usuario.rol === 'administrador';
+    return Boolean(esDueno || esAdmin);
   }
 
+  // ————— Resto de métodos para CRUD de salón, servicios y empleados —————
   editarSalon(salon: Salon): void {
     this.salonEditando = { ...salon };
   }
 
-
   guardarCambiosSalon(): void {
     if (!this.salonEditando) return;
-
     const { id_salon, nombre, direccion, telefono, descripcion, especializacion } = this.salonEditando;
-
-    const data = { nombre, direccion, telefono, descripcion, especializacion };
-
-    this.salonService.actualizarSalon(id_salon, data).subscribe({
-      next: () => {
-        alert('Salón actualizado correctamente');
-        this.fetchSalon(this.usuario.id_usuario);
-        this.cerrarModal();
-      },
-      error: (err) => {
-        console.error('Error al actualizar el salón', err);
-        alert('Hubo un error al actualizar el salón');
-      }
-    });
+    if (this.imagenSalonSeleccionada) {
+      const formData = new FormData();
+      formData.append('nombre', nombre);
+      formData.append('direccion', direccion);
+      formData.append('telefono', telefono);
+      formData.append('descripcion', descripcion);
+      formData.append('especializacion', especializacion);
+      formData.append('id_usuario', String(this.usuario.id_usuario));
+      formData.append('foto', this.imagenSalonSeleccionada);
+      formData.append('_method', 'PUT');
+      this.salonService.actualizarSalonConImagen(id_salon, formData).subscribe({
+        next: () => {
+          alert('Salón actualizado correctamente con imagen');
+          this.fetchSalon(this.usuario.id_usuario);
+          this.cerrarModalSalon();
+        },
+        error: err => {
+          console.error('Error al actualizar salón con imagen:', err);
+          alert('Hubo un error al actualizar el salón');
+        }
+      });
+    } else {
+      const data = {
+        nombre,
+        direccion,
+        telefono,
+        descripcion,
+        especializacion,
+        id_usuario: this.usuario.id_usuario
+      };
+      this.salonService.actualizarSalon(id_salon, data).subscribe({
+        next: () => {
+          alert('Salón actualizado correctamente');
+          this.fetchSalon(this.usuario.id_usuario);
+          this.cerrarModalSalon();
+        },
+        error: err => {
+          console.error('Error al actualizar salón sin imagen:', err);
+          alert('Hubo un error al actualizar el salón');
+        }
+      });
+    }
   }
 
-  cerrarModal(): void {
-    this.salonEditando = null;
-  }
-
-  eliminarSalon(salon: Salon): void {
-    this.salonAEliminar = salon;
-    this.nombreConfirmacion = '';
-  }
-
-  confirmarEliminacion(): void {
-    if (!this.salonAEliminar) return;
-
-    this.salonService.eliminarSalon(this.salonAEliminar.id_salon).subscribe({
+  borrarSalon(salon: Salon): void {
+    if (!confirm(`¿Seguro que quieres eliminar el salón "${salon.nombre}"?`)) return;
+    this.salonService.eliminarSalon(salon.id_salon).subscribe({
       next: () => {
         alert('Salón eliminado correctamente');
         this.fetchSalon(this.usuario.id_usuario);
-        this.cancelarEliminacion();
       },
-      error: (err) => {
-        console.error('Error al eliminar el salón', err);
+      error: err => {
+        console.error('Error al eliminar salón:', err);
         alert('Hubo un error al eliminar el salón');
       }
     });
   }
-  
+
+  // Métodos de confirmación de eliminación
   cancelarEliminacion(): void {
     this.salonAEliminar = null;
     this.nombreConfirmacion = '';
   }
 
+  confirmarEliminacion(): void {
+    if (!this.salonAEliminar) return;
+    this.borrarSalon(this.salonAEliminar);
+    this.salonAEliminar = null;
+    this.nombreConfirmacion = '';
+  }
+
+  cerrarModalSalon(): void {
+    this.salonEditando = null;
+    this.imagenSalonSeleccionada = null;
+    this.previewUrlSalon = null;
+  }
+
+  abrirFormularioCrearServicio(id_salon: number): void {
+    this.servicioNuevo = {
+      id_salon,
+      nombre: '',
+      descripcion: '',
+      precio: 0,
+      duracion_minutos: 0
+    };
+    this.showFormCrear = true;
+  }
+
+  abrirFormularioEditarServicio(serv: Servicio): void {
+    this.servicioEditando = { ...serv };
+    this.showFormEditar = true;
+  }
+
+  cerrarFormularioServicio(): void {
+    this.showFormCrear = false;
+    this.showFormEditar = false;
+    this.servicioEditando = null;
+  }
+
+  guardarServicioNuevo(): void {
+    if (
+      !this.servicioNuevo.nombre ||
+      this.servicioNuevo.precio == null ||
+      this.servicioNuevo.duracion_minutos == null ||
+      this.servicioNuevo.id_salon == null
+    ) {
+      alert('Completa todos los campos del servicio.');
+      return;
+    }
+    const payloadCrear = {
+      id_salon: this.servicioNuevo.id_salon,
+      nombre: this.servicioNuevo.nombre,
+      descripcion: this.servicioNuevo.descripcion,
+      precio: this.servicioNuevo.precio,
+      duracion: this.servicioNuevo.duracion_minutos
+    };
+    this.servicioService.crearServicio(payloadCrear).subscribe({
+      next: servCreado => {
+        this.cargarServiciosDeSalon(servCreado.id_salon);
+        this.cerrarFormularioServicio();
+      },
+      error: err => {
+        console.error('Error al crear servicio:', err);
+        alert('Hubo un error al crear el servicio');
+      }
+    });
+  }
+
+  guardarCambiosServicio(): void {
+    if (!this.servicioEditando) return;
+    const { id_servicio, nombre, descripcion, precio, duracion_minutos, id_salon } = this.servicioEditando;
+    if (!nombre || precio == null || duracion_minutos == null || id_salon == null) {
+      alert('El servicio debe tener nombre, precio y duración.');
+      return;
+    }
+    const payloadActualizar = {
+      nombre,
+      descripcion,
+      precio,
+      duracion: duracion_minutos,
+      id_salon
+    };
+    this.servicioService.actualizarServicio(id_servicio, payloadActualizar).subscribe({
+      next: () => {
+        this.cargarServiciosDeSalon(id_salon);
+        this.cerrarFormularioServicio();
+      },
+      error: err => {
+        console.error('Error al actualizar servicio:', err);
+        alert('Hubo un error al actualizar el servicio');
+      }
+    });
+  }
+
+  borrarServicio(serv: Servicio): void {
+    if (!confirm(`¿Seguro que quieres eliminar el servicio "${serv.nombre}"?`)) return;
+    this.servicioService.eliminarServicio(serv.id_servicio).subscribe({
+      next: () => this.cargarServiciosDeSalon(serv.id_salon),
+      error: err => {
+        console.error('Error al eliminar servicio:', err);
+        alert('Hubo un error al eliminar el servicio');
+      }
+    });
+  }
+
+  abrirFormularioCrearEmpleado(id_salon: number): void {
+    this.empleadoNuevo = {
+      id_salon,
+      nombre: '',
+      telefono: ''
+    };
+    this.showFormCrearEmpleado = true;
+  }
+
+  abrirFormularioEditarEmpleado(emp: Empleado): void {
+    this.empleadoEditando = { ...emp };
+    this.previewUrlEmpleado = emp.foto || null;
+    this.showFormEditarEmpleado = true;
+  }
+
+  cerrarFormularioEmpleado(): void {
+    this.showFormCrearEmpleado = false;
+    this.showFormEditarEmpleado = false;
+    this.empleadoEditando = null;
+    this.imagenEmpleadoSeleccionada = null;
+    this.previewUrlEmpleado = null;
+  }
+
+  guardarEmpleadoNuevo(): void {
+    if (
+      !this.empleadoNuevo.nombre ||
+      !this.empleadoNuevo.telefono ||
+      this.empleadoNuevo.id_salon == null
+    ) {
+      alert('Completa todos los campos del empleado.');
+      return;
+    }
+    const payloadCrear: any = {
+      id_salon: this.empleadoNuevo.id_salon,
+      nombre: this.empleadoNuevo.nombre,
+      telefono: this.empleadoNuevo.telefono
+    };
+    if (this.imagenEmpleadoSeleccionada) {
+      const formData = new FormData();
+      formData.append('id_salon', String(payloadCrear.id_salon));
+      formData.append('nombre', payloadCrear.nombre);
+      formData.append('telefono', payloadCrear.telefono);
+      formData.append('foto', this.imagenEmpleadoSeleccionada);
+      this.empleadoService.crearEmpleadoConImagen(formData).subscribe({
+        next: empCreado => {
+          this.cargarEmpleadosDeSalon(empCreado.id_salon);
+          this.cerrarFormularioEmpleado();
+        },
+        error: err => {
+          console.error('Error al crear empleado con imagen:', err);
+          alert('Hubo un error al crear el empleado');
+        }
+      });
+    } else {
+      this.empleadoService.crearEmpleado(payloadCrear).subscribe({
+        next: empCreado => {
+          this.cargarEmpleadosDeSalon(empCreado.id_salon);
+          this.cerrarFormularioEmpleado();
+        },
+        error: err => {
+          console.error('Error al crear empleado:', err);
+          alert('Hubo un error al crear el empleado');
+        }
+      });
+    }
+  }
+
+  guardarCambiosEmpleado(): void {
+    if (!this.empleadoEditando) return;
+    const { id_empleado, nombre, telefono, id_salon } = this.empleadoEditando;
+    if (!nombre || !telefono || id_salon == null) {
+      alert('El empleado debe tener nombre y teléfono.');
+      return;
+    }
+    const payloadActualizar: any = {
+      nombre,
+      telefono,
+      id_salon
+    };
+    if (this.imagenEmpleadoSeleccionada) {
+      const formData = new FormData();
+      formData.append('nombre', nombre);
+      formData.append('telefono', telefono);
+      formData.append('foto', this.imagenEmpleadoSeleccionada);
+      formData.append('_method', 'PUT');
+      this.empleadoService.actualizarEmpleadoConImagen(id_empleado, formData).subscribe({
+        next: () => {
+          this.cargarEmpleadosDeSalon(id_salon);
+          this.cerrarFormularioEmpleado();
+        },
+        error: err => {
+          console.error('Error al actualizar empleado con imagen:', err);
+          alert('Hubo un error al actualizar el empleado');
+        }
+      });
+    } else {
+      this.empleadoService.actualizarEmpleado(id_empleado, payloadActualizar).subscribe({
+        next: () => {
+          this.cargarEmpleadosDeSalon(id_salon);
+          this.cerrarFormularioEmpleado();
+        },
+        error: err => {
+          console.error('Error al actualizar empleado:', err);
+          alert('Hubo un error al actualizar el empleado');
+        }
+      });
+    }
+  }
+
+  borrarEmpleado(emp: Empleado): void {
+    if (!confirm(`¿Seguro que quieres eliminar al empleado "${emp.nombre}"?`)) return;
+    this.empleadoService.eliminarEmpleado(emp.id_empleado).subscribe({
+      next: () => this.cargarEmpleadosDeSalon(emp.id_salon),
+      error: err => {
+        console.error('Error al eliminar empleado:', err);
+        alert('Hubo un error al eliminar el empleado');
+      }
+    });
+  }
+
   private onPerfilActualizado(res: any) {
-    console.log('Perfil actualizado', res);
     localStorage.setItem('usuario', JSON.stringify(res));
-    this.authSvc['currentUserSubject'].next(res);
+    (this.authSvc as any).currentUserSubject.next(res);
     this.usuario = { ...res };
-    this.previewUrl = res.foto_perfil;
+    this.previewUrlPerfil = res.foto_perfil;
     alert('Cambios guardados correctamente');
   }
 
   private onError(err: any) {
-    console.error('Error al guardar cambios', err);
-    console.log('Detalles del error:', err.error);
+    console.error('Error al guardar cambios:', err);
     alert('Hubo un error al guardar los cambios');
   }
 }

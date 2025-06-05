@@ -13,6 +13,13 @@ class EmpleadoController extends Controller
      */
     public function index()
     {
+        $empleados = Empleado::all()->map(function($emp) {
+            // Si tiene campo 'foto' (p.ej. "empleados/1749..."), convertirlo en URL pública
+            if ($emp->foto) {
+                $emp->foto = asset('storage/' . $emp->foto);
+            }
+            return $emp;
+        });
         return response()->json(Empleado::all());
     }
 
@@ -52,9 +59,26 @@ class EmpleadoController extends Controller
             'nombre'    => 'sometimes|required|string|max:255',
             'telefono'  => 'sometimes|required|string|max:20',
             'id_salon'  => 'sometimes|required|exists:salon,id_salon',
+            // Aceptar archivo de foto si se envía:
+            'foto'      => 'sometimes|file|image|max:2048',
         ]);
+        
+        // Si envían nueva foto, la guardamos en public/storage/empleados
+        if ($request->hasFile('foto')) {
+            $file     = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            // Se guarda en storage/app/public/empleados/...
+            $file->move(public_path('storage/empleados'), $filename);
+            // Guardamos en la BD la ruta relativa "empleados/xxxxx"
+            $validated['foto'] = 'empleados/' . $filename;
+        }
 
         $empleado->update($validated);
+
+        // Finalmente, devolvemos el objeto con 'foto' como URL completa:
+        if ($empleado->foto) {
+            $empleado->foto = asset('storage/' . $empleado->foto);
+        }
 
         return response()->json($empleado);
     }
@@ -75,7 +99,13 @@ class EmpleadoController extends Controller
      */
     public function porSalon(string $id_salon)
     {
-        $empleados = Empleado::where('id_salon', $id_salon)->get();
+        $empleados = Empleado::where('id_salon', $id_salon)->get()
+        ->map(function($emp) {
+            if ($emp->foto) {
+                $emp->foto = asset('storage/' . $emp->foto);
+            }
+            return $emp;
+        });
         return response()->json($empleados);
     }
 }

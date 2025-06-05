@@ -9,6 +9,8 @@ import { PreguntasFrecuentesComponent} from './paginas/preguntas-frecuentes/preg
 import { ContactoComponent } from './paginas/contacto/contacto.component';
 import { PoliticaDePrivacidadComponent } from './paginas/politica-de-privacidad/politica-de-privacidad.component';
 import { RegistrarNegocioComponent } from './paginas/registrar-negocio/registrar-negocio.component';
+import { AuthOrNoSalonGuard } from './guards/auth-or-no-salon.guard';
+import { AuthGuard } from './services/auth.guard';
 export const routes: Routes = [{
     path: '',
     component: PaginaPrincipalComponent
@@ -23,11 +25,13 @@ export const routes: Routes = [{
     },
     {
         path: 'register-negocio',
-        component: RegistrarNegocioComponent
+        component: RegistrarNegocioComponent,
+        canActivate: [AuthOrNoSalonGuard]
     },
     {
         path: 'perfil',
-        component: PerfilComponent
+        component: PerfilComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'quienesSomos',

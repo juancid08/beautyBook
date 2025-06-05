@@ -144,8 +144,12 @@ export class SalonService {
     return this.http.post<Salon>(this.baseUrl, data, { headers });
   }
 
-  actualizarSalon(id: number, data: Partial<Salon>): Observable<Salon> {
+  actualizarSalon(id: number, data: any): Observable<Salon> {
     return this.http.put<Salon>(`${this.baseUrl}/${id}`, data);
+  }
+
+  actualizarSalonConImagen(id: number, data: FormData) {
+    return this.http.post<any>(`${this.baseUrl}/${id}`, data);
   }
 
   eliminarSalon(id: number): Observable<any> {
