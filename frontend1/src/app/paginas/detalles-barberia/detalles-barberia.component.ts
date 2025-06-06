@@ -1,15 +1,18 @@
-import { Component } from '@angular/core';
+// src/app/pages/detalles-barberia/detalles-barberia.component.ts
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavbarComponent } from "../../componentes/navbar/navbar.component";
 import { FooterComponent } from '../../componentes/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import { Salon, SalonService } from '../../services/salon.service';
 import { Servicio, ServicioService } from '../../services/servicio.service';
 import { Empleado, EmpleadoService } from '../../services/empleado.service';
-import { CitaService, Cita } from '../../services/cita.service';
+import { Cita, CitaService } from '../../services/cita.service';
 import { AuthService } from '../../services/auth.service';
 import { Resena, ResenaService } from '../../services/resena.service';
+
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
@@ -19,12 +22,22 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   templateUrl: './detalles-barberia.component.html',
   styleUrls: ['./detalles-barberia.component.scss']
 })
-export class DetallesBarberiaComponent {
-  // Variables de control
-  usuarioActual: any;
-  mostrarPopup = false;
+export class DetallesBarberiaComponent implements OnInit {
+  // —–––––––––––––– Variables de control de sesión y datos —––––––––––––––—
+  usuarioActual: any = null;               // Rellenado desde AuthService.currentUser$
+  salon: Salon | undefined;
+  servicios: Servicio[] = [];
+  empleados: Empleado[] = [];
+  resenas: Resena[] = [];                  // Reseñas cargadas para este salón
 
-  // Generación de fechas próximas
+  citasDeUsuario: Cita[] = [];             // Todas las citas de este usuario
+  citasPasadasSinResenar: Cita[] = [];      // Filtradas: fecha pasada, no cancelada, y sin reseña
+
+  // Helpers de fecha
+  todayIso: string = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
+
+  // —–––––––––––––– Variables para reserva de cita (ya las tenías) —––––––––––––––—
+  mostrarPopup = false;
   diasDisponibles: { dia: string, numero: number, mes: string, fecha: Date }[] = [];
   turnosDisponibles: Array<'Mañana' | 'Tarde' | 'Noche'> = ['Mañana', 'Tarde', 'Noche'];
   diasSemana: Array<{ nombre: string; horario: string }> = [];
@@ -34,17 +47,9 @@ export class DetallesBarberiaComponent {
   horaSeleccionada: string | null = null;
 
   diaSeleccionado: { dia: string, numero: number, mes: string, fecha: Date };
-  
-  salon: Salon | undefined;
 
   servicio: Servicio | undefined;
-  servicios: Servicio[] = [];
-
-  resena: Resena | undefined;
-  resenas: Resena[] = [];
-
   empleadoSeleccionado: Empleado | undefined;
-  empleados: Empleado[] = [];
 
   mapUrl!: SafeResourceUrl | null;
 
@@ -54,49 +59,60 @@ export class DetallesBarberiaComponent {
     private salonService: SalonService,
     private servicioService: ServicioService,
     private empleadoService: EmpleadoService,
-    private resenaService: ResenaService,
     private citaService: CitaService,
+    private resenaService: ResenaService,
     private sanitizer: DomSanitizer
   ) {
-    // Generamos los próximos 30 días
+    // Generamos los próximos 30 días (para el popup de reserva)
     this.generarFechas();
-    // Inicialmente seleccionamos el primer día
     this.diaSeleccionado = this.diasDisponibles[0];
   }
 
   ngOnInit(): void {
+    // 1) Suscribirnos a cambios del usuario logueado:
+    this.authSvc.currentUser$.subscribe(usuario => {
+      this.usuarioActual = usuario;
+      // Si ya tenemos el salón cargado, recalculemos citas elegibles:
+      if (usuario && this.salon) {
+        this.fetchCitasUsuarioParaSalon(usuario.id_usuario, this.salon.id_salon);
+      }
+    });
+
+    // 2) Leer el parámetro 'id' de la ruta para cargar datos del salón:
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
         const salonId = +id;
         this.fetchSalon(salonId);
         this.fetchServicios(salonId);
-        this.fetchResenas(salonId);
         this.fetchEmpleados(salonId);
+        this.fetchResenas(salonId);
+        // Las citas del usuario se cargarán cuando se conozca this.usuarioActual
       }
     });
-
-    this.authSvc.currentUser$.subscribe(usuario => {
-      this.usuarioActual = usuario;
-    });
   }
+
+  // —–––––––––––––– Métodos para cargar datos de salón, servicios, empleados y reseñas —––––––––––––––—
 
   fetchSalon(salonId: number): void {
     this.salonService.getSalon(salonId).subscribe({
       next: salon => {
         this.salon = this.salonService.getSalonFormateado(salon);
 
-        // Montamos el mapa
+        // Generar URL del mapa embebido:
         const direccionEncode = encodeURIComponent(this.salon!.direccion);
         const urlEmbed = `https://www.google.com/maps?q=${direccionEncode}&output=embed`;
         this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(urlEmbed);
 
-        // Construimos horario semanal para la sidebar
+        // Construir horario semanal (sidebar):
         this.generarHorarioSemanal();
+
+        // Si ya hay un usuario logueado, recalculemos citas elegibles
+        if (this.usuarioActual && this.usuarioActual.id_usuario) {
+          this.fetchCitasUsuarioParaSalon(this.usuarioActual.id_usuario, salonId);
+        }
       },
-      error: err => {
-        console.error('Error al cargar el salón', err);
-      }
+      error: err => console.error('Error al cargar el salón', err)
     });
   }
 
@@ -105,9 +121,7 @@ export class DetallesBarberiaComponent {
       next: servicios => {
         this.servicios = servicios;
       },
-      error: err => {
-        console.error('Error al cargar los servicios', err);
-      }
+      error: err => console.error('Error al cargar los servicios', err)
     });
   }
 
@@ -115,12 +129,9 @@ export class DetallesBarberiaComponent {
     this.empleadoService.getEmpleadosPorSalon(salonId).subscribe({
       next: empleados => {
         this.empleados = empleados;
-        // Por defecto seleccionamos el primer empleado
         this.empleadoSeleccionado = empleados[0] || undefined;
       },
-      error: err => {
-        console.error('Error al cargar los empleados:', err);
-      }
+      error: err => console.error('Error al cargar los empleados', err)
     });
   }
 
@@ -128,18 +139,23 @@ export class DetallesBarberiaComponent {
     this.resenaService.getResenasPorSalon(salonId).subscribe({
       next: resenas => {
         this.resenas = resenas;
+        // Una vez que cargamos las reseñas existentes, recalculamos las citas pendientes de reseñar
+        if (this.usuarioActual && this.usuarioActual.id_usuario && this.salon) {
+          this.fetchCitasUsuarioParaSalon(this.usuarioActual.id_usuario, this.salon.id_salon);
+        }
       },
       error: err => {
-        console.error('Error al cargar las reseñas:', err);
+        console.error('Error al cargar las reseñas', err);
+        this.resenas = [];
       }
     });
   }
 
+  // —–––––––––––––– Reserva de cita (métodos ya los tenías) —––––––––––––––—
+
   abrirPopup(servicio: Servicio) {
     this.servicio = servicio;
     this.mostrarPopup = true;
-
-    // Limpiamos selección previa
     this.turnoSeleccionado = null;
     this.horaSeleccionada = null;
     this.horasDisponibles = [];
@@ -152,21 +168,17 @@ export class DetallesBarberiaComponent {
     this.horasDisponibles = [];
   }
 
-  private generarHorarioSemanal() {
+  generarHorarioSemanal() {
     if (!this.salon) {
       this.diasSemana = [];
       return;
     }
     const nombresDias = [
-      'Lunes', 'Martes', 'Miércoles', 'Jueves',
-      'Viernes', 'Sábado', 'Domingo'
+      'Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'
     ];
     const apertura = this.salon.horario_apertura;
-    const cierre   = this.salon.horario_cierre;   
-    const textoHorario = apertura && cierre
-      ? `${apertura} - ${cierre}`
-      : 'Cerrado';
-
+    const cierre   = this.salon.horario_cierre;
+    const textoHorario = apertura && cierre ? `${apertura} - ${cierre}` : 'Cerrado';
     this.diasSemana = nombresDias.map(dia => ({
       nombre: dia,
       horario: textoHorario
@@ -189,7 +201,7 @@ export class DetallesBarberiaComponent {
       id_usuario: this.usuarioActual.id_usuario,
       id_servicio: this.servicio.id_servicio,
       id_empleado: this.empleadoSeleccionado.id_empleado,
-      fecha: this.diaSeleccionado.fecha.toISOString().split('T')[0], // "YYYY-MM-DD"
+      fecha: this.diaSeleccionado.fecha.toISOString().split('T')[0],
       hora: this.horaSeleccionada,
       estado: 'pendiente'
     };
@@ -226,13 +238,10 @@ export class DetallesBarberiaComponent {
     this.horaSeleccionada = null;
   }
 
-  /** —————————————— AQUÍ VA LA CORRECCIÓN —————————————— **/
   seleccionarEmpleado(empleado: Empleado) {
     this.empleadoSeleccionado = empleado;
     this.horaSeleccionada = null;
     this.horasDisponibles = [];
-
-    // Si ya había un turno elegido, lo volvemos a recalcular para el nuevo empleado
     if (this.turnoSeleccionado) {
       this.seleccionarTurno(this.turnoSeleccionado);
     }
@@ -244,9 +253,7 @@ export class DetallesBarberiaComponent {
     const [h2, m2] = end.split(':').map(Number);
     let inicioMin = h1 * 60 + m1;
     const finMin = h2 * 60 + m2;
-
     if (inicioMin >= finMin) return slots;
-
     while (inicioMin < finMin) {
       const hh = Math.floor(inicioMin / 60);
       const mm = inicioMin % 60;
@@ -266,53 +273,41 @@ export class DetallesBarberiaComponent {
       return;
     }
 
-    // 1) Calculamos el inicio/fin del turno
-    const apertura = this.salon.horario_apertura; 
-    const cierre   = this.salon.horario_cierre;   
+    const apertura = this.salon.horario_apertura;
+    const cierre   = this.salon.horario_cierre;
 
     let inicioTurno: string;
     let finTurno: string;
 
     if (turno === 'Mañana') {
       inicioTurno = apertura;
-      finTurno = '14:00';
+      finTurno    = '14:00';
     } else if (turno === 'Tarde') {
       inicioTurno = '14:00';
-      finTurno = cierre < '20:00' ? cierre : '20:00';
+      finTurno    = cierre < '20:00' ? cierre : '20:00';
     } else {
       inicioTurno = '20:00';
-      finTurno = cierre;
+      finTurno    = cierre;
     }
 
     const todosLosSlots = this.getTimeSlots(inicioTurno, finTurno);
-    const fechaISO = this.diaSeleccionado.fecha.toISOString().split('T')[0]; // "YYYY-MM-DD"
+    const fechaISO = this.diaSeleccionado.fecha.toISOString().split('T')[0];
 
-    // 2) Llamamos al servicio, que nos devuelve *todas* las citas, pero luego filtraremos aquí mismo:
-    this.citaService
-      .getCitasPorEmpleadoYFecha(this.empleadoSeleccionado.id_empleado, fechaISO)
+    this.citaService.getCitasPorEmpleadoYFecha(this.empleadoSeleccionado.id_empleado, fechaISO)
       .subscribe({
         next: (citasExistentes: Cita[]) => {
           const filtradas = citasExistentes.filter(c =>
             c.id_empleado === this.empleadoSeleccionado!.id_empleado &&
             c.fecha === fechaISO
           );
-
-          // Ahora extraemos únicamente las horas de esas citas “válidas”
           const horasOcupadas = filtradas.map(c => c.hora);
-
-          // Devolvemos solo los slots que NO estén en horasOcupadas
-          this.horasDisponibles = todosLosSlots.filter(
-            slot => !horasOcupadas.includes(slot)
-          );
-
-          // Si no queda ninguno, podrías avisar al usuario, pero no es obligatorio:
+          this.horasDisponibles = todosLosSlots.filter(slot => !horasOcupadas.includes(slot));
           if (this.horasDisponibles.length === 0) {
-            console.warn(`No hay horas libres para ${turno} en ${fechaISO} para el empleado ${this.empleadoSeleccionado!.id_empleado}`);
+            console.warn(`No hay horas libres para ${turno} en ${fechaISO}`);
           }
         },
         error: err => {
           console.error('Error al consultar citas existentes:', err);
-          // En caso de error, mostramos todos los slots sin filtrar
           this.horasDisponibles = todosLosSlots;
         }
       });
@@ -320,5 +315,96 @@ export class DetallesBarberiaComponent {
 
   seleccionarHora(hora: string) {
     this.horaSeleccionada = hora;
+  }
+
+  // —–––––––––––––– NUEVOS MÉTODOS PARA RESEÑAS —––––––––––––––—
+
+  /** 
+   * 1) Carga todas las citas de este usuario, filtra las de este salón,
+   *    luego selecciona solo aquellas con fecha pasada, estado distinto de 'cancelada'
+   *    y cuyo servicio aún no tenga reseña hecha por este usuario.
+   */
+  fetchCitasUsuarioParaSalon(idUsuario: number, idSalon: number) {
+    this.citaService.getCitasPorUsuario(idUsuario).subscribe({
+      next: (citas: Cita[]) => {
+        // 1.1) Obtener todos los servicios de este salón
+        this.servicioService.getServiciosPorSalon(idSalon).subscribe({
+          next: (servs: Servicio[]) => {
+            const idsServiciosSalon = servs.map(s => s.id_servicio);
+
+            // 1.2) Filtrar solo las citas de este usuario cuyo servicio pertenezca a este salón
+            this.citasDeUsuario = citas.filter(c =>
+              idsServiciosSalon.includes(c.id_servicio)
+            );
+
+            // 1.3) Quedarnos solo con las que ya pasaron de fecha y no están canceladas
+            const elegibles = this.citasDeUsuario.filter(c =>
+              c.estado !== 'cancelada' &&
+              c.fecha < this.todayIso
+            );
+
+            // 1.4) De las reseñas ya cargadas (this.resenas), ver qué servicios ya tienen reseña de este usuario
+            //      (no usamos id_cita, sino id_servicio como clave única).
+            const serviciosConResena = this.resenas.map(r => Number(r.id_servicio));
+
+            // 1.5) Finalmente, de “elegibles” quedarnos sólo con aquellos cuyo id_servicio
+            //      NO aparezca en serviciosConResena (es decir, aún no hay reseña para ese servicio):
+            this.citasPasadasSinResenar = elegibles.filter(c =>
+              !serviciosConResena.includes(c.id_servicio)
+            );
+          },
+          error: err => console.error('Error al cargar servicios para filtrar citas:', err)
+        });
+      },
+      error: err => console.error('Error al cargar citas del usuario:', err)
+    });
+  }
+
+  /**
+   * 2) Envía la nueva reseña al backend. Luego recarga las reseñas del salón y recalcula
+   *    las citas pendientes de reseñar.
+   */
+  onSubmitResena(cita: Cita, rating: number, comentario: string) {
+    if (!this.usuarioActual) {
+      alert('Debes iniciar sesión para dejar una reseña.');
+      return;
+    }
+
+    // Construir payload según tu ResenaService (sin id_cita, enviamos id_usuario e id_servicio)
+    const payload: Partial<Resena> = {
+      id_usuario: this.usuarioActual.id_usuario.toString(),
+      id_servicio: cita.id_servicio.toString(),
+      comentario: comentario,
+      calificacion: rating,
+      fecha_resena: this.todayIso // o bien usar backend para asignar fecha actual
+    };
+
+    this.resenaService.crearResena(payload).subscribe({
+      next: nuevaResena => {
+        alert('Gracias por tu reseña.');
+        // 2.1) Recargar reseñas de este salón
+        if (this.salon) {
+          this.fetchResenas(this.salon.id_salon);
+        }
+      },
+      error: err => {
+        console.error('Error al enviar reseña:', err);
+        if (err.status === 403) {
+          alert('No puedes crear una reseña si no has asistido a ese servicio.');
+        } else if (err.status === 422) {
+          alert('Datos inválidos o ya existe reseña para este servicio.');
+        } else {
+          alert('Ocurrió un error al enviar tu reseña.');
+        }
+      }
+    });
+  }
+
+  /** 
+   * Devuelve el nombre de un servicio dado su ID, o '—' si no se encuentra 
+   */
+  getNombreServicioPorId(idServicio: number): string {
+    const srv = this.servicios.find(s => s.id_servicio === idServicio);
+    return srv ? srv.nombre : '—';
   }
 }

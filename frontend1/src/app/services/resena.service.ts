@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 export interface Resena {
   id_resena: number;
@@ -17,38 +18,60 @@ export interface Resena {
 export class ResenaService {
   private baseUrl = 'http://localhost/api/resenas';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authSvc: AuthService
+  ) {}
 
-  // Obtener todas las reseñas
+  private headers(): HttpHeaders {
+    const token = this.authSvc.getToken();
+    return new HttpHeaders({
+      Authorization: token ? `Bearer ${token}` : ''
+    });
+  }
+
+  // Obtener todas las reseñas (público)
   getResenas(): Observable<Resena[]> {
     return this.http.get<Resena[]>(this.baseUrl);
   }
 
-  // Obtener una reseña por su ID
+  // Obtener una reseña por su ID (público)
   getResena(id: number): Observable<Resena> {
     return this.http.get<Resena>(`${this.baseUrl}/${id}`);
   }
 
-  // Crear nueva reseña
+  // Crear nueva reseña (requiere token)
   crearResena(data: Partial<Resena>): Observable<Resena> {
-    return this.http.post<Resena>(this.baseUrl, data);
+    return this.http.post<Resena>(
+      this.baseUrl,
+      data,
+      { headers: this.headers() }
+    );
   }
 
-  // Actualizar reseña existente
+  // Actualizar reseña existente (requiere token)
   actualizarResena(id: number, data: Partial<Resena>): Observable<Resena> {
-    return this.http.put<Resena>(`${this.baseUrl}/${id}`, data);
+    return this.http.put<Resena>(
+      `${this.baseUrl}/${id}`,
+      data,
+      { headers: this.headers() }
+    );
   }
 
-  // Eliminar reseña
+  // Eliminar reseña (requiere token)
   eliminarResena(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/${id}`);
+    return this.http.delete(
+      `${this.baseUrl}/${id}`,
+      { headers: this.headers() }
+    );
   }
 
-  // Obtener reseñas por servicio 
+  // Obtener reseñas por servicio (público)
   getResenasPorServicio(idServicio: number): Observable<Resena[]> {
     return this.http.get<Resena[]>(`${this.baseUrl}?id_servicio=${idServicio}`);
   }
 
+  // Si tuvieras ruta GET /api/salones/{id}/resenas:
   getResenasPorSalon(idSalon: number): Observable<Resena[]> {
     return this.http.get<Resena[]>(`http://localhost/api/salones/${idSalon}/resenas`);
   }
