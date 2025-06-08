@@ -1,0 +1,89 @@
+<div class="navbar-superior">
+  <a (click)="goHome()" class="logo" aria-label="BeautyBook">
+    <svg
+      #logoSvg
+      width="320"
+      height="100"
+      viewBox="0 0 320 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <text
+        x="0"
+        y="55"
+        font-family="'Poppins', sans-serif"
+        font-size="36"
+        font-weight="600"
+        fill="#fff"
+        opacity="0"
+      >
+        Beauty
+      </text>
+      <text
+        x="140"
+        y="55"
+        font-family="'Poppins', sans-serif"
+        font-size="36"
+        font-weight="700"
+        fill="#E0C060"
+        stroke="#fff"
+        stroke-width="1"
+        opacity="0"
+      >
+        Book
+      </text>
+      <path
+        d="M0 65 Q80 85 160 65"
+        stroke="#E0C060"
+        stroke-width="2"
+        fill="none"
+        stroke-dasharray="300"
+        stroke-dashoffset="300"
+      />
+    </svg>
+  </a>
+
+  <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+
+  <div class="botones">
+    <ng-container *ngIf="usuarioActual; else noLogin">
+      <div class="bienvenida">
+        <span>Bienvenido/a, {{ usuarioActual.nombre }}</span>
+      </div>
+      <img
+        src="/assets/image/icono_empleados.png"
+        class="foto-perfil w-10 h-10 rounded-full cursor-pointer"
+        (click)="goPerfil()"
+        alt="Foto de perfil"
+      />
+      <button class="logout" (click)="logout()">Cerrar Sesión</button>
+    </ng-container>
+
+    <ng-template #noLogin>
+      <button class="login-btn" (click)="onLogin()">
+        Iniciar Sesión/Registrarse
+      </button>
+      <button class="language-flag" (click)="toggleIdioma()">
+        <iconify-icon
+          [icon]="
+            idiomaActual === 'es'
+              ? 'emojione:flag-for-spain'
+              : 'emojione:flag-for-united-states'
+          "
+          width="40"
+          height="28"
+          [attr.aria-label]="idiomaActual === 'es' ? 'Español' : 'English'"
+        ></iconify-icon>
+      </button>
+      <button class="registrar" (click)="onRegister()">
+        Registra tu negocio
+      </button>
+    </ng-template>
+  </div>
+
+  <label for="menu-toggle" class="hamburger" aria-label="Abrir menú">
+    <span></span>
+    <span></span>
+    <span></span>
+  </label>
+</div>

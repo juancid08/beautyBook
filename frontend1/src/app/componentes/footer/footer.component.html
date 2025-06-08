@@ -1,4 +1,4 @@
-<div class="footer">
+<div class="footer" #footer>
   <div class="preguntas">
     <a (click)="navigateTo('quienesSomos')">Quiénes Somos</a>
     <a (click)="navigateTo('preguntasFrecuentes')">Preguntas Frecuentes</a>
@@ -7,30 +7,57 @@
   </div>
 
   <div class="footer-inferior">
-    <div class="redes-sociales">
-      <a href="https://www.facebook.com/BeautyBook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-      <a href="https://www.instagram.com/BeautyBook" target="_blank"><i class="fab fa-instagram"></i></a>
-      <a href="https://twitter.com/BeautyBook" target="_blank"><i class="fab fa-twitter"></i></a>
+    <div class="logo-svg">
+      <svg
+        width="200"
+        height="60"
+        viewBox="0 0 320 100"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <text
+          x="0"
+          y="55"
+          font-family="'Poppins', sans-serif"
+          font-size="36"
+          font-weight="600"
+          fill="#fff"
+        >
+          Beauty
+        </text>
+        <text
+          x="140"
+          y="55"
+          font-family="'Poppins', sans-serif"
+          font-size="36"
+          font-weight="700"
+          fill="#f1c40f"
+          stroke="#fff"
+          stroke-width="1"
+        >
+          Book
+        </text>
+        <path
+          d="M0 65 Q80 85 160 65"
+          stroke="#f1c40f"
+          stroke-width="2"
+          fill="none"
+        />
+      </svg>
     </div>
 
     <p>&copy; 2025 BeautyBook. Todos los derechos reservados.</p>
 
-    <!-- SVG como logo -->
-    <div class="logo-svg">
-      <svg width="200" height="60" viewBox="0 0 320 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Texto Beauty -->
-        <text x="0" y="55" font-family="'Poppins', sans-serif" font-size="36" font-weight="600" fill="#fff">
-          Beauty
-        </text>
-
-        <!-- Texto Book con borde -->
-        <text x="140" y="55" font-family="'Poppins', sans-serif" font-size="36" font-weight="700" fill="#f1c40f" stroke="#fff" stroke-width="1">
-          Book
-        </text>
-
-        <!-- Línea curva -->
-        <path d="M0 65 Q80 85 160 65" stroke="#f1c40f" stroke-width="2" fill="none" />
-      </svg>
+    <div class="redes-sociales">
+      <a href="https://www.facebook.com/BeautyBook" target="_blank"
+        ><i class="fab fa-facebook-f"></i
+      ></a>
+      <a href="https://www.instagram.com/BeautyBook" target="_blank"
+        ><i class="fab fa-instagram"></i
+      ></a>
+      <a href="https://twitter.com/BeautyBook" target="_blank"
+        ><i class="fab fa-twitter"></i
+      ></a>
     </div>
   </div>
 </div>
