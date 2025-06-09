@@ -246,6 +246,10 @@ export class PaginaPrincipalComponent
     this.router.navigate(["/register"]);
   }
 
+  goPerfil() {
+    this.router.navigate(['/perfil']);
+  }
+
   onRegistrarNegocio() {
     if (!this.usuarioActual) {
       this.router.navigate(['/login']);

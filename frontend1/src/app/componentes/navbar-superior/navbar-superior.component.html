@@ -57,6 +57,14 @@
         alt="Foto de perfil"
       />
       <button class="logout" (click)="logout()">Cerrar Sesión</button>
+      
+      <button
+        class="registrar"
+        *ngIf="!tieneSalon"
+        (click)="onRegistrarNegocio()"
+      >
+        Registra tu negocio
+      </button>
     </ng-container>
 
     <ng-template #noLogin>
@@ -64,18 +72,14 @@
         Iniciar Sesión/Registrarse
       </button>
       <button class="language-flag" (click)="toggleIdioma()">
-        <iconify-icon
-          [icon]="
-            idiomaActual === 'es'
-              ? 'emojione:flag-for-spain'
-              : 'emojione:flag-for-united-states'
-          "
-          width="40"
-          height="28"
-          [attr.aria-label]="idiomaActual === 'es' ? 'Español' : 'English'"
-        ></iconify-icon>
+        <!-- ... icono de bandera ... -->
       </button>
-      <button class="registrar" (click)="onRegister()">
+      <!-- Sólo aparece si no tiene salón -->
+      <button
+        class="registrar"
+        *ngIf="!tieneSalon"
+        (click)="onRegistrarNegocio()"
+      >
         Registra tu negocio
       </button>
     </ng-template>

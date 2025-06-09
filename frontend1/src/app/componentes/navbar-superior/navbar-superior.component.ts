@@ -14,6 +14,7 @@ import { isPlatformBrowser, CommonModule } from "@angular/common";
 import { Router } from "@angular/router";
 import anime from "animejs/lib/anime.es.js";
 import { AuthService } from "../../services/auth.service";
+import { SalonService, Salon } from "../../services/salon.service";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -29,23 +30,43 @@ export class NavbarSuperiorComponent
 {
   @ViewChild("logoSvg") logoSvg!: ElementRef<SVGSVGElement>;
 
-  usuarioActual: any = "";
+  usuarioActual: any = null;
+  tieneSalon = false;
   idiomaActual: "es" | "en" = "es";
+
   private userSub!: Subscription;
+  private salonSub!: Subscription;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
     private router: Router,
-    private authSvc: AuthService
+    private authSvc: AuthService,
+    private salonService: SalonService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    // 1) Suscribirse al usuario
     this.userSub = this.authSvc.currentUser$.subscribe((u) => {
       this.usuarioActual = u;
+      // 2) Si hay usuario, comprobar si tiene salón
+      if (u && u.id_usuario) {
+        this.salonSub = this.salonService
+          .getSalonesPorUsuario(u.id_usuario)
+          .subscribe({
+            next: (salones: Salon[]) => {
+              this.tieneSalon = salones.length > 0;
+            },
+            error: () => {
+              this.tieneSalon = false;
+            },
+          });
+      } else {
+        this.tieneSalon = false;
+      }
     });
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId) && this.logoSvg) {
       anime
         .timeline({ loop: false })
@@ -67,33 +88,40 @@ export class NavbarSuperiorComponent
     }
   }
 
-  ngOnDestroy() {
-    if (this.userSub) {
-      this.userSub.unsubscribe();
-    }
+  ngOnDestroy(): void {
+    this.userSub?.unsubscribe();
+    this.salonSub?.unsubscribe();
   }
 
-  goHome() {
+  goHome(): void {
     this.router.navigate(["/"]);
   }
 
-  goPerfil() {
+  goPerfil(): void {
     this.router.navigate(["/perfil"]);
+  }
+
+  onLogin(): void {
+    this.router.navigate(["/login"]);
+  }
+
+  onRegister(): void {
+    this.router.navigate(["/register"]);
+  }
+
+  onRegistrarNegocio(): void {
+    if (!this.usuarioActual) {
+      this.router.navigate(["/login"]);
+    } else {
+      this.router.navigate(["/register-negocio"]);
+    }
+  }
+
+  logout(): void {
+    this.authSvc.logout();
   }
 
   toggleIdioma(): void {
     this.idiomaActual = this.idiomaActual === "es" ? "en" : "es";
-  }
-
-  onLogin() {
-    this.router.navigate(["/login"]);
-  }
-
-  onRegister() {
-    this.router.navigate(["/register"]);
-  }
-
-  logout() {
-    this.authSvc.logout();
   }
 }
