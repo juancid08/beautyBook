@@ -1,51 +1,78 @@
 <!-- NAVBAR IMPORTADA DE COMPONENTES -->
 <app-navbar></app-navbar>
 
-<!-- CONTENEDOR GENERAL EN FILA -->
-<div class="flex px-6 mt-10 mb-24 gap-6">
+<!-- CONTENEDOR GENERAL -->
+<div class="flex flex-col lg:flex-row px-6 lg:px-20 mt-10 mb-24 gap-8">
   <!-- ACCORDION IMPORTADO DE COMPONENTES -->
-  <div class="w-64">
+  <div class="w-full lg:w-1/3">
     <app-accordion></app-accordion>
   </div>
 
-  <!-- CONTENIDO PRINCIPAL A LA DERECHA -->
-  <div class="flex-1 pb-5">
-    <div class="flex flex-col gap-8">
-      <h2 class="text-2xl font-bold">Preguntas frecuentes</h2>
+  <!-- CONTENIDO PRINCIPAL -->
+  <div
+    class="flex-1 pb-5 bg-white p-8 rounded-2xl shadow-md"
+    data-aos="fade-up"
+    data-aos-duration="1000"
+  >
+    <div class="flex flex-col gap-10">
+      <h2 class="text-3xl font-extrabold text-gray-800 text-left">
+        Preguntas frecuentes
+      </h2>
 
-      <ul class="space-y-6 list-none">
-        <li>
-          <p><span class="mr-2">✂️</span><strong>¿Cuáles son las ventajas de utilizar BeautyBook en comparación con otros métodos de reserva?</strong></p>
-          <p class="ml-6">
-            BeautyBook te ofrece una forma rápida, sencilla y organizada de reservar servicios de belleza sin llamadas ni esperas. 
-            Puedes explorar profesionales disponibles, ver reseñas reales, comparar precios, consultar horarios en tiempo real y 
-            gestionar tus citas desde un solo lugar. Todo esto con unos pocos clics y desde cualquier dispositivo.
+      <ul class="space-y-10 list-none">
+        <li class="transition-transform transform hover:scale-105 duration-300">
+          <p class="flex items-center text-xl font-semibold text-gray-800 mb-2">
+            <span class="mr-3 text-pink-500 text-2xl">✂️</span>
+            ¿Cuáles son las ventajas de utilizar BeautyBook en comparación con
+            otros métodos de reserva?
+          </p>
+          <p class="ml-9 text-gray-600 text-lg leading-relaxed">
+            BeautyBook te ofrece una forma rápida, sencilla y organizada de
+            reservar servicios de belleza sin llamadas ni esperas. Puedes
+            explorar profesionales disponibles, ver reseñas reales, comparar
+            precios, consultar horarios en tiempo real y gestionar tus citas
+            desde un solo lugar. Todo esto con unos pocos clics y desde
+            cualquier dispositivo.
           </p>
         </li>
 
-        <li>
-          <p><span class="mr-2">✂️</span><strong>¿BeautyBook para clientes es gratis?</strong></p>
-          <p class="ml-6">
-            ¡Sí! BeautyBook es completamente gratuito para los clientes. No pagas ninguna comisión por reservar una cita. Solo pagas por
-            el servicio que reservas con tu profesional de belleza favorito.
+        <li class="transition-transform transform hover:scale-105 duration-300">
+          <p class="flex items-center text-xl font-semibold text-gray-800 mb-2">
+            <span class="mr-3 text-pink-500 text-2xl">✂️</span>
+            ¿BeautyBook para clientes es gratis?
+          </p>
+          <p class="ml-9 text-gray-600 text-lg leading-relaxed">
+            ¡Sí! BeautyBook es completamente gratuito para los clientes. No
+            pagas ninguna comisión por reservar una cita. Solo pagas por el
+            servicio que reservas con tu profesional de belleza favorito.
           </p>
         </li>
 
-        <li>
-          <p><span class="mr-2">✂️</span><strong>¿Puedo usar BeautyBook fuera de mi país?</strong></p>
-          <p class="ml-6">
-            BeautyBook está diseñado para ofrecerte flexibilidad, estés donde estés. Puedes usar la plataforma en cualquier lugar 
-            del mundo. Si estás de viaje, simplemente cambia tu ubicación en la app y encontrarás profesionales disponibles cerca de ti 
-            (según disponibilidad en la zona).
+        <li class="transition-transform transform hover:scale-105 duration-300">
+          <p class="flex items-center text-xl font-semibold text-gray-800 mb-2">
+            <span class="mr-3 text-pink-500 text-2xl">✂️</span>
+            ¿Puedo usar BeautyBook fuera de mi país?
+          </p>
+          <p class="ml-9 text-gray-600 text-lg leading-relaxed">
+            BeautyBook está diseñado para ofrecerte flexibilidad, estés donde
+            estés. Puedes usar la plataforma en cualquier lugar del mundo. Si
+            estás de viaje, simplemente cambia tu ubicación en la app y
+            encontrarás profesionales disponibles cerca de ti (según
+            disponibilidad en la zona).
           </p>
         </li>
 
-        <li>
-          <p><span class="mr-2">✂️</span><strong>¿Cómo puedo contactar directamente con un proveedor de servicios?</strong></p>
-          <p class="ml-6">
-            Puedes contactar directamente con un proveedor desde su perfil en BeautyBook. Cada profesional tiene una sección de contacto
-            donde podrás enviarle un mensaje, llamar o incluso chatear si ofrece esa opción. También recibirás notificaciones y recordatorios
-            para mantenerte siempre en contacto con ellos antes y después de tu cita.
+        <li class="transition-transform transform hover:scale-105 duration-300">
+          <p class="flex items-center text-xl font-semibold text-gray-800 mb-2">
+            <span class="mr-3 text-pink-500 text-2xl">✂️</span>
+            ¿Cómo puedo contactar directamente con un proveedor de servicios?
+          </p>
+          <p class="ml-9 text-gray-600 text-lg leading-relaxed">
+            Puedes contactar directamente con un proveedor desde su perfil en
+            BeautyBook. Cada profesional tiene una sección de contacto donde
+            podrás enviarle un mensaje, llamar o incluso chatear si ofrece esa
+            opción. También recibirás notificaciones y recordatorios para
+            mantenerte siempre en contacto con ellos antes y después de tu cita.
           </p>
         </li>
       </ul>

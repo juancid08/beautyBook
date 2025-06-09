@@ -1,28 +1,27 @@
 .categorias-quienes-somos a {
-    position: relative;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-    padding-bottom: 0.2rem;
-    transition: color 0.2s ease;
-  
-    &:hover {
-      color: #f1c40f;
-    }
-  
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background-color: #f1c40f;
-      transition: width 0.3s ease;
-    }
-  
-    &:hover::after {
-      width: 100%;
-    }
+  position: relative;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  padding-bottom: 0.2rem;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #f1c40f;
   }
-  
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #f1c40f;
+    transition: width 0.3s ease;
+  }
+
+  &:hover::after {
+    width: 100%;
+  }
+}
