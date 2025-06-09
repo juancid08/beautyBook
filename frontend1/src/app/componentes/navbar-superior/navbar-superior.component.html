@@ -72,14 +72,18 @@
         Iniciar Sesión/Registrarse
       </button>
       <button class="language-flag" (click)="toggleIdioma()">
-        <!-- ... icono de bandera ... -->
+        <iconify-icon
+          [icon]="
+            idiomaActual === 'es'
+              ? 'emojione:flag-for-spain'
+              : 'emojione:flag-for-united-states'
+          "
+          width="40"
+          height="28"
+          [attr.aria-label]="idiomaActual === 'es' ? 'Español' : 'English'"
+        ></iconify-icon>
       </button>
-      <!-- Sólo aparece si no tiene salón -->
-      <button
-        class="registrar"
-        *ngIf="!tieneSalon"
-        (click)="onRegistrarNegocio()"
-      >
+      <button class="registrar"        *ngIf="!tieneSalon" (click)="onRegistrarNegocio()">
         Registra tu negocio
       </button>
     </ng-template>
