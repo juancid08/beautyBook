@@ -1,93 +1,52 @@
-<div class="navbar-container">
-  <video #bgVideo autoplay muted loop class="navbar-video">
+<div class="navbar-container fade-in">
+  <video #bgVideo autoplay muted loop class="navbar-video zoom-in">
     <source src="/assets/video/hero_section.mp4" type="video/mp4" />
     Tu navegador no soporta videos HTML5.
   </video>
 
-  <div class="navbar-superior">
-    <a (click)="goHome()" class="logo" aria-label="BeautyBook">
-      <svg
-        #logoSvg
-        width="320"
-        height="100"
-        viewBox="0 0 320 100"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <text
-          x="0"
-          y="55"
-          font-family="'Poppins', sans-serif"
-          font-size="36"
-          font-weight="600"
-          fill="#fff"
-          opacity="0"
-        >
-          Beauty
-        </text>
-        <text
-          x="140"
-          y="55"
-          font-family="'Poppins', sans-serif"
-          font-size="36"
-          font-weight="700"
-          fill="#E0C060"
-          stroke="#fff"
-          stroke-width="1"
-          opacity="0"
-        >
-          Book
-        </text>
-        <path
-          d="M0 65 Q80 85 160 65"
-          stroke="#E0C060"
-          stroke-width="2"
-          fill="none"
-          stroke-dasharray="300"
-          stroke-dashoffset="300"
-        />
-      </svg>
-    </a>
+  <app-navbar-superior></app-navbar-superior>
 
-    <div class="botones">
-      <ng-container *ngIf="usuarioActual; else noLogin">
-        <div class="bienvenida">
-          <span>Bienvenido/a, {{ usuarioActual.nombre }}</span>
+  <div class="botones">
+    <ng-container *ngIf="usuarioActual; else noLogin">
+      <div class="bienvenida">
+        <span>Bienvenido/a, {{ usuarioActual.nombre }}</span>
+      </div>
+      <img
+        src="/assets/image/icono_empleados.png"
+        class="foto-perfil w-10 h-10 rounded-full cursor-pointer"
+        (click)="goPerfil()"
+      />
+      <button class="logout" (click)="logout()">
+        <i class="fas fa-right-from-bracket"></i>
+        Cerrar Sesión
+      </button>
+      <button class="registrar" *ngIf="!tieneSalon" (click)="onRegistrarNegocio()">
+        Registra tu negocio
+      </button>
+    </ng-container>
+
+    <ng-template #noLogin>
+      <button class="login-btn" (click)="onLogin()">
+        <i class="fas fa-sign-in-alt"></i>
+        <div class="text-lines">
+          <span>Iniciar</span>
+          <span>Sesión/Registrarse</span>
         </div>
-        <img
-          src="/assets/image/icono_empleados.png"
-          class="foto-perfil w-10 h-10 rounded-full cursor-pointer"
-          (click)="goPerfil()"
-        />
-        <button class="logout" (click)="logout()">
-          <i class="fas fa-right-from-bracket"></i>
-          Cerrar Sesión
-        </button>
-        <button class="registrar" *ngIf="!tieneSalon" (click)="onRegistrarNegocio()">
-          Registra tu negocio
-        </button>
-      </ng-container>
-
-      <ng-template #noLogin>
-        <button class="login-btn" (click)="onLogin()">
-          <i class="fas fa-sign-in-alt"></i>
-          <div class="text-lines">
-            <span>Iniciar</span>
-            <span>Sesión/Registrarse</span>
-          </div>
-        </button>
-        <button class="registrar" *ngIf="!tieneSalon" (click)="onRegistrarNegocio()">
-          Registra tu negocio
-        </button>
-      </ng-template>
-    </div>
+      </button>
+      <button class="registrar" *ngIf="!tieneSalon" (click)="onRegistrarNegocio()">
+        Registra tu negocio
+      </button>
+    </ng-template>
   </div>
 
-  <div class="navbar-medio">
+  <div class="navbar-medio slide-in-down">
     <div class="frases-container">
-      <p class="frases">{{ displayedText }}</p>
+      <p class="frases typewriter">
+        {{ displayedText }}<span class="cursor">|</span>
+      </p>
     </div>
-    <div class="buscador" style="position: relative">
+
+    <div class="buscador">
       <input
         type="text"
         [(ngModel)]="searchTerm"
@@ -98,64 +57,27 @@
       />
 
       <ul *ngIf="sugerencias.length > 0" class="sugerencias-list">
-        <li
-          *ngFor="let sugerencia of sugerencias"
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            cursor: pointer;
-          "
-        >
-          <span (click)="selectSugerencia(sugerencia)" style="flex-grow: 1">
+        <li *ngFor="let sugerencia of sugerencias" class="sugerencia-item">
+          <span (click)="selectSugerencia(sugerencia)" class="sugerencia-text">
             {{ sugerencia }}
           </span>
-          <button
-            (click)="setSearchOnly(sugerencia); $event.stopPropagation()"
-            class="btn-sugerencia"
-            [attr.aria-label]="'Copiar ' + sugerencia"
-            style="
-              background-color: transparent;
-              border: none;
-              cursor: pointer;
-              font-size: 1.2rem;
-              color: #e0c060;
-            "
-            title="Copiar texto al buscador"
-          >
+          <button (click)="setSearchOnly(sugerencia); $event.stopPropagation()" class="btn-sugerencia">
             📋
           </button>
         </li>
       </ul>
 
-      <!-- Mensaje si no hay sugerencias -->
-      <p
-        *ngIf="sugerencias.length === 0 && searchTerm"
-        style="
-          margin-top: 4px;
-          font-style: italic;
-          color: #eee;
-          background: rgba(0, 0, 0, 0.4);
-          padding: 4px 8px;
-          border-radius: 4px;
-          position: absolute;
-          top: 100%;
-          left: 0;
-        "
-      >
+      <p *ngIf="sugerencias.length === 0 && searchTerm" class="no-results">
         No se encontraron resultados para "{{ searchTerm }}"
       </p>
 
       <button class="buscar" (click)="onSearch()">
         <i class="fas fa-search"></i>
       </button>
-
-      <!-- DEBUG: mostrar en crudo lo que hay en sugerencias -->
     </div>
   </div>
 
-  <div class="navbar-inferior">
+  <div class="navbar-inferior fade-in-delay">
     <div class="categorias">
       <a
         *ngFor="let cat of categories"
@@ -169,68 +91,61 @@
   </div>
 </div>
 
-<div class="contenido-pagina">
+<div class="contenido-pagina fade-container">
   <h1>{{ tituloCategoria }}</h1>
+
   <div class="slider-wrapper">
     <button class="nav-arrow left" (click)="scrollLeft()">
       <i class="fas fa-chevron-left"></i>
     </button>
+
     <div #cardsContainer class="cards-container">
       <div
-        class="card"
+        class="card animate-card"
         *ngFor="let salon of salones"
         (click)="goBarberShopDetails(salon)"
       >
         <div class="image-wrapper">
-          <img
-            [src]="salon.foto || '/assets/image/default-salon.png'"
-            [alt]="salon.nombre"
-          />
+          <img [src]="salon.foto || '/assets/image/default-salon.png'" [alt]="salon.nombre" />
           <div class="rating">{{ salon.rating?.toFixed(1) || "N/A" }} ★</div>
         </div>
+
         <div class="card-body">
           <h2 class="salon-name">{{ salon.nombre }}</h2>
           <p class="salon-street">{{ salon.direccion }}</p>
-          <button
-            class="like-btn"
-            (click)="toggleLike(salon); $event.stopPropagation()"
-          >
-            <i
-              class="fas"
-              [ngClass]="salon.liked ? 'fa-heart' : 'fa-heart-o'"
-            ></i>
+          <button class="like-btn" (click)="toggleLike(salon); $event.stopPropagation()">
+            <i class="fas" [ngClass]="salon.liked ? 'fa-heart' : 'fa-heart-o'"></i>
           </button>
         </div>
       </div>
     </div>
+
     <button class="nav-arrow right" (click)="scrollRight()">
       <i class="fas fa-chevron-right"></i>
     </button>
   </div>
 </div>
 
-<div class="pre-footer">
-  <div class="texto">
-    <h4><strong>Tu cita de belleza, más fácil que nunca</strong></h4>
-    <p>
-      ¿Buscas a un barbero, peluquero, masajista o manicurista cerca de ti? ¿Te
-      gustaría agendar una sesión para darle forma a tu barba, definir tus cejas
-      o disfrutar de un masaje profundo?
-      <br /><br />
-      Con BeautyBook, una app gratuita pensada para el mundo de la belleza y el
-      bienestar, podrás agendar tu cita en segundos. Olvídate de las llamadas
-      telefónicas: reserva cuando quieras, las 24 horas del día, los 7 días de
-      la semana, desde donde estés.
-      <br /><br />
-      <strong
-        >Descubre los mejores profesionales de tu zona y agenda al instante con
-        BeautyBook.</strong
-      >
-    </p>
-  </div>
-  <div class="imagen">
-    <img src="/assets/image/pagina1.webp" alt="Foto de contenido principal" />
+<div class="pre-footer fade-in-up">
+  <div class="pre-footer-content">
+    <div class="texto">
+      <h4><strong>Tu cita de belleza, más fácil que nunca</strong></h4>
+      <p>
+        ¿Buscas a un barbero, peluquero, masajista o manicurista cerca de ti?
+        ¿Te gustaría agendar una sesión para darle forma a tu barba, definir tus
+        cejas o disfrutar de un masaje profundo?
+        <br /><br />
+        Con BeautyBook podrás agendar tu cita en segundos.
+        <br /><br />
+        <strong>Descubre los mejores profesionales de tu zona y agenda al instante.</strong>
+      </p>
+    </div>
+
+    <div class="imagen">
+      <img src="/assets/image/pagina1.webp" alt="Foto de contenido principal" />
+    </div>
   </div>
 </div>
 
+<br /><br /><br /><br /><br /><br /><br /><br />
 <app-footer></app-footer>

@@ -1,30 +1,36 @@
+// src/app/pages/pagina-principal/pagina-principal.component.ts
 import {
   Component,
   OnInit,
   OnDestroy,
   AfterViewInit,
-  Inject,
-  PLATFORM_ID,
   ViewChild,
   ElementRef,
+  CUSTOM_ELEMENTS_SCHEMA,
+  Inject,
+  PLATFORM_ID,
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { FooterComponent } from "../../componentes/footer/footer.component";
-import anime from "animejs/lib/anime.es.js";
-import { AuthService } from "../../services/auth.service";
 import { SalonService, Salon } from "../../services/salon.service";
-
-// 👇 Añadido para RxJS autocomplete
 import { Subject, Subscription, of } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
+import { NavbarSuperiorComponent } from "../../componentes/navbar-superior/navbar-superior.component";
+import { AuthService } from "../../services/auth.service"; // <-- Asegúrate de tener esto
 
 @Component({
   selector: "app-pagina-principal",
   standalone: true,
-  imports: [CommonModule, FormsModule, FooterComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NavbarSuperiorComponent,
+    FooterComponent,
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: "./pagina-principal.component.html",
   styleUrls: ["./pagina-principal.component.scss"],
 })
@@ -32,7 +38,6 @@ export class PaginaPrincipalComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
   @ViewChild("bgVideo") bgVideo!: ElementRef<HTMLVideoElement>;
-  @ViewChild("logoSvg") logoSvg!: ElementRef<SVGSVGElement>;
   @ViewChild("cardsContainer") cardsContainer!: ElementRef<HTMLDivElement>;
 
   searchTerm = "";
@@ -61,7 +66,6 @@ export class PaginaPrincipalComponent
   usuarioActual: any = "";
   tieneSalon: boolean | null = null;
 
-  // 👇 Autocomplete
   sugerencias: string[] = [];
   private searchTerm$ = new Subject<string>();
   private sugSub!: Subscription;
@@ -69,8 +73,8 @@ export class PaginaPrincipalComponent
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
     private router: Router,
-    private authSvc: AuthService,
-    private salonService: SalonService
+    private salonService: SalonService,
+    private authSvc: AuthService
   ) {}
 
   ngOnInit() {
@@ -98,7 +102,6 @@ export class PaginaPrincipalComponent
 
     this.fetchSalones();
 
-    // 👇 Suscripción para autocomplete
     this.sugSub = this.searchTerm$
       .pipe(
         debounceTime(300),
@@ -109,15 +112,33 @@ export class PaginaPrincipalComponent
         })
       )
       .subscribe((nombres) => {
-        console.log("🔍 Sugerencias recibidas del servidor:", nombres);
         this.sugerencias = nombres;
       });
   }
 
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
-      this.animateLogo();
+      this.cambiarVideoSegunDispositivo();
     }
+  }
+
+  private cambiarVideoSegunDispositivo() {
+    if (!this.bgVideo) return;
+
+    const videoElement = this.bgVideo.nativeElement;
+    const sourceElement = videoElement.querySelector("source");
+
+    if (this.isMobile()) {
+      sourceElement?.setAttribute("src", "/assets/video/video_movil.mp4");
+    } else {
+      sourceElement?.setAttribute("src", "/assets/video/hero_section.mp4");
+    }
+
+    videoElement.load();
+  }
+
+  private isMobile(): boolean {
+    return window.innerWidth <= 768;
   }
 
   ngOnDestroy() {
@@ -143,8 +164,8 @@ export class PaginaPrincipalComponent
   private startTyping() {
     const current = this.phrases[this.phraseIndex];
     if (this.charIndex < current.length) {
-      this.displayedText += current[this.charIndex++];
-      this.typingTimer = setTimeout(() => this.startTyping(), 100);
+      this.displayedText += current[this.charIndex++]; 
+      this.typingTimer = setTimeout(() => this.startTyping(), 80);
     } else {
       this.typingTimer = setTimeout(() => this.startDeleting(), 2000);
     }
@@ -154,25 +175,15 @@ export class PaginaPrincipalComponent
     if (this.charIndex > 0) {
       this.displayedText = this.displayedText.slice(0, -1);
       this.charIndex--;
-      this.deletingTimer = setTimeout(() => this.startDeleting(), 50);
+      this.deletingTimer = setTimeout(() => this.startDeleting(), 40);
     } else {
       this.phraseIndex = (this.phraseIndex + 1) % this.phrases.length;
       this.typingTimer = setTimeout(() => this.startTyping(), 500);
     }
   }
 
-  goHome() {
-    if (this.bgVideo) {
-      this.bgVideo.nativeElement.currentTime = 0;
-    }
-  }
-
   goBarberShopDetails(salon: Salon) {
     this.router.navigate(["/detallesBarberia", salon.id_salon]);
-  }
-
-  goPerfil() {
-    this.router.navigate(["/perfil"]);
   }
 
   onSearch() {
@@ -184,15 +195,14 @@ export class PaginaPrincipalComponent
 
     this.salonService.buscarSalonesPorNombre(termino).subscribe((salones) => {
       if (salones.length === 1) {
-        // Si solo hay un resultado, navegar directamente al detalle del salón
         this.router.navigate(["/detallesBarberia", salones[0].id_salon]);
       } else {
-        // Si hay varios o ninguno, mostrar lista o mensaje
         this.salones = salones;
         this.selectedCategory = null;
       }
     });
   }
+
   setSearchOnly(nombre: string) {
     this.searchTerm = nombre;
     this.sugerencias = [];
@@ -205,7 +215,6 @@ export class PaginaPrincipalComponent
   selectSugerencia(nombre: string) {
     this.searchTerm = nombre;
     this.sugerencias = [];
-    // Llamamos al backend para obtener el objeto Salon completo
     this.salonService
       .buscarSalonesPorNombre(nombre.toLowerCase())
       .subscribe((salones) => {
@@ -267,26 +276,5 @@ export class PaginaPrincipalComponent
       left: 300,
       behavior: "smooth",
     });
-  }
-
-  private animateLogo() {
-    if (!this.logoSvg) return;
-    anime
-      .timeline({ loop: false })
-      .add({
-        targets: this.logoSvg.nativeElement.querySelectorAll("text"),
-        translateY: [-20, 0],
-        opacity: [0, 1],
-        easing: "easeOutExpo",
-        duration: 1200,
-        delay: anime.stagger(300),
-      })
-      .add({
-        targets: this.logoSvg.nativeElement.querySelector("path"),
-        strokeDashoffset: [anime.setDashoffset, 0],
-        easing: "easeInOutSine",
-        duration: 1500,
-        delay: 200,
-      });
   }
 }
