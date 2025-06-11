@@ -47,17 +47,16 @@
 
   <div class="botones">
     <ng-container *ngIf="usuarioActual; else noLogin">
-      <div class="bienvenida">
-        <span>Bienvenido/a, {{ usuarioActual.nombre }}</span>
-      </div>
-      <img
-        src="/assets/image/icono_empleados.png"
-        class="foto-perfil w-10 h-10 rounded-full cursor-pointer"
-        (click)="goPerfil()"
-        alt="Foto de perfil"
-      />
-      <button class="logout" (click)="logout()">Cerrar Sesión</button>
-      
+      <!-- AQUÍ ESTÁ EL NUEVO BLOQUE UNIFICADO DE PERFIL -->
+      <button class="perfil-btn" (click)="goPerfil()">
+        <img
+          src="/assets/image/icono_empleados.png"
+          class="foto-perfil"
+          alt="Foto de perfil"
+        />
+        <span>Perfil</span>
+      </button>
+
       <button
         class="registrar"
         *ngIf="!tieneSalon"
@@ -65,26 +64,27 @@
       >
         Registra tu negocio
       </button>
+
+      <button class="language-button" (click)="toggleIdioma()">
+        {{ idiomaActual === "es" ? "🇪🇸 ES" : "🇬🇧 EN" }}
+      </button>
     </ng-container>
 
     <ng-template #noLogin>
       <button class="login-btn" (click)="onLogin()">
         Iniciar Sesión/Registrarse
       </button>
-      <button class="language-flag" (click)="toggleIdioma()">
-        <iconify-icon
-          [icon]="
-            idiomaActual === 'es'
-              ? 'emojione:flag-for-spain'
-              : 'emojione:flag-for-united-states'
-          "
-          width="40"
-          height="28"
-          [attr.aria-label]="idiomaActual === 'es' ? 'Español' : 'English'"
-        ></iconify-icon>
-      </button>
-      <button class="registrar"        *ngIf="!tieneSalon" (click)="onRegistrarNegocio()">
+
+      <button
+        class="registrar"
+        *ngIf="!tieneSalon"
+        (click)="onRegistrarNegocio()"
+      >
         Registra tu negocio
+      </button>
+
+      <button class="language-button" (click)="toggleIdioma()">
+        {{ idiomaActual === "es" ? "🇪🇸 ES" : "🇬🇧 EN" }}
       </button>
     </ng-template>
   </div>

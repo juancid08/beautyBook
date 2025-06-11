@@ -15,27 +15,38 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        // 1. Validación
-        $data = $request->validate([
-            'nombre'                  => 'required|string|max:255',
-            'apellidos'               => 'required|string|max:255',
-            'email'                   => 'required|email|unique:usuario,email',
-            'password'                => 'required|string|min:6|confirmed',
-            'password_confirmation'   => 'required|string|min:6'
-        ]);
+        $rules = [
+            'nombre'                => 'required|string|max:255',
+            'apellidos'             => 'required|string|max:255',
+            'email'                 => 'required|email|unique:usuario,email',
+            'password'              => 'required|string|min:7|confirmed',
+            'password_confirmation' => 'required|string|min:7',
+        ];
 
-        // 2. Crear usuario
+        $messages = [
+            'nombre.required'                  => 'El nombre es obligatorio.',
+            'apellidos.required'               => 'Los apellidos son obligatorios.',
+            'email.required'                   => 'El correo electrónico es obligatorio.',
+            'email.email'                      => 'Debe ingresar un correo electrónico válido.',
+            'email.unique'                     => 'Ese correo ya está registrado.',
+            'password.required'                => 'La contraseña es obligatoria.',
+            'password.min'                     => 'La contraseña debe tener al menos :min caracteres.',
+            'password.confirmed'               => 'Las contraseñas no coinciden.',
+            'password_confirmation.required'   => 'Debe repetir la contraseña.',
+            'password_confirmation.min'        => 'La confirmación debe tener al menos :min caracteres.',
+        ];
+
+        $data = $request->validate($rules, $messages);
+
         $usuario = Usuario::create([
             'nombre'     => $data['nombre'],
             'apellidos'  => $data['apellidos'],
-            'email'    => $data['email'],
-            'password' => Hash::make($data['password']),
+            'email'      => $data['email'],
+            'password'   => Hash::make($data['password']),
         ]);
 
-        // 3. Generar token
         $token = $usuario->createToken('token-api')->plainTextToken;
 
-        // 4. Devolver JSON con usuario y token
         return response()->json([
             'usuario' => $usuario,
             'token'   => $token,
@@ -50,6 +61,10 @@ class AuthController extends Controller
         $request->validate([
             'email'    => 'required|email',
             'password' => 'required|string',
+        ], [
+            'email.required'    => 'El correo electrónico es obligatorio.',
+            'email.email'       => 'Debe ingresar un correo electrónico válido.',
+            'password.required' => 'La contraseña es obligatoria.',
         ]);
 
         $usuario = Usuario::where('email', $request->email)->first();

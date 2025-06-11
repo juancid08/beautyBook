@@ -25,10 +25,19 @@ export class FooterComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     const observer = new IntersectionObserver(
-      (entries) => {
+      (entries, obs) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             this.renderer.addClass(this.footerElement.nativeElement, "visible");
+
+            // Si solo quieres mostrarlo una vez, paras de observar:
+            obs.unobserve(entry.target);
+          } else {
+            // (opcional) para que desaparezca si vuelves a subir
+            this.renderer.removeClass(
+              this.footerElement.nativeElement,
+              "visible"
+            );
           }
         });
       },
@@ -36,5 +45,9 @@ export class FooterComponent implements AfterViewInit {
     );
 
     observer.observe(this.footerElement.nativeElement);
+  }
+
+  goHome() {
+    this.router.navigate(["/"]);
   }
 }

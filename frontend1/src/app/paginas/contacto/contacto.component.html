@@ -8,23 +8,105 @@
     <app-accordion></app-accordion>
   </div>
 
-  <!-- TEXTO DE CONTACTO A LA DERECHA -->
+  <!-- Sección “Contáctanos” mejorada -->
   <div
-    class="flex-1 bg-white p-8 rounded-2xl shadow-md text-gray-800"
+    class="flex-1 bg-white p-10 rounded-3xl shadow-xl text-gray-800 space-y-10"
     data-aos="fade-up"
     data-aos-duration="1000"
   >
-    <h2 class="text-3xl font-bold mb-4 text-left">Contáctanos</h2>
-    <p class="text-lg mb-6 text-gray-700">
-      ¿Tienes alguna pregunta o problema? Ponte en contacto con nuestro equipo
-      de atención al cliente.
+    <!-- TÍTULO -->
+    <h2 class="text-4xl font-extrabold text-gray-900">Contáctanos</h2>
+    <p class="text-lg text-gray-700 max-w-prose">
+      En <strong>BeautyBook</strong> queremos asegurar que tu experiencia sea
+      perfecta. Si tienes dudas, sugerencias o necesitas ayuda, escríbenos y te
+      responderemos en un abrir y cerrar de ojos.
     </p>
 
-    <h3 class="text-xl font-semibold mb-2 text-gray-800">
-      Contactar con el servicio de atención al cliente
-    </h3>
-    <p class="text-lg text-blue-600 underline">
-      <a href="mailto:help.es&#64;beauty.com">help.es&#64;beauty.com</a>
+    <!-- TARJETAS DE CONTACTO -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Correo de soporte -->
+      <div
+        class="flex items-start gap-3 p-4 md:p-6 bg-blue-50 rounded-2xl hover:shadow-lg transition-shadow"
+      >
+        <div class="p-2 md:p-3 bg-blue-600 rounded-full text-white">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 md:h-6 md:w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 8h18a2 2 0 002-2V8a2 2 0 00-2-2H3a2 2 0 00-2 2v6a2 2 0 002 2z"
+            />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-lg md:text-2xl font-semibold text-gray-900">
+            Correo de soporte
+          </h3>
+          <a
+            href="mailto:help.es&#64;beauty.com"
+            class="mt-1 inline-block text-base md:text-lg text-blue-600 hover:underline"
+          >
+            help.es&#64;beauty.com
+          </a>
+        </div>
+      </div>
+
+      <!-- Soporte en redes sociales -->
+      <div
+        class="flex items-start gap-3 p-4 md:p-6 bg-pink-50 rounded-2xl hover:shadow-lg transition-shadow"
+      >
+        <div class="p-2 md:p-3 bg-pink-500 rounded-full text-white">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 md:h-6 md:w-6"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M24 4.6a10 10 0 01-2.9.8 5.07 5.07 0 002.2-2.8 10.14 10.14 0 01-3.2 1.2 5.05 5.05 0 00-8.6 4.6A14.3 14.3 0 011.7 3a5.05 5.05 0 001.6 6.8 5 5 0 01-2.3-.6v.06a5.07 5.07 0 004 5 5 5 0 01-2.3.1 5.05 5.05 0 004.7 3.5 10.12 10.12 0 01-6.3 2.2A10.3 10.3 0 010 19.5 14.3 14.3 0 007.7 21c9.2 0 14.2-7.6 14.2-14.2 0-.2 0-.4 0-.6A10.15 10.15 0 0024 4.6z"
+            />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-lg md:text-2xl font-semibold text-gray-900">
+            Redes Sociales
+          </h3>
+          <p class="mt-1 text-base md:text-lg text-gray-700 leading-relaxed">
+            Síguenos en
+            <a
+              href="https://facebook.com/BeautyBook"
+              target="_blank"
+              class="text-blue-600 hover:underline"
+              >Facebook</a
+            >,
+            <a
+              href="https://instagram.com/BeautyBook"
+              target="_blank"
+              class="text-pink-500 hover:underline"
+              >Instagram</a
+            >
+            y
+            <a
+              href="https://twitter.com/BeautyBook"
+              target="_blank"
+              class="text-blue-400 hover:underline"
+              >Twitter</a
+            >.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MENSAJE FINAL -->
+    <p class="text-gray-500 text-base">
+      Nuestro objetivo es ofrecerte una experiencia ágil y personalizada.
+      Escríbenos sin compromiso: ¡estamos aquí para ayudarte a crecer!
     </p>
   </div>
 </div>

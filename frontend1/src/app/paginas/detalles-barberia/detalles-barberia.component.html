@@ -1,7 +1,9 @@
 <!-- NAVBAR COMPLETA -->
 <app-navbar></app-navbar>
 
-<main class="max-w-screen-xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+<main
+  class="max-w-screen-xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8"
+>
   <!-- Imagen del local con slider -->
   <div class="lg:col-span-2" *ngIf="salon">
     <div class="relative">
@@ -30,7 +32,7 @@
     </div>
 
     <!-- Sección de Servicios -->
-    <section class="mt-6">
+    <section class="mt-6 section">
       <h3 class="text-lg font-semibold mb-2">Servicios</h3>
 
       <ng-container *ngIf="servicios && servicios.length > 0; else noServicios">
@@ -43,7 +45,7 @@
                 <button
                   (click)="abrirPopup(servicio)"
                   class="text-sm text-white px-3 py-1 rounded"
-                  style="background-color: #46796B;"
+                  style="background-color: #46796b"
                 >
                   {{ servicio.precio }}€ Reservar
                 </button>
@@ -59,12 +61,17 @@
     </section>
 
     <!-- Sección de Reseñas Existentes -->
-    <section class="mt-6">
+    <section class="mt-6 section">
       <h3 class="text-lg font-semibold mb-2">Reseñas</h3>
       <ng-container *ngIf="resenas && resenas.length > 0; else noResenas">
         <div class="space-y-4">
-          <div *ngFor="let resena of resenas" class="p-4 border rounded shadow-sm">
-            <p class="text-sm text-gray-900 italic">{{ usuarioActual.nombre }}</p>
+          <div
+            *ngFor="let resena of resenas"
+            class="p-4 border rounded shadow-sm"
+          >
+            <p class="text-sm text-gray-900 italic">
+              {{ usuarioActual.nombre }}
+            </p>
             <p class="text-sm text-gray-700 italic">{{ resena.comentario }}</p>
             <div class="text-yellow-400 text-xl">★★★★★</div>
           </div>
@@ -76,17 +83,24 @@
     </section>
 
     <!-- Sección para Dejar una Reseña -->
-    <section class="mt-8" *ngIf="usuarioActual">
+    <section class="mt-8 section" *ngIf="usuarioActual">
       <h3 class="text-lg font-semibold mb-4">Dejar una Reseña</h3>
 
-      <div *ngIf="citasPasadasSinResenar.length > 0; else noElegibles" class="space-y-6">
-        <div *ngFor="let cita of citasPasadasSinResenar" class="p-4 border rounded shadow-sm">
-          <!-- Mostrar breve información de la cita -->
+      <div
+        *ngIf="citasPasadasSinResenar.length > 0; else noElegibles"
+        class="space-y-6"
+      >
+        <div
+          *ngFor="let cita of citasPasadasSinResenar"
+          class="p-4 border rounded shadow-sm"
+        >
           <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
           <p><strong>Hora:</strong> {{ cita.hora }}</p>
-          <p><strong>Servicio:</strong> {{ getNombreServicioPorId(cita.id_servicio) }}</p>
+          <p>
+            <strong>Servicio:</strong>
+            {{ getNombreServicioPorId(cita.id_servicio) }}
+          </p>
 
-          <!-- Formulario rápido de rating + comentario -->
           <div class="mt-2">
             <label class="block text-sm font-medium">Puntuación (1–5):</label>
             <select #selRating class="border px-2 py-1 rounded mb-2">
@@ -106,7 +120,9 @@
             ></textarea>
 
             <button
-              (click)="onSubmitResena(cita, +selRating.value, txtComentario.value)"
+              (click)="
+                onSubmitResena(cita, +selRating.value, txtComentario.value)
+              "
               class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
             >
               Enviar Reseña
@@ -116,7 +132,9 @@
       </div>
 
       <ng-template #noElegibles>
-        <p class="text-gray-600 italic">No tienes citas pendientes de reseñar.</p>
+        <p class="text-gray-600 italic">
+          No tienes citas pendientes de reseñar.
+        </p>
       </ng-template>
     </section>
   </div>
@@ -130,14 +148,15 @@
         [src]="mapUrl"
         width="100%"
         height="200"
-        style="border:0;"
+        style="border: 0"
         allowfullscreen=""
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
         class="rounded"
       ></iframe>
       <div class="mt-2 text-sm">
-        <strong>{{ salon?.nombre }}</strong><br />
+        <strong>{{ salon?.nombre }}</strong
+        ><br />
         {{ salon?.direccion }}
       </div>
     </div>
@@ -172,101 +191,102 @@
   </aside>
 </main>
 
-  <!-- POPUP DE RESERVA -->
+<!-- POPUP DE RESERVA -->
+<div
+  *ngIf="mostrarPopup"
+  class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+>
   <div
-    *ngIf="mostrarPopup"
-    class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+    class="bg-white w-full max-w-4xl rounded-2xl shadow-xl p-6 sm:p-8 relative animate-popup overflow-y-auto max-h-[90vh]"
   >
-    <div class="bg-white w-full max-w-4xl rounded-2xl shadow-xl p-8 relative">
-      <!-- Botón cerrar -->
-      <button
-        (click)="cerrarPopup()"
-        class="absolute top-4 right-4 text-gray-500 hover:text-black text-3xl"
+    <!-- Botón cerrar -->
+    <button
+      (click)="cerrarPopup()"
+      class="absolute top-4 right-4 text-gray-500 hover:text-black text-3xl"
+    >
+      &times;
+    </button>
+
+    <!-- SLIDER de días -->
+    <div class="flex gap-4 overflow-x-auto mb-8 no-scrollbar">
+      <div
+        *ngFor="let dia of diasDisponibles"
+        (click)="seleccionarDia(dia)"
+        class="min-w-[80px] h-40 flex flex-col items-center justify-center border rounded-xl cursor-pointer transition duration-200 shadow-sm hover:shadow-md"
+        [class.bg-gray-900]="dia === diaSeleccionado"
+        [class.text-white]="dia === diaSeleccionado"
       >
-        &times;
-      </button>
-
-      <!-- SLIDER de días -->
-      <div class="flex gap-4 overflow-x-auto mb-8 no-scrollbar">
-        <div
-          *ngFor="let dia of diasDisponibles"
-          (click)="seleccionarDia(dia)"
-          class="min-w-[80px] h-40 flex flex-col items-center justify-center border rounded-xl cursor-pointer transition
-                duration-200 shadow-sm hover:shadow-md"
-          [class.bg-gray-900]="dia === diaSeleccionado"
-          [class.text-white]="dia === diaSeleccionado"
-        >
-          <span class="text-sm capitalize">{{ dia.dia }}</span>
-          <span class="text-4xl font-bold">{{ dia.numero }}</span>
-          <span class="text-sm uppercase">{{ dia.mes }}</span>
-        </div>
+        <span class="text-sm capitalize">{{ dia.dia }}</span>
+        <span class="text-4xl font-bold">{{ dia.numero }}</span>
+        <span class="text-sm uppercase">{{ dia.mes }}</span>
       </div>
+    </div>
 
-      <!-- Turnos -->
-      <div class="text-center mb-6">
-        <h3 class="text-lg font-semibold mb-4">Selecciona un turno</h3>
-        <div class="flex justify-center gap-6">
-          <button
-            *ngFor="let turno of turnosDisponibles"
-            (click)="seleccionarTurno(turno)"
-            class="px-5 py-2 border rounded-full hover:bg-gray-100"
-            [class.bg-black]="turno === turnoSeleccionado"
-            [class.text-white]="turno === turnoSeleccionado"
-          >
-            {{ turno }}
-          </button>
-        </div>
-      </div>
-
-      <!-- Horas -->
-      <div *ngIf="horasDisponibles.length" class="text-center mb-8">
-        <h3 class="text-lg font-semibold mb-4">Horas disponibles</h3>
-        <div class="flex flex-wrap justify-center gap-3">
-          <button
-            *ngFor="let hora of horasDisponibles"
-            (click)="seleccionarHora(hora)"
-            class="px-4 py-2 border rounded-full"
-            [class.bg-black]="hora === horaSeleccionada"
-            [class.text-white]="hora === horaSeleccionada"
-          >
-            {{ hora }}
-          </button>
-        </div>
-      </div>
-
-      <!-- Empleados -->
-      <div class="text-center mb-8">
-        <h3 class="text-lg font-semibold mb-4">Selecciona al empleado</h3>
-        <div class="flex flex-wrap justify-center gap-6">
-          <div
-            *ngFor="let empleado of empleados"
-            (click)="seleccionarEmpleado(empleado)"
-            class="flex items-center gap-4 p-4 rounded-lg shadow-sm cursor-pointer w-64 border transition hover:shadow-md"
-            [class.bg-black]="empleado === empleadoSeleccionado"
-            [class.text-white]="empleado === empleadoSeleccionado"
-          >
-            <img
-              [src]="empleado.foto || '/assets/image/icono_empleados.png'"
-              alt="{{ empleado.nombre }}"
-              class="w-12 h-12 rounded-full object-cover"
-            />
-            <span class="text-base font-medium">{{ empleado.nombre }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Confirmar -->
-      <div class="text-center mt-6">
+    <!-- Turnos -->
+    <div class="text-center mb-6">
+      <h3 class="text-lg font-semibold mb-4">Selecciona un turno</h3>
+      <div class="flex justify-center gap-6">
         <button
-          class="bg-black text-white px-8 py-2 rounded-full disabled:opacity-50"
-          [disabled]="!horaSeleccionada || !empleadoSeleccionado || !servicio"
-          (click)="confirmarReserva()"
+          *ngFor="let turno of turnosDisponibles"
+          (click)="seleccionarTurno(turno)"
+          class="px-5 py-2 border rounded-full hover:bg-gray-100"
+          [class.bg-black]="turno === turnoSeleccionado"
+          [class.text-white]="turno === turnoSeleccionado"
         >
-          Confirmar Reserva
+          {{ turno }}
         </button>
       </div>
     </div>
+
+    <!-- Horas -->
+    <div *ngIf="horasDisponibles.length" class="text-center mb-8">
+      <h3 class="text-lg font-semibold mb-4">Horas disponibles</h3>
+      <div class="flex flex-wrap justify-center gap-3">
+        <button
+          *ngFor="let hora of horasDisponibles"
+          (click)="seleccionarHora(hora)"
+          class="px-4 py-2 border rounded-full"
+          [class.bg-black]="hora === horaSeleccionada"
+          [class.text-white]="hora === horaSeleccionada"
+        >
+          {{ hora }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Empleados -->
+    <div class="text-center mb-8">
+      <h3 class="text-lg font-semibold mb-4">Selecciona al empleado</h3>
+      <div class="flex flex-wrap justify-center gap-6">
+        <div
+          *ngFor="let empleado of empleados"
+          (click)="seleccionarEmpleado(empleado)"
+          class="flex items-center gap-4 p-4 rounded-lg shadow-sm cursor-pointer w-64 border transition hover:shadow-md"
+          [class.bg-black]="empleado === empleadoSeleccionado"
+          [class.text-white]="empleado === empleadoSeleccionado"
+        >
+          <img
+            [src]="empleado.foto || '/assets/image/icono_empleados.png'"
+            alt="{{ empleado.nombre }}"
+            class="w-12 h-12 rounded-full object-cover"
+          />
+          <span class="text-base font-medium">{{ empleado.nombre }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmar -->
+    <div class="text-center mt-6">
+      <button
+        class="bg-black text-white px-8 py-2 rounded-full disabled:opacity-50"
+        [disabled]="!horaSeleccionada || !empleadoSeleccionado || !servicio"
+        (click)="confirmarReserva()"
+      >
+        Confirmar Reserva
+      </button>
+    </div>
   </div>
+</div>
 
 <!-- Footer -->
 <app-footer></app-footer>

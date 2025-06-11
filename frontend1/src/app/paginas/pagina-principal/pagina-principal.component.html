@@ -7,24 +7,6 @@
   <app-navbar-superior></app-navbar-superior>
 
   <div class="botones">
-    <ng-container *ngIf="usuarioActual; else noLogin">
-      <div class="bienvenida">
-        <span>Bienvenido/a, {{ usuarioActual.nombre }}</span>
-      </div>
-      <img
-        src="/assets/image/icono_empleados.png"
-        class="foto-perfil w-10 h-10 rounded-full cursor-pointer"
-        (click)="goPerfil()"
-      />
-      <button class="logout" (click)="logout()">
-        <i class="fas fa-right-from-bracket"></i>
-        Cerrar Sesión
-      </button>
-      <button class="registrar" *ngIf="!tieneSalon" (click)="onRegistrarNegocio()">
-        Registra tu negocio
-      </button>
-    </ng-container>
-
     <ng-template #noLogin>
       <button class="login-btn" (click)="onLogin()">
         <i class="fas fa-sign-in-alt"></i>
@@ -33,7 +15,11 @@
           <span>Sesión/Registrarse</span>
         </div>
       </button>
-      <button class="registrar" *ngIf="!tieneSalon" (click)="onRegistrarNegocio()">
+      <button
+        class="registrar"
+        *ngIf="!tieneSalon"
+        (click)="onRegistrarNegocio()"
+      >
         Registra tu negocio
       </button>
     </ng-template>
@@ -46,34 +32,43 @@
       </p>
     </div>
 
-    <div class="buscador">
-      <input
-        type="text"
-        [(ngModel)]="searchTerm"
-        (input)="onSearchSuggest()"
-        (keyup.enter)="onSearch()"
-        placeholder="Consultar negocios y servicios disponibles"
-        class="form-control"
-      />
+    <div class="buscador-completo" [class.con-sugerencias]="mostrarSugerencias">
+      <div class="buscador">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="onSearchSuggest()"
+          (keyup.enter)="onSearch()"
+          placeholder="Consultar negocios y servicios disponibles"
+        />
+        <button class="buscar" (click)="onSearch()">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
 
       <ul *ngIf="sugerencias.length > 0" class="sugerencias-list">
         <li *ngFor="let sugerencia of sugerencias" class="sugerencia-item">
           <span (click)="selectSugerencia(sugerencia)" class="sugerencia-text">
             {{ sugerencia }}
           </span>
-          <button (click)="setSearchOnly(sugerencia); $event.stopPropagation()" class="btn-sugerencia">
+          <button
+            (click)="setSearchOnly(sugerencia); $event.stopPropagation()"
+            class="btn-sugerencia"
+          >
             📋
           </button>
         </li>
       </ul>
 
-      <p *ngIf="sugerencias.length === 0 && searchTerm" class="no-results">
-        No se encontraron resultados para "{{ searchTerm }}"
-      </p>
-
-      <button class="buscar" (click)="onSearch()">
-        <i class="fas fa-search"></i>
-      </button>
+      <div
+        *ngIf="sugerencias.length === 0 && searchTerm"
+        class="no-results-container"
+      >
+        <i class="fas fa-exclamation-circle no-results-icon"></i>
+        <p class="no-results-text">
+          No se encontraron resultados para <strong>"{{ searchTerm }}"</strong>
+        </p>
+      </div>
     </div>
   </div>
 
@@ -106,15 +101,24 @@
         (click)="goBarberShopDetails(salon)"
       >
         <div class="image-wrapper">
-          <img [src]="salon.foto || '/assets/image/default-salon.png'" [alt]="salon.nombre" />
+          <img
+            [src]="salon.foto || '/assets/image/default-salon.png'"
+            [alt]="salon.nombre"
+          />
           <div class="rating">{{ salon.rating?.toFixed(1) || "N/A" }} ★</div>
         </div>
 
         <div class="card-body">
           <h2 class="salon-name">{{ salon.nombre }}</h2>
           <p class="salon-street">{{ salon.direccion }}</p>
-          <button class="like-btn" (click)="toggleLike(salon); $event.stopPropagation()">
-            <i class="fas" [ngClass]="salon.liked ? 'fa-heart' : 'fa-heart-o'"></i>
+          <button
+            class="like-btn"
+            (click)="toggleLike(salon); $event.stopPropagation()"
+          >
+            <i
+              class="fas"
+              [ngClass]="salon.liked ? 'fa-heart' : 'fa-heart-o'"
+            ></i>
           </button>
         </div>
       </div>
@@ -137,7 +141,10 @@
         <br /><br />
         Con BeautyBook podrás agendar tu cita en segundos.
         <br /><br />
-        <strong>Descubre los mejores profesionales de tu zona y agenda al instante.</strong>
+        <strong
+          >Descubre los mejores profesionales de tu zona y agenda al
+          instante.</strong
+        >
       </p>
     </div>
 

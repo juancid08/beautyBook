@@ -1,271 +1,407 @@
 <app-navbar></app-navbar>
 
 <main class="max-w-2xl mx-auto px-4 py-12">
-  <h2 class="text-2xl font-bold mb-6 text-center">Perfil de Usuario</h2>
+  <h2 class="text-2xl font-bold mb-6 text-center">
+    Perfil de {{ usuario?.nombre }}
+  </h2>
 
-  <form (ngSubmit)="guardarCambios()" #perfilForm="ngForm" class="space-y-6">
-    <!-- Foto de perfil -->
-    <div class="text-center">
-      <img
-        [src]="previewUrlPerfil || '/assets/image/icono_empleados.png'"
-        class="w-24 h-24 mx-auto rounded-full object-cover mb-2"
-        alt="Foto de perfil"
-      />
-      <input
-        type="file"
-        (change)="onFileSelected($event, 'perfil')"
-        accept="image/*"
-        name="foto_perfil"
-      />
-    </div>
+  <div class="space-y-4" id="accordion">
+    <!-- Sección Perfil -->
+    <details open class="border rounded-md p-4">
+      <summary class="cursor-pointer font-semibold text-lg">Perfil</summary>
 
-    <!-- Nombre -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Nombre</label>
-      <input
-        type="text"
-        class="w-full border border-gray-300 rounded px-4 py-2"
-        [(ngModel)]="usuario.nombre"
-        name="nombre"
-        required
-      />
-    </div>
+      <form
+        (ngSubmit)="guardarCambios()"
+        #perfilForm="ngForm"
+        class="space-y-6"
+      >
+        <!-- Foto de perfil -->
+        <div class="text-center">
+          <img
+            [src]="previewUrlPerfil || '/assets/image/icono_empleados.png'"
+            class="w-28 h-28 mx-auto rounded-full object-cover mb-4 transition-opacity duration-300 hover:opacity-80"
+            alt="Foto de perfil"
+          />
 
-    <!-- Correo -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Correo</label>
-      <input
-        type="email"
-        class="w-full border border-gray-300 rounded px-4 py-2"
-        [(ngModel)]="usuario.email"
-        name="email"
-        required
-      />
-    </div>
-
-    <!-- Teléfono -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Teléfono</label>
-      <input
-        type="text"
-        class="w-full border border-gray-300 rounded px-4 py-2"
-        [(ngModel)]="usuario.telefono"
-        name="telefono"
-        required
-      />
-    </div>
-
-    <!-- Botón guardar -->
-    <button
-      type="submit"
-      class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded"
-      [disabled]="perfilForm.invalid"
-    >
-      Guardar Cambios
-    </button>
-  </form>
-
-
-  <hr class="my-8" />
-
-  <h3 class="text-xl font-semibold mb-4">Mis citas</h3>
-
-  <div *ngIf="citas.length > 0; else sinCitas" class="space-y-4">
-    <div *ngFor="let cita of citas" class="p-4 border rounded shadow-sm">
-      <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
-      <p><strong>Hora:</strong> {{ cita.hora }}</p>
-
-      <!-- Si el usuario es dueño o administrador, permite cambiar el estado -->
-      <ng-container *ngIf="esDuenoOSuper(cita); else mostrarSoloEstado">
-        <label class="block text-sm font-medium">Estado:</label>
-        <select
-          [(ngModel)]="cita.estado"
-          (change)="onCambiarEstado(cita, $any($event.target).value)"
-          class="border px-2 py-1 rounded mb-2"
-          name="estadoCita{{cita.id_cita}}"
-        >
-          <option value="pendiente">Pendiente</option>
-          <option value="confirmada">Confirmada</option>
-          <option value="cancelada">Cancelada</option>
-        </select>
-      </ng-container>
-      <ng-template #mostrarSoloEstado>
-        <p><strong>Estado:</strong> {{ cita.estado }}</p>
-      </ng-template>
-
-      <p><strong>Servicio:</strong> {{ serviciosMap[cita.id_servicio] || 'Cargando...' }}</p>
-
-      <!-- Si el usuario es dueño o administrador, permite cambiar el empleado asignado -->
-      <ng-container *ngIf="esDuenoOSuper(cita); else mostrarSoloEmpleado">
-        <label class="block text-sm font-medium">Empleado asignado:</label>
-        <select
-          (change)="onCambiarEmpleado(cita, +$any($event.target).value)"
-          [ngModel]="cita.id_empleado"
-          class="border px-2 py-1 rounded mb-2"
-          name="empleadoCita{{cita.id_cita}}"
-        >
-          <option
-            *ngFor="let emp of empleadosPorSalon[citaSalonMap[cita.id_cita]]"
-            [value]="emp.id_empleado"
+          <label
+            for="perfilUpload"
+            class="inline-flex items-center bg-[#117B95] hover:bg-opacity-90 text-white font-medium px-5 py-2 rounded-lg shadow transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#117B95]"
           >
-            {{ emp.nombre }}
-          </option>
-        </select>
-      </ng-container>
-      <ng-template #mostrarSoloEmpleado>
-        <p><strong>Empleado:</strong> {{ empleadosMap[cita.id_empleado] || 'Cargando...' }}</p>
-      </ng-template>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 8l1.5-2h3l1.5-2h4l1.5 2h3L21 8m-1 0v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8h16z"
+              />
+              <circle
+                cx="12"
+                cy="13"
+                r="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span class="ml-2">Cambiar foto</span>
+          </label>
+          <input
+            id="perfilUpload"
+            type="file"
+            accept="image/*"
+            hidden
+            (change)="onFileSelected($event, 'perfil')"
+          />
+        </div>
 
-      <!-- NUEVO: Botón para eliminar la cita entero -->
-      <button
-        class="mt-2 bg-red-600 text-white px-4 py-1 rounded text-sm"
-        (click)="onEliminarCita(cita)"
-      >
-        Eliminar cita
-      </button>
-    </div>
-  </div>
+        <!-- Nombre -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Nombre</label>
+          <input
+            type="text"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            [(ngModel)]="usuario.nombre"
+            name="nombre"
+            required
+          />
+        </div>
 
-  <ng-template #sinCitas>
-    <p class="text-gray-500 italic">No tienes citas registradas aún.</p>
-  </ng-template>
+        <!-- Correo -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Correo</label>
+          <input
+            type="email"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            [(ngModel)]="usuario.email"
+            name="email"
+            required
+          />
+        </div>
 
-  <!-- Mi salón -->
-  <hr class="my-8" />
-  <h3 class="text-xl font-semibold mb-4">Mi salón</h3>
+        <!-- Teléfono -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700"
+            >Teléfono</label
+          >
+          <input
+            type="text"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            [(ngModel)]="usuario.telefono"
+            name="telefono"
+            required
+          />
+        </div>
 
-  <div *ngIf="misSalones.length > 0; else sinSalon" class="space-y-4">
-    <!-- INICIO del ngFor que recorre cada SALÓN -->
-    <div *ngFor="let salon of misSalones" class="p-4 border rounded shadow-sm">
-      <p><strong>Nombre:</strong> {{ salon.nombre }}</p>
-      <p><strong>Dirección:</strong> {{ salon.direccion }}</p>
-      <p><strong>Teléfono:</strong> {{ salon.telefono }}</p>
-      <p><strong>Descripción:</strong> {{ salon.descripcion }}</p>
-      <p><strong>Horario:</strong> {{ salon.horario_apertura }} - {{ salon.horario_cierre }}</p>
+        <!-- Botón guardar -->
+        <button
+          type="submit"
+          class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition"
+          [disabled]="perfilForm.invalid"
+        >
+          Guardar Cambios
+        </button>
+      </form>
+    </details>
 
-      <!-- Botones Editar / Eliminar Salón -->
-      <button
-        *ngIf="usuario.rol === 'administrador' || usuario.id_usuario === salon.id_usuario"
-        class="bg-yellow-500 text-white px-4 py-1 rounded mt-2 mr-2"
-        (click)="editarSalon(salon)"
-      >
-        Editar
-      </button>
-      <button
-        *ngIf="usuario.rol === 'administrador' || usuario.id_usuario === salon.id_usuario"
-        class="bg-red-500 text-white px-4 py-1 rounded mt-2"
-        (click)="borrarSalon(salon)"
-      >
-        Eliminar
-      </button>
+    <!-- Sección Citas -->
+    <!-- Sección Citas -->
+    <details class="border rounded-md p-4 shadow-sm">
+      <summary class="cursor-pointer font-semibold text-lg">Citas</summary>
+      <h3 class="text-xl font-semibold my-4 text-center text-[#117B95]">
+        Mis Citas
+      </h3>
 
-      <!-- BOTÓN PARA AGREGAR SERVICIO -->
-      <button
-        *ngIf="usuario.rol === 'administrador' || usuario.id_usuario === salon.id_usuario"
-        class="bg-blue-600 text-white px-4 py-1 rounded mt-2 ml-4"
-        (click)="abrirFormularioCrearServicio(salon.id_salon)"
-      >
-        + Agregar servicio
-      </button>
-
-      <!-- LISTA DE SERVICIOS de este salón -->
-      <div class="mt-4">
-        <h4 class="text-lg font-semibold mb-2">Servicios</h4>
+      <div *ngIf="citas.length > 0; else sinCitas" class="space-y-6">
         <div
-          *ngIf="serviciosPorSalon[salon.id_salon] && serviciosPorSalon[salon.id_salon].length > 0; else sinServicios"
-          class="space-y-2"
+          *ngFor="let cita of citas"
+          class="p-5 bg-gray-50 border border-gray-200 rounded-lg shadow hover:shadow-md transition-shadow"
         >
-          <div
-            *ngFor="let serv of serviciosPorSalon[salon.id_salon]"
-            class="p-2 border rounded flex justify-between items-center"
-          >
-            <div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <p><strong>📅 Fecha:</strong> {{ cita.fecha }}</p>
+            <p><strong>⏰ Hora:</strong> {{ cita.hora }}</p>
+            <p>
+              <strong>💈 Servicio:</strong>
+              {{ serviciosMap[cita.id_servicio] || "Cargando..." }}
+            </p>
+
+            <ng-container *ngIf="esDuenoOSuper(cita); else mostrarSoloEstado">
+              <div>
+                <label class="block text-sm font-medium text-gray-700"
+                  >Estado:</label
+                >
+                <select
+                  [(ngModel)]="cita.estado"
+                  (change)="onCambiarEstado(cita, $any($event.target).value)"
+                  class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[#117B95] focus:outline-none"
+                  name="estadoCita{{ cita.id_cita }}"
+                >
+                  <option value="pendiente">Pendiente</option>
+                  <option value="confirmada">Confirmada</option>
+                  <option value="cancelada">Cancelada</option>
+                </select>
+              </div>
+            </ng-container>
+            <ng-template #mostrarSoloEstado>
+              <p><strong>Estado:</strong> {{ cita.estado }}</p>
+            </ng-template>
+
+            <ng-container *ngIf="esDuenoOSuper(cita); else mostrarSoloEmpleado">
+              <div>
+                <label class="block text-sm font-medium text-gray-700"
+                  >Empleado asignado:</label
+                >
+                <select
+                  (change)="onCambiarEmpleado(cita, +$any($event.target).value)"
+                  [ngModel]="cita.id_empleado"
+                  class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[#117B95] focus:outline-none"
+                  name="empleadoCita{{ cita.id_cita }}"
+                >
+                  <option
+                    *ngFor="
+                      let emp of empleadosPorSalon[citaSalonMap[cita.id_cita]]
+                    "
+                    [value]="emp.id_empleado"
+                  >
+                    {{ emp.nombre }}
+                  </option>
+                </select>
+              </div>
+            </ng-container>
+            <ng-template #mostrarSoloEmpleado>
               <p>
-                <strong>{{ serv.nombre }}</strong> ({{ serv.duracion_minutos }} min)
-                &ndash; €{{ serv.precio }}
+                <strong>Empleado:</strong>
+                {{ empleadosMap[cita.id_empleado] || "Cargando..." }}
               </p>
-              <p class="text-gray-600 text-sm">{{ serv.descripcion }}</p>
-            </div>
-            <div class="flex space-x-2">
-              <button
-                class="bg-yellow-500 text-white px-3 py-1 rounded text-sm"
-                (click)="abrirFormularioEditarServicio(serv)"
-              >
-                Editar
-              </button>
-              <button
-                class="bg-red-500 text-white px-3 py-1 rounded text-sm"
-                (click)="borrarServicio(serv)"
-              >
-                Eliminar
-              </button>
-            </div>
+            </ng-template>
+          </div>
+
+          <!-- Botón eliminar -->
+          <div class="mt-4 text-right">
+            <button
+              class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm transition"
+              (click)="onEliminarCita(cita)"
+            >
+              🗑 Eliminar Cita
+            </button>
           </div>
         </div>
-        <ng-template #sinServicios>
-          <p class="text-gray-500 italic">No hay servicios para este salón.</p>
-        </ng-template>
       </div>
 
-      <!-- LISTA DE EMPLEADOS de este salón -->
-      <div class="mt-6">
-        <h4 class="text-lg font-semibold mb-2">Empleados</h4>
-        <!-- Botón para agregar empleado -->
-        <button
-          *ngIf="usuario.rol === 'administrador' || usuario.id_usuario === salon.id_usuario"
-          class="bg-indigo-600 text-white px-4 py-1 rounded mb-2"
-          (click)="abrirFormularioCrearEmpleado(salon.id_salon)"
-        >
-          + Agregar empleado
-        </button>
+      <ng-template #sinCitas>
+        <p class="text-center text-gray-500 italic mt-4">
+          No tienes citas registradas aún.
+        </p>
+      </ng-template>
+    </details>
 
+    <!-- Sección Salón -->
+    <details
+      class="border rounded-md p-4 shadow-sm transition-all duration-300 ease-in-out"
+    >
+      <summary class="cursor-pointer font-semibold text-lg">Mi Salón</summary>
+
+      <h3 class="text-xl font-semibold my-6 text-center text-[#117B95]">
+        Mis Salones
+      </h3>
+
+      <div *ngIf="misSalones.length > 0; else sinSalon" class="space-y-6">
         <div
-          *ngIf="empleadosPorSalon[salon.id_salon] && empleadosPorSalon[salon.id_salon].length > 0; else sinEmpleados"
-          class="space-y-2"
+          *ngFor="let salon of misSalones"
+          class="p-6 bg-white border border-gray-200 rounded-xl shadow hover:shadow-md transition animate-fade-in"
         >
-          <div
-            *ngFor="let emp of empleadosPorSalon[salon.id_salon]"
-            class="p-2 border rounded flex justify-between items-center"
-          >
-            <div class="flex items-center space-x-4">
-              <img
-                *ngIf="emp.foto"
-                [src]="emp.foto"
-                alt="Foto {{ emp.nombre }}"
-                class="w-10 h-10 rounded-full object-cover"
-              />
-              <div>
-                <p><strong>{{ emp.nombre }}</strong></p>
-                <p class="text-gray-600 text-sm">Tel.: {{ emp.telefono }}</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <p><strong>Nombre:</strong> {{ salon.nombre }}</p>
+            <p><strong>Dirección:</strong> {{ salon.direccion }}</p>
+            <p><strong>Teléfono:</strong> {{ salon.telefono }}</p>
+            <p>
+              <strong>Horario:</strong> {{ salon.horario_apertura }} -
+              {{ salon.horario_cierre }}
+            </p>
+            <p class="md:col-span-2">
+              <strong>Descripción:</strong> {{ salon.descripcion }}
+            </p>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-2 justify-end">
+            <button
+              *ngIf="
+                usuario.rol === 'administrador' ||
+                usuario.id_usuario === salon.id_usuario
+              "
+              class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition"
+              (click)="editarSalon(salon)"
+            >
+              ✏️ Editar
+            </button>
+            <button
+              *ngIf="
+                usuario.rol === 'administrador' ||
+                usuario.id_usuario === salon.id_usuario
+              "
+              class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition"
+              (click)="borrarSalon(salon)"
+            >
+              🗑 Eliminar
+            </button>
+            <button
+              *ngIf="
+                usuario.rol === 'administrador' ||
+                usuario.id_usuario === salon.id_usuario
+              "
+              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition"
+              (click)="abrirFormularioCrearServicio(salon.id_salon)"
+            >
+              + Agregar servicio
+            </button>
+          </div>
+
+          <!-- LISTA DE SERVICIOS -->
+          <div class="mt-6">
+            <h4 class="text-lg font-semibold mb-2">Servicios</h4>
+            <div
+              *ngIf="
+                serviciosPorSalon[salon.id_salon] &&
+                  serviciosPorSalon[salon.id_salon].length > 0;
+                else sinServicios
+              "
+              class="space-y-3"
+            >
+              <div
+                *ngFor="let serv of serviciosPorSalon[salon.id_salon]"
+                class="p-3 border border-gray-200 rounded-lg flex justify-between items-start bg-gray-50"
+              >
+                <div>
+                  <p>
+                    <strong>{{ serv.nombre }}</strong> ({{
+                      serv.duracion_minutos
+                    }}
+                    min) - €{{ serv.precio }}
+                  </p>
+                  <p class="text-sm text-gray-600">{{ serv.descripcion }}</p>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
+                    (click)="abrirFormularioEditarServicio(serv)"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                    (click)="borrarServicio(serv)"
+                  >
+                    Eliminar
+                  </button>
+                </div>
               </div>
             </div>
-            <div class="flex space-x-2">
-              <button
-                class="bg-yellow-500 text-white px-3 py-1 rounded text-sm"
-                (click)="abrirFormularioEditarEmpleado(emp)"
+            <ng-template #sinServicios>
+              <p class="text-gray-500 italic">
+                No hay servicios para este salón.
+              </p>
+            </ng-template>
+          </div>
+
+          <!-- LISTA DE EMPLEADOS -->
+          <div class="mt-6">
+            <h4 class="text-lg font-semibold mb-2">Empleados</h4>
+            <button
+              *ngIf="
+                usuario.rol === 'administrador' ||
+                usuario.id_usuario === salon.id_usuario
+              "
+              class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1 rounded mb-3"
+              (click)="abrirFormularioCrearEmpleado(salon.id_salon)"
+            >
+              + Agregar empleado
+            </button>
+
+            <div
+              *ngIf="
+                empleadosPorSalon[salon.id_salon] &&
+                  empleadosPorSalon[salon.id_salon].length > 0;
+                else sinEmpleados
+              "
+              class="space-y-3"
+            >
+              <div
+                *ngFor="let emp of empleadosPorSalon[salon.id_salon]"
+                class="p-3 border border-gray-200 rounded-lg flex items-center justify-between bg-gray-50"
               >
-                Editar
-              </button>
-              <button
-                class="bg-red-500 text-white px-3 py-1 rounded text-sm"
-                (click)="borrarEmpleado(emp)"
-              >
-                Eliminar
-              </button>
+                <div class="flex items-center gap-4">
+                  <img
+                    *ngIf="emp.foto"
+                    [src]="emp.foto"
+                    alt="Foto {{ emp.nombre }}"
+                    class="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div>
+                    <p class="font-medium">{{ emp.nombre }}</p>
+                    <p class="text-sm text-gray-600">
+                      Tel.: {{ emp.telefono }}
+                    </p>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
+                    (click)="abrirFormularioEditarEmpleado(emp)"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                    (click)="borrarEmpleado(emp)"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </div>
             </div>
+            <ng-template #sinEmpleados>
+              <p class="text-gray-500 italic">
+                No hay empleados para este salón.
+              </p>
+            </ng-template>
           </div>
         </div>
-        <ng-template #sinEmpleados>
-          <p class="text-gray-500 italic">No hay empleados para este salón.</p>
-        </ng-template>
       </div>
-    </div>
-    <!-- FIN del ngFor que recorre cada SALÓN -->
-  </div>
 
-  <ng-template #sinSalon>
-    <p class="text-gray-500 italic">No tienes ningún salón registrado.</p>
-  </ng-template>
+      <ng-template #sinSalon>
+        <p class="text-center text-gray-500 italic mt-4">
+          No tienes ningún salón registrado.
+        </p>
+      </ng-template>
+    </details>
+
+    <!-- Sección Cerrar Sesión -->
+    <details
+      class="border rounded-md p-4 shadow-sm transition-all duration-300 ease-in-out animate-fade-in-up"
+    >
+      <summary class="cursor-pointer font-semibold text-lg text-red-600">
+        🔒 Cerrar Sesión
+      </summary>
+      <div class="mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
+        <p class="text-sm text-gray-700 mb-4 text-center">
+          ¿Seguro que quieres cerrar sesión? Esta acción cerrará tu sesión
+          actual.
+        </p>
+        <div class="flex justify-center">
+          <button
+            (click)="logout()"
+            class="bg-red-600 hover:bg-red-700 active:scale-95 text-white px-6 py-2 rounded-lg font-semibold transition transform"
+          >
+            🚪 Salir ahora
+          </button>
+        </div>
+      </div>
+    </details>
+  </div>
 </main>
 
 <app-footer></app-footer>
@@ -276,7 +412,9 @@
   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
 >
   <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-    <h3 class="text-xl font-semibold mb-4 text-red-600">Confirmar Eliminación</h3>
+    <h3 class="text-xl font-semibold mb-4 text-red-600">
+      Confirmar Eliminación
+    </h3>
     <p class="mb-4">
       Para confirmar, escribe el nombre del salón:
       <strong>{{ salonAEliminar.nombre }}</strong>
@@ -316,7 +454,7 @@
 >
   <div class="bg-white rounded-lg p-6 w-full max-w-lg shadow-lg">
     <h3 class="text-xl font-semibold mb-4">
-      {{ salonEditando.id_salon ? 'Editar Salón' : 'Agregar Salón' }}
+      {{ salonEditando.id_salon ? "Editar Salón" : "Agregar Salón" }}
     </h3>
     <form (ngSubmit)="guardarCambiosSalon()" class="space-y-4">
       <div>
@@ -397,7 +535,7 @@
           Cancelar
         </button>
         <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
-          {{ salonEditando.id_salon ? 'Actualizar' : 'Guardar' }}
+          {{ salonEditando.id_salon ? "Actualizar" : "Guardar" }}
         </button>
       </div>
     </form>

@@ -19,7 +19,7 @@ import { SalonService, Salon } from "../../services/salon.service";
 import { Subject, Subscription, of } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
 import { NavbarSuperiorComponent } from "../../componentes/navbar-superior/navbar-superior.component";
-import { AuthService } from "../../services/auth.service"; // <-- Asegúrate de tener esto
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: "app-pagina-principal",
@@ -93,9 +93,9 @@ export class PaginaPrincipalComponent
             this.tieneSalon = salones.length > 0;
           },
           error: (err) => {
-            console.error('Error al comprobar salones del usuario', err);
+            console.error("Error al comprobar salones del usuario", err);
             this.tieneSalon = false;
-          }
+          },
         });
       }
     });
@@ -164,7 +164,7 @@ export class PaginaPrincipalComponent
   private startTyping() {
     const current = this.phrases[this.phraseIndex];
     if (this.charIndex < current.length) {
-      this.displayedText += current[this.charIndex++]; 
+      this.displayedText += current[this.charIndex++];
       this.typingTimer = setTimeout(() => this.startTyping(), 80);
     } else {
       this.typingTimer = setTimeout(() => this.startDeleting(), 2000);
@@ -247,14 +247,14 @@ export class PaginaPrincipalComponent
   }
 
   goPerfil() {
-    this.router.navigate(['/perfil']);
+    this.router.navigate(["/perfil"]);
   }
 
   onRegistrarNegocio() {
     if (!this.usuarioActual) {
-      this.router.navigate(['/login']);
+      this.router.navigate(["/login"]);
     } else {
-      this.router.navigate(['/register-negocio']); 
+      this.router.navigate(["/register-negocio"]);
     }
   }
 
@@ -280,5 +280,11 @@ export class PaginaPrincipalComponent
       left: 300,
       behavior: "smooth",
     });
+  }
+  get mostrarSugerencias(): boolean {
+    return (
+      this.sugerencias.length > 0 ||
+      (!!this.searchTerm && this.sugerencias.length === 0)
+    );
   }
 }

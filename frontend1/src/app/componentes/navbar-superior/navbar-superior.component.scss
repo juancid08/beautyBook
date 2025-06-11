@@ -18,6 +18,7 @@
       width: auto;
       display: block;
     }
+
     &:hover {
       opacity: 0.9;
     }
@@ -46,6 +47,7 @@
       background-color: #fff;
       border-radius: 2px;
     }
+
     &:hover span {
       background-color: #e0c060;
     }
@@ -54,14 +56,46 @@
   .botones {
     display: flex;
     gap: 1rem;
+    align-items: center;
 
-    .bienvenida {
-      color: white;
-      margin-right: 10px;
+    .perfil-contenedor {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     img.foto-perfil {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
       cursor: pointer;
+      border-radius: 50%;
+    }
+
+    .perfil-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        transform: scale(1.05);
+      }
+
+      img.foto-perfil {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+      }
     }
 
     .login-btn,
@@ -73,24 +107,12 @@
       font-weight: bold;
       display: flex;
       align-items: center;
-
-      i {
-        margin-right: 0.5rem;
-        font-size: 1.2rem;
-      }
-
-      .text-lines {
-        display: flex;
-        flex-direction: column;
-        line-height: 1;
-        font-size: 0.8rem;
-        text-align: left;
-      }
     }
 
     .login-btn {
       background-color: rgba(255, 255, 255, 0.1);
       color: white;
+
       &:hover {
         background-color: rgba(255, 255, 255, 0.2);
       }
@@ -108,38 +130,39 @@
       font-weight: 500;
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-    .logout:hover {
-      color: #e74c3c;
-      transform: scale(1.03);
-    }
-    .logout:active {
-      transform: scale(0.97);
-    }
-    .logout:focus {
-      outline: none;
+
+      &:hover {
+        color: #e74c3c;
+        transform: scale(1.03);
+      }
     }
 
     .registrar {
       background-color: #e0c060;
       color: black;
+
       &:hover {
         background-color: #e1b700;
       }
     }
 
-    .language-flag {
-      background: transparent;
+    .language-button {
+      padding: 0.7rem 1.5rem;
       border: none;
+      border-radius: 5px;
       cursor: pointer;
-      padding: 0.2rem;
-      border-radius: 2px;
-      overflow: hidden;
-      display: inline-block;
-      transition: transform 0.2s ease;
+      font-weight: bold;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
 
       &:hover {
-        transform: scale(1.1);
+        background-color: rgba(255, 255, 255, 0.2);
+        transform: scale(1.05);
       }
     }
   }
@@ -147,7 +170,6 @@
 
 @media (max-width: 1024px) {
   .navbar-superior {
-    flex-wrap: nowrap;
     padding: 0.5rem 1rem;
 
     .hamburger {
@@ -157,7 +179,6 @@
     .botones {
       display: none;
       flex-direction: column;
-      gap: 0.5rem;
       background: rgba(0, 0, 0, 0.9);
       position: absolute;
       top: 100%;
@@ -166,16 +187,17 @@
       padding: 1rem;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
       z-index: 9999;
-      width: 200px;
+      width: 220px;
 
       button,
-      span,
-      .bienvenida {
+      span {
         font-size: 0.85rem;
       }
 
       .login-btn,
-      .registrar {
+      .registrar,
+      .perfil-btn,
+      .language-button {
         padding: 0.6rem 1rem;
       }
 

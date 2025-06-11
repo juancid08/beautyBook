@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import { NavbarComponent } from "../../componentes/navbar/navbar.component";
-import { FooterComponent } from '../../componentes/footer/footer.component';
-import { AuthService } from '../../services/auth.service';
-import { Cita, CitaService } from '../../services/cita.service';
-import { SalonService, Salon } from '../../services/salon.service';
-import { Servicio, ServicioService } from '../../services/servicio.service';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Empleado, EmpleadoService } from '../../services/empleado.service';
+import { FooterComponent } from "../../componentes/footer/footer.component";
+import { AuthService } from "../../services/auth.service";
+import { Cita, CitaService } from "../../services/cita.service";
+import { SalonService, Salon } from "../../services/salon.service";
+import { Servicio, ServicioService } from "../../services/servicio.service";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { Empleado, EmpleadoService } from "../../services/empleado.service";
+import Swal from "sweetalert2";
 
 @Component({
-  selector: 'app-perfil',
+  selector: "app-perfil",
   standalone: true,
-  templateUrl: './perfil.component.html',
-  styleUrls: ['./perfil.component.scss'],
-  imports: [NavbarComponent, FooterComponent, CommonModule, FormsModule]
+  templateUrl: "./perfil.component.html",
+  styleUrls: ["./perfil.component.scss"],
+  imports: [NavbarComponent, FooterComponent, CommonModule, FormsModule],
 })
 export class PerfilComponent implements OnInit {
   // --- Perfil de usuario ---
@@ -28,23 +29,40 @@ export class PerfilComponent implements OnInit {
 
   salonEditando: Salon | null = null;
   salonAEliminar: Salon | null = null;
-
+  // BOTÓN LOGOUT
+  logout(): void {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Cerrarás tu sesión actual.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, cerrar sesión",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.authSvc.logout();
+        Swal.fire("Sesión cerrada", "", "success");
+      }
+    });
+  }
   // Mapa auxiliar para almacenar a qué salón pertenece cada cita
   citaSalonMap: Record<number, number> = {};
 
   serviciosMap: Record<number, string> = {};
   empleadosMap: Record<number, string> = {};
 
-  nombreConfirmacion: string = '';
+  nombreConfirmacion: string = "";
 
   // --- Servicios por salón ---
   serviciosPorSalon: Record<number, Servicio[]> = {};
   servicioNuevo: Partial<Servicio> = {
     id_salon: 0,
-    nombre: '',
-    descripcion: '',
+    nombre: "",
+    descripcion: "",
     precio: 0,
-    duracion_minutos: 0
+    duracion_minutos: 0,
   };
   servicioEditando: Servicio | null = null;
   showFormCrear: boolean = false;
@@ -54,8 +72,8 @@ export class PerfilComponent implements OnInit {
   empleadosPorSalon: Record<number, Empleado[]> = {};
   empleadoNuevo: Partial<Empleado> = {
     id_salon: 0,
-    nombre: '',
-    telefono: ''
+    nombre: "",
+    telefono: "",
   };
   empleadoEditando: Empleado | null = null;
   showFormCrearEmpleado: boolean = false;
@@ -76,7 +94,7 @@ export class PerfilComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authSvc.currentUser$.subscribe(usuario => {
+    this.authSvc.currentUser$.subscribe((usuario) => {
       this.usuario = { ...usuario };
       this.previewUrlPerfil = usuario?.foto_perfil ?? null;
       if (this.usuario?.id_usuario) {
@@ -87,36 +105,36 @@ export class PerfilComponent implements OnInit {
   }
 
   /**
-   * Obtiene los salones del usuario (dueño/administrador). 
+   * Obtiene los salones del usuario (dueño/administrador).
    * Para cada salón, carga sus servicios y empleados.
    */
   fetchSalon(idUsuario: number): void {
     this.salonService.getSalonesPorUsuario(idUsuario).subscribe({
-      next: salones => {
+      next: (salones) => {
         this.misSalones = salones;
-        salones.forEach(salon => {
+        salones.forEach((salon) => {
           this.cargarServiciosDeSalon(salon.id_salon);
           this.cargarEmpleadosDeSalon(salon.id_salon);
         });
       },
-      error: err => console.error('Error al cargar salones:', err)
+      error: (err) => console.error("Error al cargar salones:", err),
     });
   }
 
   /**
-   * Obtiene las citas del usuario (cliente). 
+   * Obtiene las citas del usuario (cliente).
    * Para cada cita, obtiene nombre de servicio, nombre de empleado y asigna id_salon en citaSalonMap.
    */
   fetchCitas(idUsuario: number): void {
     this.citaService.getCitasPorUsuario(idUsuario).subscribe({
-      next: citas => {
+      next: (citas) => {
         this.citas = citas;
-        citas.forEach(cita => {
+        citas.forEach((cita) => {
           this.getNombreServicio(cita.id_servicio);
           this.getNombreEmpleado(cita.id_empleado);
           // Obtener id_salon a partir del servicio asociado a la cita
           this.servicioService.getServicio(cita.id_servicio).subscribe({
-            next: serv => {
+            next: (serv) => {
               this.citaSalonMap[cita.id_cita] = serv.id_salon;
               // Si aún no cargamos los empleados de ese salón, haremos:
               if (!this.empleadosPorSalon[serv.id_salon]) {
@@ -124,12 +142,14 @@ export class PerfilComponent implements OnInit {
               }
             },
             error: () => {
-              console.warn(`No se pudo obtener id_salon para cita ${cita.id_cita}`);
-            }
+              console.warn(
+                `No se pudo obtener id_salon para cita ${cita.id_cita}`
+              );
+            },
           });
         });
       },
-      error: err => console.error('Error al cargar citas:', err)
+      error: (err) => console.error("Error al cargar citas:", err),
     });
   }
 
@@ -138,11 +158,11 @@ export class PerfilComponent implements OnInit {
    */
   cargarServiciosDeSalon(id_salon: number): void {
     this.servicioService.getServiciosPorSalon(id_salon).subscribe({
-      next: servs => this.serviciosPorSalon[id_salon] = servs,
-      error: err => {
+      next: (servs) => (this.serviciosPorSalon[id_salon] = servs),
+      error: (err) => {
         console.error(`Error al cargar servicios de salón ${id_salon}:`, err);
         this.serviciosPorSalon[id_salon] = [];
-      }
+      },
     });
   }
 
@@ -151,11 +171,11 @@ export class PerfilComponent implements OnInit {
    */
   cargarEmpleadosDeSalon(id_salon: number): void {
     this.empleadoService.getEmpleadosPorSalon(id_salon).subscribe({
-      next: emps => this.empleadosPorSalon[id_salon] = emps,
-      error: err => {
+      next: (emps) => (this.empleadosPorSalon[id_salon] = emps),
+      error: (err) => {
         console.error(`Error al cargar empleados de salón ${id_salon}:`, err);
         this.empleadosPorSalon[id_salon] = [];
-      }
+      },
     });
   }
 
@@ -165,8 +185,8 @@ export class PerfilComponent implements OnInit {
   getNombreServicio(id: number): void {
     if (!this.serviciosMap[id]) {
       this.servicioService.getServicio(id).subscribe({
-        next: serv => this.serviciosMap[id] = serv.nombre,
-        error: () => this.serviciosMap[id] = 'Desconocido'
+        next: (serv) => (this.serviciosMap[id] = serv.nombre),
+        error: () => (this.serviciosMap[id] = "Desconocido"),
       });
     }
   }
@@ -177,8 +197,8 @@ export class PerfilComponent implements OnInit {
   getNombreEmpleado(id: number): void {
     if (!this.empleadosMap[id]) {
       this.empleadoService.getEmpleado(id).subscribe({
-        next: emp => this.empleadosMap[id] = emp.nombre,
-        error: () => this.empleadosMap[id] = 'Desconocido'
+        next: (emp) => (this.empleadosMap[id] = emp.nombre),
+        error: () => (this.empleadosMap[id] = "Desconocido"),
       });
     }
   }
@@ -186,22 +206,22 @@ export class PerfilComponent implements OnInit {
   /**
    * Maneja la selección de archivos (perfil, salón, empleado).
    */
-  onFileSelected(event: any, target: 'perfil' | 'salon' | 'empleado'): void {
+  onFileSelected(event: any, target: "perfil" | "salon" | "empleado"): void {
     const file: File = event.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (e: any) => {
       switch (target) {
-        case 'perfil':
+        case "perfil":
           this.imagenPerfilSeleccionada = file;
           this.previewUrlPerfil = e.target.result;
           break;
-        case 'salon':
+        case "salon":
           this.imagenSalonSeleccionada = file;
           this.previewUrlSalon = e.target.result;
           break;
-        case 'empleado':
+        case "empleado":
           this.imagenEmpleadoSeleccionada = file;
           this.previewUrlEmpleado = e.target.result;
           break;
@@ -216,23 +236,23 @@ export class PerfilComponent implements OnInit {
 
     if (this.imagenPerfilSeleccionada) {
       const formData = new FormData();
-      formData.append('nombre', this.usuario.nombre);
-      formData.append('email', this.usuario.email);
-      formData.append('telefono', this.usuario.telefono);
-      formData.append('foto_perfil', this.imagenPerfilSeleccionada);
+      formData.append("nombre", this.usuario.nombre);
+      formData.append("email", this.usuario.email);
+      formData.append("telefono", this.usuario.telefono);
+      formData.append("foto_perfil", this.imagenPerfilSeleccionada);
       this.authSvc.actualizarPerfilConImagen(userId, formData).subscribe({
-        next: res => this.onPerfilActualizado(res),
-        error: err => this.onError(err)
+        next: (res) => this.onPerfilActualizado(res),
+        error: (err) => this.onError(err),
       });
     } else {
       const body = {
         nombre: this.usuario.nombre,
         email: this.usuario.email,
-        telefono: this.usuario.telefono
+        telefono: this.usuario.telefono,
       };
       this.authSvc.actualizarPerfil(userId, body).subscribe({
-        next: res => this.onPerfilActualizado(res),
-        error: err => this.onError(err)
+        next: (res) => this.onPerfilActualizado(res),
+        error: (err) => this.onError(err),
       });
     }
   }
@@ -244,17 +264,25 @@ export class PerfilComponent implements OnInit {
    * Hace DELETE al backend y remueve la cita del array local.
    */
   onEliminarCita(cita: Cita): void {
-    if (!confirm('¿Seguro que quieres eliminar esta cita permanentemente?')) return;
-
-    this.citaService.eliminarCita(cita.id_cita).subscribe({
-      next: () => {
-        // Filtrar la lista local para remover la cita eliminada
-        this.citas = this.citas.filter(c => c.id_cita !== cita.id_cita);
-        alert('Cita eliminada correctamente');
-      },
-      error: err => {
-        console.error('Error al eliminar cita:', err);
-        alert('No se pudo eliminar la cita');
+    Swal.fire({
+      title: "¿Eliminar cita?",
+      text: "Esta acción no se puede deshacer.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.citaService.eliminarCita(cita.id_cita).subscribe({
+          next: () => {
+            this.citas = this.citas.filter((c) => c.id_cita !== cita.id_cita);
+            Swal.fire("Cita eliminada", "", "success");
+          },
+          error: (err) => {
+            console.error("Error al eliminar cita:", err);
+            Swal.fire("Error", "No se pudo eliminar la cita", "error");
+          },
+        });
       }
     });
   }
@@ -262,34 +290,41 @@ export class PerfilComponent implements OnInit {
   /**
    * Solo dueño de salón o administrador: cambia el estado de la cita
    */
-  onCambiarEstado(cita: Cita, nuevoEstado: 'pendiente' | 'confirmada' | 'cancelada'): void {
-    this.citaService.actualizarCita(cita.id_cita, { estado: nuevoEstado }).subscribe({
-      next: () => {
-        cita.estado = nuevoEstado;
-        alert('Estado de la cita actualizado');
-      },
-      error: err => {
-        console.error('Error al actualizar estado:', err);
-        alert('No se pudo actualizar el estado');
-      }
-    });
+  onCambiarEstado(
+    cita: Cita,
+    nuevoEstado: "pendiente" | "confirmada" | "cancelada"
+  ): void {
+    this.citaService
+      .actualizarCita(cita.id_cita, { estado: nuevoEstado })
+      .subscribe({
+        next: () => {
+          cita.estado = nuevoEstado;
+          Swal.fire("Estado actualizado", "", "success");
+        },
+        error: (err) => {
+          console.error("Error al actualizar estado:", err);
+          Swal.fire("Error", "No se pudo actualizar el estado", "error");
+        },
+      });
   }
 
   /**
    * Solo dueño de salón o administrador: cambia el empleado asignado a la cita.
    */
   onCambiarEmpleado(cita: Cita, nuevoEmpleadoId: number): void {
-    this.citaService.actualizarCita(cita.id_cita, { id_empleado: nuevoEmpleadoId }).subscribe({
-      next: () => {
-        cita.id_empleado = nuevoEmpleadoId;
-        this.getNombreEmpleado(nuevoEmpleadoId);
-        alert('Empleado asignado actualizado');
-      },
-      error: err => {
-        console.error('Error al cambiar empleado:', err);
-        alert('No se pudo cambiar el empleado');
-      }
-    });
+    this.citaService
+      .actualizarCita(cita.id_cita, { id_empleado: nuevoEmpleadoId })
+      .subscribe({
+        next: () => {
+          cita.id_empleado = nuevoEmpleadoId;
+          this.getNombreEmpleado(nuevoEmpleadoId);
+          Swal.fire("Empleado actualizado", "", "success");
+        },
+        error: (err) => {
+          console.error("Error al cambiar empleado:", err);
+          Swal.fire("Error", "No se pudo cambiar el empleado", "error");
+        },
+      });
   }
 
   /**
@@ -297,9 +332,9 @@ export class PerfilComponent implements OnInit {
    */
   esDuenoOSuper(cita: Cita): boolean {
     const idSalon = this.citaSalonMap[cita.id_cita];
-    const salon = this.misSalones.find(s => s.id_salon === idSalon);
+    const salon = this.misSalones.find((s) => s.id_salon === idSalon);
     const esDueno = salon && salon.id_usuario === this.usuario.id_usuario;
-    const esAdmin = this.usuario.rol === 'administrador';
+    const esAdmin = this.usuario.rol === "administrador";
     return Boolean(esDueno || esAdmin);
   }
 
@@ -310,27 +345,34 @@ export class PerfilComponent implements OnInit {
 
   guardarCambiosSalon(): void {
     if (!this.salonEditando) return;
-    const { id_salon, nombre, direccion, telefono, descripcion, especializacion } = this.salonEditando;
+    const {
+      id_salon,
+      nombre,
+      direccion,
+      telefono,
+      descripcion,
+      especializacion,
+    } = this.salonEditando;
     if (this.imagenSalonSeleccionada) {
       const formData = new FormData();
-      formData.append('nombre', nombre);
-      formData.append('direccion', direccion);
-      formData.append('telefono', telefono);
-      formData.append('descripcion', descripcion);
-      formData.append('especializacion', especializacion);
-      formData.append('id_usuario', String(this.usuario.id_usuario));
-      formData.append('foto', this.imagenSalonSeleccionada);
-      formData.append('_method', 'PUT');
+      formData.append("nombre", nombre);
+      formData.append("direccion", direccion);
+      formData.append("telefono", telefono);
+      formData.append("descripcion", descripcion);
+      formData.append("especializacion", especializacion);
+      formData.append("id_usuario", String(this.usuario.id_usuario));
+      formData.append("foto", this.imagenSalonSeleccionada);
+      formData.append("_method", "PUT");
       this.salonService.actualizarSalonConImagen(id_salon, formData).subscribe({
         next: () => {
-          alert('Salón actualizado correctamente con imagen');
+          alert("Salón actualizado correctamente con imagen");
           this.fetchSalon(this.usuario.id_usuario);
           this.cerrarModalSalon();
         },
-        error: err => {
-          console.error('Error al actualizar salón con imagen:', err);
-          alert('Hubo un error al actualizar el salón');
-        }
+        error: (err) => {
+          console.error("Error al actualizar salón con imagen:", err);
+          alert("Hubo un error al actualizar el salón");
+        },
       });
     } else {
       const data = {
@@ -339,47 +381,48 @@ export class PerfilComponent implements OnInit {
         telefono,
         descripcion,
         especializacion,
-        id_usuario: this.usuario.id_usuario
+        id_usuario: this.usuario.id_usuario,
       };
       this.salonService.actualizarSalon(id_salon, data).subscribe({
         next: () => {
-          alert('Salón actualizado correctamente');
+          alert("Salón actualizado correctamente");
           this.fetchSalon(this.usuario.id_usuario);
           this.cerrarModalSalon();
         },
-        error: err => {
-          console.error('Error al actualizar salón sin imagen:', err);
-          alert('Hubo un error al actualizar el salón');
-        }
+        error: (err) => {
+          console.error("Error al actualizar salón sin imagen:", err);
+          alert("Hubo un error al actualizar el salón");
+        },
       });
     }
   }
 
   borrarSalon(salon: Salon): void {
-    if (!confirm(`¿Seguro que quieres eliminar el salón "${salon.nombre}"?`)) return;
+    if (!confirm(`¿Seguro que quieres eliminar el salón "${salon.nombre}"?`))
+      return;
     this.salonService.eliminarSalon(salon.id_salon).subscribe({
       next: () => {
-        alert('Salón eliminado correctamente');
+        alert("Salón eliminado correctamente");
         this.fetchSalon(this.usuario.id_usuario);
       },
-      error: err => {
-        console.error('Error al eliminar salón:', err);
-        alert('Hubo un error al eliminar el salón');
-      }
+      error: (err) => {
+        console.error("Error al eliminar salón:", err);
+        alert("Hubo un error al eliminar el salón");
+      },
     });
   }
 
   // Métodos de confirmación de eliminación
   cancelarEliminacion(): void {
     this.salonAEliminar = null;
-    this.nombreConfirmacion = '';
+    this.nombreConfirmacion = "";
   }
 
   confirmarEliminacion(): void {
     if (!this.salonAEliminar) return;
     this.borrarSalon(this.salonAEliminar);
     this.salonAEliminar = null;
-    this.nombreConfirmacion = '';
+    this.nombreConfirmacion = "";
   }
 
   cerrarModalSalon(): void {
@@ -391,10 +434,10 @@ export class PerfilComponent implements OnInit {
   abrirFormularioCrearServicio(id_salon: number): void {
     this.servicioNuevo = {
       id_salon,
-      nombre: '',
-      descripcion: '',
+      nombre: "",
+      descripcion: "",
       precio: 0,
-      duracion_minutos: 0
+      duracion_minutos: 0,
     };
     this.showFormCrear = true;
   }
@@ -417,7 +460,11 @@ export class PerfilComponent implements OnInit {
       this.servicioNuevo.duracion_minutos == null ||
       this.servicioNuevo.id_salon == null
     ) {
-      alert('Completa todos los campos del servicio.');
+      Swal.fire(
+        "Campos incompletos",
+        "Completa todos los campos del servicio.",
+        "warning"
+      );
       return;
     }
     const payloadCrear = {
@@ -425,25 +472,41 @@ export class PerfilComponent implements OnInit {
       nombre: this.servicioNuevo.nombre,
       descripcion: this.servicioNuevo.descripcion,
       precio: this.servicioNuevo.precio,
-      duracion: this.servicioNuevo.duracion_minutos
+      duracion: this.servicioNuevo.duracion_minutos,
     };
     this.servicioService.crearServicio(payloadCrear).subscribe({
-      next: servCreado => {
+      next: (servCreado) => {
         this.cargarServiciosDeSalon(servCreado.id_salon);
         this.cerrarFormularioServicio();
       },
-      error: err => {
-        console.error('Error al crear servicio:', err);
-        alert('Hubo un error al crear el servicio');
-      }
+      error: (err) => {
+        console.error("Error al crear servicio:", err);
+        Swal.fire("Error", "Hubo un error al crear el servicio", "error");
+      },
     });
   }
 
   guardarCambiosServicio(): void {
     if (!this.servicioEditando) return;
-    const { id_servicio, nombre, descripcion, precio, duracion_minutos, id_salon } = this.servicioEditando;
-    if (!nombre || precio == null || duracion_minutos == null || id_salon == null) {
-      alert('El servicio debe tener nombre, precio y duración.');
+    const {
+      id_servicio,
+      nombre,
+      descripcion,
+      precio,
+      duracion_minutos,
+      id_salon,
+    } = this.servicioEditando;
+    if (
+      !nombre ||
+      precio == null ||
+      duracion_minutos == null ||
+      id_salon == null
+    ) {
+      Swal.fire(
+        "Campos incompletos",
+        "El servicio debe tener nombre, precio y duración.",
+        "warning"
+      );
       return;
     }
     const payloadActualizar = {
@@ -451,27 +514,45 @@ export class PerfilComponent implements OnInit {
       descripcion,
       precio,
       duracion: duracion_minutos,
-      id_salon
+      id_salon,
     };
-    this.servicioService.actualizarServicio(id_servicio, payloadActualizar).subscribe({
-      next: () => {
-        this.cargarServiciosDeSalon(id_salon);
-        this.cerrarFormularioServicio();
-      },
-      error: err => {
-        console.error('Error al actualizar servicio:', err);
-        alert('Hubo un error al actualizar el servicio');
-      }
-    });
+    this.servicioService
+      .actualizarServicio(id_servicio, payloadActualizar)
+      .subscribe({
+        next: () => {
+          this.cargarServiciosDeSalon(id_salon);
+          this.cerrarFormularioServicio();
+        },
+        error: (err) => {
+          console.error("Error al actualizar servicio:", err);
+          Swal.fire(
+            "Error",
+            "Hubo un error al actualizar el servicio",
+            "error"
+          );
+        },
+      });
   }
-
   borrarServicio(serv: Servicio): void {
-    if (!confirm(`¿Seguro que quieres eliminar el servicio "${serv.nombre}"?`)) return;
-    this.servicioService.eliminarServicio(serv.id_servicio).subscribe({
-      next: () => this.cargarServiciosDeSalon(serv.id_salon),
-      error: err => {
-        console.error('Error al eliminar servicio:', err);
-        alert('Hubo un error al eliminar el servicio');
+    Swal.fire({
+      title: `¿Eliminar servicio "${serv.nombre}"?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.servicioService.eliminarServicio(serv.id_servicio).subscribe({
+          next: () => this.cargarServiciosDeSalon(serv.id_salon),
+          error: (err) => {
+            console.error("Error al eliminar servicio:", err);
+            Swal.fire(
+              "Error",
+              "Hubo un error al eliminar el servicio",
+              "error"
+            );
+          },
+        });
       }
     });
   }
@@ -479,8 +560,8 @@ export class PerfilComponent implements OnInit {
   abrirFormularioCrearEmpleado(id_salon: number): void {
     this.empleadoNuevo = {
       id_salon,
-      nombre: '',
-      telefono: ''
+      nombre: "",
+      telefono: "",
     };
     this.showFormCrearEmpleado = true;
   }
@@ -505,40 +586,44 @@ export class PerfilComponent implements OnInit {
       !this.empleadoNuevo.telefono ||
       this.empleadoNuevo.id_salon == null
     ) {
-      alert('Completa todos los campos del empleado.');
+      Swal.fire(
+        "Campos incompletos",
+        "Completa todos los campos del empleado.",
+        "warning"
+      );
       return;
     }
     const payloadCrear: any = {
       id_salon: this.empleadoNuevo.id_salon,
       nombre: this.empleadoNuevo.nombre,
-      telefono: this.empleadoNuevo.telefono
+      telefono: this.empleadoNuevo.telefono,
     };
     if (this.imagenEmpleadoSeleccionada) {
       const formData = new FormData();
-      formData.append('id_salon', String(payloadCrear.id_salon));
-      formData.append('nombre', payloadCrear.nombre);
-      formData.append('telefono', payloadCrear.telefono);
-      formData.append('foto', this.imagenEmpleadoSeleccionada);
+      formData.append("id_salon", String(payloadCrear.id_salon));
+      formData.append("nombre", payloadCrear.nombre);
+      formData.append("telefono", payloadCrear.telefono);
+      formData.append("foto", this.imagenEmpleadoSeleccionada);
       this.empleadoService.crearEmpleadoConImagen(formData).subscribe({
-        next: empCreado => {
+        next: (empCreado) => {
           this.cargarEmpleadosDeSalon(empCreado.id_salon);
           this.cerrarFormularioEmpleado();
         },
-        error: err => {
-          console.error('Error al crear empleado con imagen:', err);
-          alert('Hubo un error al crear el empleado');
-        }
+        error: (err) => {
+          console.error("Error al crear empleado con imagen:", err);
+          alert("Hubo un error al crear el empleado");
+        },
       });
     } else {
       this.empleadoService.crearEmpleado(payloadCrear).subscribe({
-        next: empCreado => {
+        next: (empCreado) => {
           this.cargarEmpleadosDeSalon(empCreado.id_salon);
           this.cerrarFormularioEmpleado();
         },
-        error: err => {
-          console.error('Error al crear empleado:', err);
-          alert('Hubo un error al crear el empleado');
-        }
+        error: (err) => {
+          console.error("Error al crear empleado:", err);
+          alert("Hubo un error al crear el empleado");
+        },
       });
     }
   }
@@ -547,65 +632,84 @@ export class PerfilComponent implements OnInit {
     if (!this.empleadoEditando) return;
     const { id_empleado, nombre, telefono, id_salon } = this.empleadoEditando;
     if (!nombre || !telefono || id_salon == null) {
-      alert('El empleado debe tener nombre y teléfono.');
+      Swal.fire(
+        "Campos incompletos",
+        "El empleado debe tener nombre y teléfono.",
+        "warning"
+      );
       return;
     }
     const payloadActualizar: any = {
       nombre,
       telefono,
-      id_salon
+      id_salon,
     };
     if (this.imagenEmpleadoSeleccionada) {
       const formData = new FormData();
-      formData.append('nombre', nombre);
-      formData.append('telefono', telefono);
-      formData.append('foto', this.imagenEmpleadoSeleccionada);
-      formData.append('_method', 'PUT');
-      this.empleadoService.actualizarEmpleadoConImagen(id_empleado, formData).subscribe({
-        next: () => {
-          this.cargarEmpleadosDeSalon(id_salon);
-          this.cerrarFormularioEmpleado();
-        },
-        error: err => {
-          console.error('Error al actualizar empleado con imagen:', err);
-          alert('Hubo un error al actualizar el empleado');
-        }
-      });
+      formData.append("nombre", nombre);
+      formData.append("telefono", telefono);
+      formData.append("foto", this.imagenEmpleadoSeleccionada);
+      formData.append("_method", "PUT");
+      this.empleadoService
+        .actualizarEmpleadoConImagen(id_empleado, formData)
+        .subscribe({
+          next: () => {
+            this.cargarEmpleadosDeSalon(id_salon);
+            this.cerrarFormularioEmpleado();
+          },
+          error: (err) => {
+            console.error("Error al actualizar empleado con imagen:", err);
+            alert("Hubo un error al actualizar el empleado");
+          },
+        });
     } else {
-      this.empleadoService.actualizarEmpleado(id_empleado, payloadActualizar).subscribe({
-        next: () => {
-          this.cargarEmpleadosDeSalon(id_salon);
-          this.cerrarFormularioEmpleado();
-        },
-        error: err => {
-          console.error('Error al actualizar empleado:', err);
-          alert('Hubo un error al actualizar el empleado');
-        }
-      });
+      this.empleadoService
+        .actualizarEmpleado(id_empleado, payloadActualizar)
+        .subscribe({
+          next: () => {
+            this.cargarEmpleadosDeSalon(id_salon);
+            this.cerrarFormularioEmpleado();
+          },
+          error: (err) => {
+            console.error("Error al actualizar empleado:", err);
+            alert("Hubo un error al actualizar el empleado");
+          },
+        });
     }
   }
 
   borrarEmpleado(emp: Empleado): void {
-    if (!confirm(`¿Seguro que quieres eliminar al empleado "${emp.nombre}"?`)) return;
-    this.empleadoService.eliminarEmpleado(emp.id_empleado).subscribe({
-      next: () => this.cargarEmpleadosDeSalon(emp.id_salon),
-      error: err => {
-        console.error('Error al eliminar empleado:', err);
-        alert('Hubo un error al eliminar el empleado');
+    Swal.fire({
+      title: `¿Eliminar a "${emp.nombre}"?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.empleadoService.eliminarEmpleado(emp.id_empleado).subscribe({
+          next: () => this.cargarEmpleadosDeSalon(emp.id_salon),
+          error: (err) => {
+            console.error("Error al eliminar empleado:", err);
+            Swal.fire(
+              "Error",
+              "Hubo un error al eliminar el empleado",
+              "error"
+            );
+          },
+        });
       }
     });
   }
-
   private onPerfilActualizado(res: any) {
-    localStorage.setItem('usuario', JSON.stringify(res));
+    localStorage.setItem("usuario", JSON.stringify(res));
     (this.authSvc as any).currentUserSubject.next(res);
     this.usuario = { ...res };
     this.previewUrlPerfil = res.foto_perfil;
-    alert('Cambios guardados correctamente');
+    Swal.fire("Perfil actualizado", "", "success");
   }
-
   private onError(err: any) {
-    console.error('Error al guardar cambios:', err);
-    alert('Hubo un error al guardar los cambios');
+    console.error("Error al guardar cambios:", err);
+    Swal.fire("Error", "Hubo un error al guardar los cambios", "error");
   }
 }

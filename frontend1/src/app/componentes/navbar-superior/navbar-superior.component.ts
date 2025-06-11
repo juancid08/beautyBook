@@ -1,4 +1,3 @@
-// src/app/componentes/navbar-superior/navbar-superior.component.ts
 import {
   Component,
   OnInit,
@@ -45,10 +44,8 @@ export class NavbarSuperiorComponent
   ) {}
 
   ngOnInit(): void {
-    // 1) Suscribirse al usuario
     this.userSub = this.authSvc.currentUser$.subscribe((u) => {
       this.usuarioActual = u;
-      // 2) Si hay usuario, comprobar si tiene salón
       if (u && u.id_usuario) {
         this.salonSub = this.salonService
           .getSalonesPorUsuario(u.id_usuario)
@@ -117,10 +114,7 @@ export class NavbarSuperiorComponent
     }
   }
 
-  logout(): void {
-    this.authSvc.logout();
-  }
-
+  // Toggle de idioma
   toggleIdioma(): void {
     this.idiomaActual = this.idiomaActual === "es" ? "en" : "es";
   }
