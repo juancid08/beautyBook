@@ -20,7 +20,7 @@ export class RegistrarNegocioComponent implements OnInit {
   imagenPreview: string | null = null;
 
   especializaciones = [
-    { nombre: 'Salón de uñas', valor: 'Salon de uñas', imagen: 'http://localhost/storage/especializacion_salon/uñas.png' },
+    { nombre: 'Salón de uñas', valor: 'Salón de uñas', imagen: 'http://localhost/storage/especializacion_salon/uñas.png' },
     { nombre: 'Peluquería', valor: 'Peluquería', imagen: 'http://localhost/storage/especializacion_salon/peluqueria.png' },
     { nombre: 'Cejas y pestañas', valor: 'Cejas y pestañas', imagen: 'http://localhost/storage/especializacion_salon/cejas_pestañas.png' },
     { nombre: 'Barbería', valor: 'Barbería', imagen: 'http://localhost/storage/especializacion_salon/barberia.png' },
@@ -37,7 +37,7 @@ export class RegistrarNegocioComponent implements OnInit {
     descripcion: '',
     horario_apertura: '',
     horario_cierre: '',
-    foto: null as string | null, // ahora guardamos base64 string
+    foto: null as string | null, 
   };
 
   mensajeExito = '';

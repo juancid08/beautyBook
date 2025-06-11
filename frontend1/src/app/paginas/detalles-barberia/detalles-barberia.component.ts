@@ -1,6 +1,6 @@
 // src/app/pages/detalles-barberia/detalles-barberia.component.ts
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { NavbarComponent } from "../../componentes/navbar/navbar.component";
 import { FooterComponent } from "../../componentes/footer/footer.component";
 import { CommonModule } from "@angular/common";
@@ -54,29 +54,32 @@ export class DetallesBarberiaComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private authSvc: AuthService,
+    private router: Router,
+    private authSvc: AuthService,   
     private salonService: SalonService,
     private servicioService: ServicioService,
     private empleadoService: EmpleadoService,
     private citaService: CitaService,
     private resenaService: ResenaService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
   ) {
     this.generarFechas();
     this.diaSeleccionado = this.diasDisponibles[0];
   }
 
   ngOnInit(): void {
-    this.authSvc.currentUser$.subscribe((usuario) => {
-      this.usuarioActual = usuario;
-      if (usuario && this.salon) {
-        this.fetchCitasUsuarioParaSalon(
-          usuario.id_usuario,
-          this.salon.id_salon
-        );
-      }
-    });
 
+    if(this.authSvc.currentUser$) {
+      this.authSvc.currentUser$.subscribe((usuario) => {
+        this.usuarioActual = usuario;
+        if (usuario && this.salon) {
+          this.fetchCitasUsuarioParaSalon(
+            usuario.id_usuario,
+            this.salon.id_salon
+          );
+        }
+      });
+    }
     this.route.paramMap.subscribe((params) => {
       const id = params.get("id");
       if (id) {
@@ -149,6 +152,7 @@ export class DetallesBarberiaComponent implements OnInit {
     this.turnoSeleccionado = null;
     this.horaSeleccionada = null;
     this.horasDisponibles = [];
+    
   }
 
   cerrarPopup() {

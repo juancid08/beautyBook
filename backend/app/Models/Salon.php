@@ -22,6 +22,6 @@ class Salon extends Model {
     public function usuario()   { return $this->belongsTo(Usuario::class, 'id_usuario');}
     public function empleados() { return $this->hasMany(Empleado::class,'id_salon'); }
     public function servicios() { return $this->hasMany(Servicio::class,'id_salon'); }
-    public function reseñas()   { return $this->hasManyThrough(Resena::class, Servicio::class,'id_salon','id_servicio'); }
+    public function resenas()   { return $this->hasManyThrough(Resena::class, Servicio::class,'id_salon','id_servicio'); }
 
 }

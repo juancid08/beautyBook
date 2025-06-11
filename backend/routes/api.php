@@ -10,13 +10,13 @@ use App\Http\Controllers\Api\CitaController;
 use App\Http\Controllers\Api\ResenaController;
 use App\Http\Controllers\Api\AuthController;
 
-// Rutas de autenticación
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
 Route::middleware('auth:sanctum')->get('user', function (Request $request) {
     return $request->user();
-});
+}); 
+
 
 // Rutas de usuarios
 Route::apiResource('usuarios', UsuarioController::class);

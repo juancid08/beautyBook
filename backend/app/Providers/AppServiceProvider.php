@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Cambiar idiomas
+         app()->setLocale(session('locale', config('app.locale')));
     }
 }
