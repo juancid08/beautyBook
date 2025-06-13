@@ -16,10 +16,20 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { FooterComponent } from "../../componentes/footer/footer.component";
 import { SalonService, Salon } from "../../services/salon.service";
-import { Subject, Subscription, of } from "rxjs";
-import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
+import { Subject, Subscription, of, forkJoin } from "rxjs";
+import {
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  map,
+} from "rxjs/operators";
 import { NavbarSuperiorComponent } from "../../componentes/navbar-superior/navbar-superior.component";
 import { AuthService } from "../../services/auth.service";
+import { ResenaService } from "../../services/resena.service";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+
+// Tipo extendido para incluir la media de reseñas
+type SalonConMedia = Salon & { mediaResena: number };
 
 @Component({
   selector: "app-pagina-principal",
@@ -29,6 +39,7 @@ import { AuthService } from "../../services/auth.service";
     FormsModule,
     NavbarSuperiorComponent,
     FooterComponent,
+    TranslateModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: "./pagina-principal.component.html",
@@ -41,28 +52,25 @@ export class PaginaPrincipalComponent
   @ViewChild("cardsContainer") cardsContainer!: ElementRef<HTMLDivElement>;
 
   searchTerm = "";
+
   categories = [
-    "Peluquería",
-    "Barbería",
-    "Salón de uñas",
-    "Depilación",
-    "Cejas y pestañas",
+    { value: "Peluquería", labelKey: "CATEGORIES.Peluqueria" },
+    { value: "Barbería", labelKey: "CATEGORIES.Barberia" },
+    { value: "Salón de uñas", labelKey: "CATEGORIES.SalonDeUnas" },
+    { value: "Depilación", labelKey: "CATEGORIES.Depilacion" },
+    { value: "Cejas y pestañas", labelKey: "CATEGORIES.CejasYPestanas" },
   ];
+
   selectedCategory: string | null = null;
 
-  phrases = [
-    "Encuentra tu estilista ideal cerca de ti.",
-    "Reserva tu cita en un click.",
-    "Expertos en belleza y bienestar.",
-  ];
-
+  private phrases = ["PAGE.PHRASE1", "PAGE.PHRASE2", "PAGE.PHRASE3"];
   displayedText = "";
   private phraseIndex = 0;
   private charIndex = 0;
   private typingTimer: any;
   private deletingTimer: any;
 
-  salones: Salon[] = [];
+  salones: SalonConMedia[] = [];
   usuarioActual: any = "";
   tieneSalon: boolean | null = null;
 
@@ -74,7 +82,9 @@ export class PaginaPrincipalComponent
     @Inject(PLATFORM_ID) private platformId: any,
     private router: Router,
     private salonService: SalonService,
-    private authSvc: AuthService
+    private authSvc: AuthService,
+    private resenaService: ResenaService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -98,6 +108,13 @@ export class PaginaPrincipalComponent
           },
         });
       }
+      this.translate
+        .get(this.phrases) // ['PAGE.PHRASE1', 'PAGE.PHRASE2', ...]
+        .subscribe((res: any) => {
+          // res es { 'PAGE.PHRASE1': 'Encuentra tu estilista…', … }
+          this.phrases = this.phrases.map((key) => res[key]);
+          this.startTyping();
+        });
     });
 
     this.fetchSalones();
@@ -147,22 +164,9 @@ export class PaginaPrincipalComponent
     if (this.sugSub) this.sugSub.unsubscribe();
   }
 
-  fetchSalones(especializacion?: string): void {
-    if (especializacion) {
-      this.salonService
-        .getSalonesFiltrado(especializacion)
-        .subscribe((salones) => {
-          this.salones = salones;
-        });
-    } else {
-      this.salonService.getSalonesFormateados().subscribe((salones) => {
-        this.salones = salones;
-      });
-    }
-  }
-
   private startTyping() {
-    const current = this.phrases[this.phraseIndex];
+    const key = this.phrases[this.phraseIndex];
+    const current = this.translate.instant(key);
     if (this.charIndex < current.length) {
       this.displayedText += current[this.charIndex++];
       this.typingTimer = setTimeout(() => this.startTyping(), 80);
@@ -172,6 +176,8 @@ export class PaginaPrincipalComponent
   }
 
   private startDeleting() {
+    const key = this.phrases[this.phraseIndex];
+    const current = this.translate.instant(key);
     if (this.charIndex > 0) {
       this.displayedText = this.displayedText.slice(0, -1);
       this.charIndex--;
@@ -197,7 +203,7 @@ export class PaginaPrincipalComponent
       if (salones.length === 1) {
         this.router.navigate(["/detallesBarberia", salones[0].id_salon]);
       } else {
-        this.salones = salones;
+        this.salones = salones as SalonConMedia[];
         this.selectedCategory = null;
       }
     });
@@ -223,19 +229,28 @@ export class PaginaPrincipalComponent
         }
       });
   }
+  selectedCategoryLabelKey: string | null = null;
 
-  filterBy(cat: string) {
-    if (this.selectedCategory === cat) {
+  filterBy(value: string, labelKey: string) {
+    if (this.selectedCategory === value) {
+      // deseleccionamos
       this.selectedCategory = null;
+      this.selectedCategoryLabelKey = null;
       this.fetchSalones();
     } else {
-      this.selectedCategory = cat;
-      this.fetchSalones(cat);
+      // seleccionamos
+      this.selectedCategory = value;
+      this.selectedCategoryLabelKey = labelKey;
+      this.fetchSalones(value);
     }
   }
 
+  // y para el título:
   get tituloCategoria(): string {
-    return this.selectedCategory ? this.selectedCategory : "Recomendado";
+    if (this.selectedCategoryLabelKey) {
+      return this.translate.instant(this.selectedCategoryLabelKey);
+    }
+    return this.translate.instant("PAGE.RECOMMENDED");
   }
 
   onLogin() {
@@ -281,10 +296,37 @@ export class PaginaPrincipalComponent
       behavior: "smooth",
     });
   }
+
   get mostrarSugerencias(): boolean {
     return (
       this.sugerencias.length > 0 ||
       (!!this.searchTerm && this.sugerencias.length === 0)
     );
+  }
+
+  fetchSalones(especializacion?: string): void {
+    const obtenerSalones = especializacion
+      ? this.salonService.getSalonesFiltrado(especializacion)
+      : this.salonService.getSalonesFormateados();
+
+    obtenerSalones.subscribe((salones) => {
+      const peticionesConResenas = salones.map((salon) =>
+        this.resenaService.getResenasPorSalon(salon.id_salon).pipe(
+          map((resenas) => {
+            const total = resenas.reduce((sum, r) => sum + r.calificacion, 0);
+            const media = resenas.length ? total / resenas.length : 0;
+
+            return {
+              ...salon,
+              mediaResena: media,
+            };
+          })
+        )
+      );
+
+      forkJoin(peticionesConResenas).subscribe((salonesConMedia) => {
+        this.salones = salonesConMedia;
+      });
+    });
   }
 }

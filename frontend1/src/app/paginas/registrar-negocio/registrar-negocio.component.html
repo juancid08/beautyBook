@@ -3,10 +3,10 @@
 <main class="mt-12 max-w-2xl mx-auto px-4 py-12">
   <ng-container *ngIf="paso === 1">
     <h2 class="text-2xl font-bold text-center mb-4">
-      ¿Qué tipo de negocio tienes?
+      {{ "REGISTER_BUSINESS.STEP1_TITLE" | translate }}
     </h2>
     <p class="text-center text-gray-600 mb-6">
-      Selecciona la categoría que mejor representa tu negocio.
+      {{ "REGISTER_BUSINESS.STEP1_SUBTITLE" | translate }}
     </p>
 
     <div class="grid grid-cols-3 gap-4 mb-4">
@@ -18,10 +18,12 @@
       >
         <img
           [src]="item.imagen"
-          alt="{{ item.nombre }}"
+          [alt]="item.labelKey | translate"
           class="w-16 h-16 rounded-full mb-2 object-cover"
         />
-        <span class="text-sm font-medium text-center">{{ item.nombre }}</span>
+        <span class="text-sm font-medium text-center">
+          {{ item.labelKey | translate }}
+        </span>
       </button>
     </div>
 
@@ -34,10 +36,12 @@
       >
         <img
           [src]="item.imagen"
-          alt="{{ item.nombre }}"
+          [alt]="item.labelKey | translate"
           class="w-16 h-16 rounded-full mb-2 object-cover"
         />
-        <span class="text-sm font-medium text-center">{{ item.nombre }}</span>
+        <span class="text-sm font-medium text-center">{{
+          item.labelKey | translate
+        }}</span>
       </button>
     </div>
   </ng-container>
@@ -45,7 +49,7 @@
   <ng-container *ngIf="paso === 2">
     <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-2xl p-6 sm:p-8">
       <h2 class="text-3xl font-semibold text-center text-gray-800 mb-8">
-        Completa la información de tu negocio
+        {{ "REGISTER_BUSINESS.STEP2_TITLE" | translate }}
       </h2>
 
       <form (ngSubmit)="registrarSalon()" novalidate class="space-y-6">
@@ -54,13 +58,16 @@
           <!-- Nombre del salón -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
-              Nombre del salón <span class="text-red-500">*</span>
+              {{ "REGISTER_BUSINESS.FIELD_NAME" | translate }}
+              <span class="text-red-500">*</span>
             </label>
             <input
               [(ngModel)]="datosNegocio.nombre"
               name="nombre"
               required
-              placeholder="Ej. Salón Belleza Plus"
+              placeholder="{{
+                'REGISTER_BUSINESS.PLACEHOLDER_NAME' | translate
+              }}"
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
             />
           </div>
@@ -68,13 +75,16 @@
           <!-- Dirección -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
-              Dirección <span class="text-red-500">*</span>
+              {{ "REGISTER_BUSINESS.FIELD_ADDRESS" | translate }}
+              <span class="text-red-500">*</span>
             </label>
             <input
               [(ngModel)]="datosNegocio.direccion"
               name="direccion"
               required
-              placeholder="Calle Falsa 123"
+              placeholder="{{
+                'REGISTER_BUSINESS.PLACEHOLDER_ADDRESS' | translate
+              }}"
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
             />
           </div>
@@ -82,13 +92,16 @@
           <!-- CIF -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
-              CIF <span class="text-red-500">*</span>
+              {{ "REGISTER_BUSINESS.FIELD_CIF" | translate }}
+              <span class="text-red-500">*</span>
             </label>
             <input
               [(ngModel)]="datosNegocio.cif"
               name="cif"
               required
-              placeholder="B12345678"
+              placeholder="{{
+                'REGISTER_BUSINESS.PLACEHOLDER_CIF' | translate
+              }}"
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
             />
           </div>
@@ -96,13 +109,16 @@
           <!-- Teléfono -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
-              Teléfono <span class="text-red-500">*</span>
+              {{ "REGISTER_BUSINESS.FIELD_PHONE" | translate }}
+              <span class="text-red-500">*</span>
             </label>
             <input
               [(ngModel)]="datosNegocio.telefono"
               name="telefono"
               required
-              placeholder="+34 600 123 456"
+              placeholder="{{
+                'REGISTER_BUSINESS.PLACEHOLDER_PHONE' | translate
+              }}"
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
             />
           </div>
@@ -110,14 +126,17 @@
           <!-- Email (ocupa las 2 columnas) -->
           <div class="md:col-span-2">
             <label class="block text-sm font-medium text-gray-700 mb-1">
-              Correo electrónico <span class="text-red-500">*</span>
+              {{ "REGISTER_BUSINESS.FIELD_EMAIL" | translate }}
+              <span class="text-red-500">*</span>
             </label>
             <input
               [(ngModel)]="datosNegocio.email"
               name="email"
               type="email"
               required
-              placeholder="tucorreo@ejemplo.com"
+              placeholder="{{
+                'REGISTER_BUSINESS.PLACEHOLDER_EMAIL' | translate
+              }}"
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
             />
           </div>
@@ -125,13 +144,15 @@
           <!-- Descripción (ocupa las 2 columnas) -->
           <div class="md:col-span-2">
             <label class="block text-sm font-medium text-gray-700 mb-1">
-              Descripción (opcional)
+              {{ "REGISTER_BUSINESS.FIELD_DESCRIPTION" | translate }}
             </label>
             <textarea
               [(ngModel)]="datosNegocio.descripcion"
               name="descripcion"
               rows="3"
-              placeholder="Cuéntanos algo sobre tu negocio..."
+              placeholder="{{
+                'REGISTER_BUSINESS.PLACEHOLDER_DESCRIPTION' | translate
+              }}"
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none resize-none"
             ></textarea>
           </div>
@@ -139,7 +160,8 @@
           <!-- Horarios -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
-              Apertura <span class="text-red-500">*</span>
+              {{ "REGISTER_BUSINESS.FIELD_OPEN" | translate }}
+              <span class="text-red-500">*</span>
             </label>
             <input
               [(ngModel)]="datosNegocio.horario_apertura"
@@ -151,7 +173,8 @@
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
-              Cierre <span class="text-red-500">*</span>
+              {{ "REGISTER_BUSINESS.FIELD_CLOSE" | translate }}
+              <span class="text-red-500">*</span>
             </label>
             <input
               [(ngModel)]="datosNegocio.horario_cierre"
@@ -167,7 +190,7 @@
         <div class="space-y-2">
           <!-- Etiqueta descriptiva -->
           <label class="block text-sm font-medium text-gray-700">
-            Foto del negocio
+            {{ "REGISTER_BUSINESS.FIELD_PHOTO" | translate }}
           </label>
 
           <!-- Botón personalizado con emoji -->
@@ -176,7 +199,9 @@
           >
             <!-- Emoji de cámara -->
             <span class="mr-2 text-lg">📸</span>
-            <span>Seleccionar archivo</span>
+            <span>
+              {{ "REGISTER_BUSINESS.BUTTON_SELECT_FILE" | translate }}
+            </span>
 
             <!-- Input real oculto -->
             <input
@@ -190,10 +215,12 @@
 
           <!-- Previsualización -->
           <div *ngIf="imagenPreview" class="mt-4">
-            <p class="text-sm text-gray-500 mb-2">Previsualización:</p>
+            <p class="text-sm text-gray-500 mb-2">
+              {{ "REGISTER_BUSINESS.LABEL_PREVIEW" | translate }}
+            </p>
             <img
               [src]="imagenPreview"
-              alt="Previsualización"
+              alt="{{ 'REGISTER_BUSINESS.LABEL_PREVIEW' | translate }}"
               class="w-full max-h-64 object-cover rounded-lg shadow-sm"
             />
           </div>
@@ -206,16 +233,23 @@
             [disabled]="cargando"
             class="w-full py-3 rounded-lg text-white bg-[#117b95] hover:bg-[#0e6378] transition disabled:opacity-50"
           >
-            {{ cargando ? "Registrando..." : "Registrar negocio" }}
+            {{
+              cargando
+                ? ("REGISTER_BUSINESS.BUTTON_SUBMIT_LOADING" | translate)
+                : ("REGISTER_BUSINESS.BUTTON_SUBMIT" | translate)
+            }}
           </button>
           <p
-            *ngIf="mensajeExito"
+            *ngIf="mensajeExitoKey"
             class="text-center text-green-600 font-medium"
           >
-            {{ mensajeExito }}
+            {{ mensajeExitoKey | translate }}
           </p>
-          <p *ngIf="mensajeError" class="text-center text-red-600 font-medium">
-            {{ mensajeError }}
+          <p
+            *ngIf="mensajeErrorKey"
+            class="text-center text-red-600 font-medium"
+          >
+            {{ mensajeErrorKey | translate : mensajeErrorParams }}
           </p>
         </div>
       </form>

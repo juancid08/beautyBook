@@ -1,112 +1,97 @@
-<!-- politica-de-privacidad.component.html -->
-
-<!-- IMPORTO NAVBAR DE LOS COMPONENTES -->
 <app-navbar></app-navbar>
 
-<!-- CONTENEDOR PRINCIPAL CON FLEX -->
 <div class="flex flex-col lg:flex-row gap-8 px-6 lg:px-20 py-10">
-  <!-- IMPORTO ACCORDION DE LOS COMPONENTES -->
   <div class="w-full lg:w-1/3">
     <app-accordion></app-accordion>
   </div>
 
-  <!-- CONTENIDO PRINCIPAL DE LA PÁGINA DE POLITICA DE PRIVACIDAD -->
   <div
     class="flex-1 bg-white p-6 rounded-2xl shadow-md text-gray-800 text-justify space-y-6"
     data-aos="fade-up"
     data-aos-duration="1000"
   >
-    <h2 class="text-3xl font-bold mb-4 text-left">Política de Privacidad</h2>
+    <h2 class="text-3xl font-bold mb-4 text-left">
+      {{ "PRIVACY.TITLE" | translate }}
+    </h2>
     <h3 class="text-sm text-gray-500 mb-6">
-      Última actualización: 15 de abril de 2025
+      {{ "PRIVACY.LAST_UPDATED" | translate : { date: "15 de abril de 2025" } }}
     </h3>
 
     <p>
-      En BeautyBook, nos comprometemos a proteger tu privacidad y a garantizar
-      que tu información personal se maneje de manera segura y responsable. Esta
-      Política de Privacidad describe cómo recopilamos, usamos y protegemos tus
-      datos cuando utilizas nuestra plataforma web o nuestros servicios.
+      {{ "PRIVACY.INTRO" | translate }}
     </p>
 
-    <h3 class="text-xl font-semibold">1. Datos que recopilamos</h3>
+    <h3 class="text-xl font-semibold">
+      {{ "PRIVACY.SECTION1_TITLE" | translate }}
+    </h3>
     <p>
-      Recopilamos únicamente la información necesaria para prestarte nuestros
-      servicios, tales como:
+      {{ "PRIVACY.SECTION1_TEXT" | translate }}
     </p>
     <ul class="list-disc list-inside mb-4">
-      <li>Datos de registro (nombre, correo electrónico, contraseña).</li>
-      <li>Información de perfil (foto, ubicación, especialidad).</li>
-      <li>Historial de citas y preferencias de servicio.</li>
+      <li *ngFor="let item of 'PRIVACY.SECTION1_LIST' | translate">
+        {{ item }}
+      </li>
     </ul>
 
-    <h3 class="text-xl font-semibold">2. Uso de tus datos</h3>
-    <p>Utilizamos tus datos para:</p>
+    <h3 class="text-xl font-semibold">
+      {{ "PRIVACY.SECTION2_TITLE" | translate }}
+    </h3>
+    <p>{{ "PRIVACY.SECTION2_TEXT" | translate }}</p>
     <ul class="list-disc list-inside mb-4">
-      <li>Gestionar y confirmar tus citas de belleza.</li>
-      <li>Enviar notificaciones y recordatorios.</li>
-      <li>Mejorar nuestra plataforma mediante análisis anónimos.</li>
+      <li *ngFor="let item of 'PRIVACY.SECTION2_LIST' | translate">
+        {{ item }}
+      </li>
     </ul>
 
-    <h3 class="text-xl font-semibold">3. Cookies y tecnologías similares</h3>
-    <p>Empleamos cookies y herramientas de seguimiento para:</p>
+    <h3 class="text-xl font-semibold">
+      {{ "PRIVACY.SECTION3_TITLE" | translate }}
+    </h3>
+    <p>{{ "PRIVACY.SECTION3_TEXT1" | translate }}</p>
     <ul class="list-disc list-inside mb-4">
-      <li>Mantener tu sesión activa.</li>
-      <li>Analizar el uso del sitio y optimizar la experiencia.</li>
-      <li>Personalizar contenidos y recomendaciones.</li>
+      <li *ngFor="let item of 'PRIVACY.SECTION3_LIST' | translate">
+        {{ item }}
+      </li>
     </ul>
-    <p>
-      Puedes gestionar o desactivar las cookies desde la configuración de tu
-      navegador, aunque esto podría afectar algunas funcionalidades.
-    </p>
+    <p>{{ "PRIVACY.SECTION3_TEXT2" | translate }}</p>
 
-    <h3 class="text-xl font-semibold">4. Compartir datos con terceros</h3>
-    <p>
-      BeautyBook no venderá ni alquilará tu información personal. Podemos
-      compartir datos con:
-    </p>
+    <h3 class="text-xl font-semibold">
+      {{ "PRIVACY.SECTION4_TITLE" | translate }}
+    </h3>
+    <p>{{ "PRIVACY.SECTION4_TEXT" | translate }}</p>
+
     <ul class="list-disc list-inside mb-4">
-      <li>Proveedores de servicios (pago, correo electrónico, alojamiento).</li>
-      <li>Autoridades legales en caso de requerimiento judicial.</li>
+      <li *ngFor="let item of 'PRIVACY.SECTION4_LIST' | translate">
+        {{ item }}
+      </li>
     </ul>
 
-    <h3 class="text-xl font-semibold">5. Seguridad de la información</h3>
+    <h3 class="text-xl font-semibold">
+      {{ "PRIVACY.SECTION5_TITLE" | translate }}
+    </h3>
     <p>
-      Implementamos medidas técnicas y organizativas de última generación, como
-      cifrado SSL/TLS, autenticación segura y controles de acceso, para proteger
-      tus datos contra accesos no autorizados, pérdida o alteración.
+      {{ "PRIVACY.SECTION5_TEXT" | translate }}
     </p>
 
-    <h3 class="text-xl font-semibold">6. Conservación de datos</h3>
-    <p>
-      Conservamos tu información durante el tiempo necesario para cumplir con
-      las finalidades descritas, así como para obligaciones legales o resolución
-      de disputas. Una vez cumplidos estos fines, procederemos a la supresión o
-      anonimización segura de los datos.
-    </p>
+    <h3 class="text-xl font-semibold">
+      {{ "PRIVACY.SECTION6_TITLE" | translate }}
+    </h3>
+    <p>{{ "PRIVACY.SECTION6_TEXT" | translate }}</p>
 
-    <h3 class="text-xl font-semibold">7. Tus derechos</h3>
-    <p>Tienes derecho a:</p>
+    <h3 class="text-xl font-semibold">
+      {{ "PRIVACY.SECTION7_TITLE" | translate }}
+    </h3>
+    <p>{{ "PRIVACY.SECTION7_TEXT1" | translate }}</p>
     <ul class="list-disc list-inside mb-4">
-      <li>Acceder, rectificar y suprimir tus datos personales.</li>
-      <li>Solicitar la portabilidad de tus datos.</li>
-      <li>Oponerte o limitar el tratamiento en determinadas circunstancias.</li>
+      <li *ngFor="let item of 'PRIVACY.SECTION7_LIST' | translate">
+        {{ item }}
+      </li>
     </ul>
-    <p>
-      Para ejercerlos, escríbenos a
-      <a
-        href="mailto:help.es&#64;beauty.com"
-        class="text-blue-600 hover:underline"
-      >
-        help.es&#64;beauty.com </a
-      >.
-    </p>
+    <p [innerHTML]="'PRIVACY.SECTION7_TEXT2' | translate"></p>
 
-    <h3 class="text-xl font-semibold">Cambios en esta política</h3>
-    <p>
-      BeautyBook puede actualizar esta Política de Privacidad ocasionalmente. Te
-      notificaremos sobre cambios importantes mediante la plataforma o por
-      correo electrónico. Te recomendamos revisarla periódicamente.
-    </p>
+    <h3 class="text-xl font-semibold">
+      {{ "PRIVACY.CHANGES_TITLE" | translate }}
+    </h3>
+    <p>{{ "PRIVACY.CHANGES_TEXT" | translate }}</p>
   </div>
 </div>
 

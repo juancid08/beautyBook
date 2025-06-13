@@ -14,7 +14,7 @@ export interface Salon {
   especializacion: string;
   foto: string;
   foto_url?: string;
-  rating?: number;
+  rating?: number | null;
   liked?: boolean;
   id_usuario: number;
 }
@@ -25,16 +25,16 @@ export interface Salon {
 export class SalonService {
   private baseUrl = "http://localhost/api/salones";
 
-  constructor(private http: HttpClient,
-    private authService: AuthService
-  ) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   getSalones(): Observable<Salon[]> {
     return this.http.get<Salon[]>(this.baseUrl);
   }
 
   getSalonesPorUsuario(idUsuario: number): Observable<Salon[]> {
-    return this.http.get<Salon[]>(`http://localhost/api/usuarios/${idUsuario}/salones`);
+    return this.http.get<Salon[]>(
+      `http://localhost/api/usuarios/${idUsuario}/salones`
+    );
   }
 
   getSalonesFiltrado(especializacion?: string): Observable<Salon[]> {
@@ -139,7 +139,7 @@ export class SalonService {
   crearSalon(data: any): Observable<Salon> {
     const token = this.authService.getToken(); // o como guardes el token
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
     return this.http.post<Salon>(this.baseUrl, data, { headers });
   }

@@ -9,13 +9,19 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { Empleado, EmpleadoService } from "../../services/empleado.service";
 import Swal from "sweetalert2";
-
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 @Component({
   selector: "app-perfil",
   standalone: true,
   templateUrl: "./perfil.component.html",
   styleUrls: ["./perfil.component.scss"],
-  imports: [NavbarComponent, FooterComponent, CommonModule, FormsModule],
+  imports: [
+    NavbarComponent,
+    FooterComponent,
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+  ],
 })
 export class PerfilComponent implements OnInit {
   // --- Perfil de usuario ---
@@ -32,18 +38,16 @@ export class PerfilComponent implements OnInit {
   // BOTÓN LOGOUT
   logout(): void {
     Swal.fire({
-      title: "¿Estás seguro?",
-      text: "Cerrarás tu sesión actual.",
+      title: this.translate.instant("SWAL.LOGOUT_TITLE"),
+      text: this.translate.instant("SWAL.LOGOUT_TEXT"),
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Sí, cerrar sesión",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: this.translate.instant("SWAL.LOGOUT_CONFIRM"),
+      cancelButtonText: this.translate.instant("SWAL.LOGOUT_CANCEL"),
     }).then((result) => {
       if (result.isConfirmed) {
         this.authSvc.logout();
-        Swal.fire("Sesión cerrada", "", "success");
+        Swal.fire(this.translate.instant("SWAL.LOGOUT_SUCCESS"), "", "success");
       }
     });
   }
@@ -90,7 +94,8 @@ export class PerfilComponent implements OnInit {
     private citaService: CitaService,
     private salonService: SalonService,
     private servicioService: ServicioService,
-    private empleadoService: EmpleadoService
+    private empleadoService: EmpleadoService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -265,28 +270,34 @@ export class PerfilComponent implements OnInit {
    */
   onEliminarCita(cita: Cita): void {
     Swal.fire({
-      title: "¿Eliminar cita?",
-      text: "Esta acción no se puede deshacer.",
+      title: this.translate.instant("SWAL.DELETE_BOOKING_TITLE"),
+      text: this.translate.instant("SWAL.DELETE_BOOKING_TEXT"),
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: this.translate.instant("SWAL.DELETE_BOOKING_CONFIRM"),
+      cancelButtonText: this.translate.instant("SWAL.DELETE_BOOKING_CANCEL"),
     }).then((result) => {
       if (result.isConfirmed) {
         this.citaService.eliminarCita(cita.id_cita).subscribe({
           next: () => {
             this.citas = this.citas.filter((c) => c.id_cita !== cita.id_cita);
-            Swal.fire("Cita eliminada", "", "success");
+            Swal.fire(
+              this.translate.instant("SWAL.DELETE_BOOKING_SUCCESS"),
+              "",
+              "success"
+            );
           },
-          error: (err) => {
-            console.error("Error al eliminar cita:", err);
-            Swal.fire("Error", "No se pudo eliminar la cita", "error");
+          error: () => {
+            Swal.fire(
+              this.translate.instant("SWAL.DELETE_BOOKING_ERROR"),
+              "",
+              "error"
+            );
           },
         });
       }
     });
   }
-
   /**
    * Solo dueño de salón o administrador: cambia el estado de la cita
    */
@@ -299,11 +310,18 @@ export class PerfilComponent implements OnInit {
       .subscribe({
         next: () => {
           cita.estado = nuevoEstado;
-          Swal.fire("Estado actualizado", "", "success");
+          Swal.fire(
+            this.translate.instant("SWAL.UPDATE_STATUS_SUCCESS"),
+            "",
+            "success"
+          );
         },
-        error: (err) => {
-          console.error("Error al actualizar estado:", err);
-          Swal.fire("Error", "No se pudo actualizar el estado", "error");
+        error: () => {
+          Swal.fire(
+            this.translate.instant("SWAL.UPDATE_STATUS_ERROR"),
+            "",
+            "error"
+          );
         },
       });
   }
@@ -318,11 +336,18 @@ export class PerfilComponent implements OnInit {
         next: () => {
           cita.id_empleado = nuevoEmpleadoId;
           this.getNombreEmpleado(nuevoEmpleadoId);
-          Swal.fire("Empleado actualizado", "", "success");
+          Swal.fire(
+            this.translate.instant("SWAL.UPDATE_EMPLOYEE_SUCCESS"),
+            "",
+            "success"
+          );
         },
-        error: (err) => {
-          console.error("Error al cambiar empleado:", err);
-          Swal.fire("Error", "No se pudo cambiar el empleado", "error");
+        error: () => {
+          Swal.fire(
+            this.translate.instant("SWAL.UPDATE_EMPLOYEE_ERROR"),
+            "",
+            "error"
+          );
         },
       });
   }
@@ -353,6 +378,7 @@ export class PerfilComponent implements OnInit {
       descripcion,
       especializacion,
     } = this.salonEditando;
+
     if (this.imagenSalonSeleccionada) {
       const formData = new FormData();
       formData.append("nombre", nombre);
@@ -363,15 +389,24 @@ export class PerfilComponent implements OnInit {
       formData.append("id_usuario", String(this.usuario.id_usuario));
       formData.append("foto", this.imagenSalonSeleccionada);
       formData.append("_method", "PUT");
+
       this.salonService.actualizarSalonConImagen(id_salon, formData).subscribe({
         next: () => {
-          alert("Salón actualizado correctamente con imagen");
+          Swal.fire(
+            this.translate.instant("SWAL.SALON_UPDATED_SUCCESS"),
+            "",
+            "success"
+          );
           this.fetchSalon(this.usuario.id_usuario);
           this.cerrarModalSalon();
         },
         error: (err) => {
           console.error("Error al actualizar salón con imagen:", err);
-          alert("Hubo un error al actualizar el salón");
+          Swal.fire(
+            this.translate.instant("SWAL.SALON_UPDATED_ERROR"),
+            "",
+            "error"
+          );
         },
       });
     } else {
@@ -383,32 +418,71 @@ export class PerfilComponent implements OnInit {
         especializacion,
         id_usuario: this.usuario.id_usuario,
       };
+
       this.salonService.actualizarSalon(id_salon, data).subscribe({
         next: () => {
-          alert("Salón actualizado correctamente");
+          Swal.fire(
+            this.translate.instant("SWAL.SALON_UPDATED_SUCCESS"),
+            "",
+            "success"
+          );
           this.fetchSalon(this.usuario.id_usuario);
           this.cerrarModalSalon();
         },
         error: (err) => {
           console.error("Error al actualizar salón sin imagen:", err);
-          alert("Hubo un error al actualizar el salón");
+          Swal.fire(
+            this.translate.instant("SWAL.SALON_UPDATED_ERROR"),
+            "",
+            "error"
+          );
         },
       });
     }
   }
 
   borrarSalon(salon: Salon): void {
-    if (!confirm(`¿Seguro que quieres eliminar el salón "${salon.nombre}"?`))
-      return;
-    this.salonService.eliminarSalon(salon.id_salon).subscribe({
-      next: () => {
-        alert("Salón eliminado correctamente");
-        this.fetchSalon(this.usuario.id_usuario);
+    Swal.fire({
+      title: this.translate.instant("PROFILE.MODAL_CONFIRM_TITULO"),
+      text:
+        `${this.translate.instant("PROFILE.MODAL_CONFIRM_TEXTO")}: ` +
+        `"${salon.nombre}"`,
+      input: "text",
+      inputPlaceholder: this.translate.instant(
+        "PROFILE.MODAL_CONFIRM_PLACEHOLDER"
+      ),
+      showCancelButton: true,
+      confirmButtonText: this.translate.instant("PROFILE.BUTTON_ELIMINAR"),
+      cancelButtonText: this.translate.instant("PROFILE.BUTTON_CANCELAR"),
+      preConfirm: (valor: string) => {
+        if (valor !== salon.nombre) {
+          Swal.showValidationMessage(
+            this.translate.instant("SWAL.GENERIC_ERROR_TEXT")
+          );
+          return false;
+        }
+        return valor;
       },
-      error: (err) => {
-        console.error("Error al eliminar salón:", err);
-        alert("Hubo un error al eliminar el salón");
-      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.salonService.eliminarSalon(salon.id_salon).subscribe({
+          next: () => {
+            Swal.fire(
+              this.translate.instant("SWAL.SALON_DELETED_SUCCESS"),
+              "",
+              "success"
+            );
+            this.fetchSalon(this.usuario.id_usuario);
+          },
+          error: () => {
+            Swal.fire(
+              this.translate.instant("SWAL.SALON_DELETED_ERROR"),
+              "",
+              "error"
+            );
+          },
+        });
+      }
     });
   }
 
@@ -461,8 +535,8 @@ export class PerfilComponent implements OnInit {
       this.servicioNuevo.id_salon == null
     ) {
       Swal.fire(
-        "Campos incompletos",
-        "Completa todos los campos del servicio.",
+        this.translate.instant("SWAL.INCOMPLETE_FIELDS"),
+        this.translate.instant("SWAL.INCOMPLETE_FIELDS_SERVICE"),
         "warning"
       );
       return;
@@ -478,10 +552,19 @@ export class PerfilComponent implements OnInit {
       next: (servCreado) => {
         this.cargarServiciosDeSalon(servCreado.id_salon);
         this.cerrarFormularioServicio();
+        Swal.fire(
+          this.translate.instant("SWAL.SERVICE_CREATED_SUCCESS"),
+          "",
+          "success"
+        );
       },
       error: (err) => {
         console.error("Error al crear servicio:", err);
-        Swal.fire("Error", "Hubo un error al crear el servicio", "error");
+        Swal.fire(
+          this.translate.instant("SWAL.SERVICE_CREATED_ERROR"),
+          "",
+          "error"
+        );
       },
     });
   }
@@ -503,8 +586,8 @@ export class PerfilComponent implements OnInit {
       id_salon == null
     ) {
       Swal.fire(
-        "Campos incompletos",
-        "El servicio debe tener nombre, precio y duración.",
+        this.translate.instant("SWAL.INCOMPLETE_FIELDS"),
+        this.translate.instant("SWAL.INCOMPLETE_FIELDS_SERVICE"),
         "warning"
       );
       return;
@@ -522,12 +605,17 @@ export class PerfilComponent implements OnInit {
         next: () => {
           this.cargarServiciosDeSalon(id_salon);
           this.cerrarFormularioServicio();
+          Swal.fire(
+            this.translate.instant("SWAL.SERVICE_UPDATED_SUCCESS"),
+            "",
+            "success"
+          );
         },
         error: (err) => {
           console.error("Error al actualizar servicio:", err);
           Swal.fire(
-            "Error",
-            "Hubo un error al actualizar el servicio",
+            this.translate.instant("SWAL.SERVICE_UPDATED_ERROR"),
+            "",
             "error"
           );
         },
@@ -535,20 +623,27 @@ export class PerfilComponent implements OnInit {
   }
   borrarServicio(serv: Servicio): void {
     Swal.fire({
-      title: `¿Eliminar servicio "${serv.nombre}"?`,
+      title: this.translate.instant("SWAL.DELETE_BOOKING_TITLE"), // o crea otra clave SWAL.DELETE_SERVICE_TITLE
+      text: this.translate.instant("SWAL.DELETE_BOOKING_TEXT"),
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: this.translate.instant("SWAL.DELETE_BOOKING_CONFIRM"),
+      cancelButtonText: this.translate.instant("SWAL.DELETE_BOOKING_CANCEL"),
     }).then((result) => {
       if (result.isConfirmed) {
         this.servicioService.eliminarServicio(serv.id_servicio).subscribe({
-          next: () => this.cargarServiciosDeSalon(serv.id_salon),
-          error: (err) => {
-            console.error("Error al eliminar servicio:", err);
+          next: () => {
+            this.cargarServiciosDeSalon(serv.id_salon);
             Swal.fire(
-              "Error",
-              "Hubo un error al eliminar el servicio",
+              this.translate.instant("SWAL.SERVICE_DELETED_SUCCESS"),
+              "",
+              "success"
+            );
+          },
+          error: () => {
+            Swal.fire(
+              this.translate.instant("SWAL.SERVICE_DELETED_ERROR"),
+              "",
               "error"
             );
           },
@@ -587,8 +682,8 @@ export class PerfilComponent implements OnInit {
       this.empleadoNuevo.id_salon == null
     ) {
       Swal.fire(
-        "Campos incompletos",
-        "Completa todos los campos del empleado.",
+        this.translate.instant("SWAL.INCOMPLETE_FIELDS"),
+        this.translate.instant("SWAL.INCOMPLETE_FIELDS_EMPLOYEE"),
         "warning"
       );
       return;
@@ -608,6 +703,11 @@ export class PerfilComponent implements OnInit {
         next: (empCreado) => {
           this.cargarEmpleadosDeSalon(empCreado.id_salon);
           this.cerrarFormularioEmpleado();
+          Swal.fire(
+            this.translate.instant("SWAL.EMPLOYEE_CREATED_SUCCESS"),
+            "",
+            "success"
+          );
         },
         error: (err) => {
           console.error("Error al crear empleado con imagen:", err);
@@ -633,8 +733,8 @@ export class PerfilComponent implements OnInit {
     const { id_empleado, nombre, telefono, id_salon } = this.empleadoEditando;
     if (!nombre || !telefono || id_salon == null) {
       Swal.fire(
-        "Campos incompletos",
-        "El empleado debe tener nombre y teléfono.",
+        this.translate.instant("SWAL.INCOMPLETE_FIELDS"),
+        this.translate.instant("SWAL.INCOMPLETE_FIELDS_EMPLOYEE"),
         "warning"
       );
       return;
@@ -656,6 +756,11 @@ export class PerfilComponent implements OnInit {
           next: () => {
             this.cargarEmpleadosDeSalon(id_salon);
             this.cerrarFormularioEmpleado();
+            Swal.fire(
+              this.translate.instant("SWAL.EMPLOYEE_UPDATED_SUCCESS"),
+              "",
+              "success"
+            );
           },
           error: (err) => {
             console.error("Error al actualizar empleado con imagen:", err);
@@ -706,10 +811,18 @@ export class PerfilComponent implements OnInit {
     (this.authSvc as any).currentUserSubject.next(res);
     this.usuario = { ...res };
     this.previewUrlPerfil = res.foto_perfil;
-    Swal.fire("Perfil actualizado", "", "success");
+    Swal.fire(
+      this.translate.instant("SWAL.PROFILE_UPDATED_SUCCESS"),
+      "",
+      "success"
+    );
   }
   private onError(err: any) {
     console.error("Error al guardar cambios:", err);
-    Swal.fire("Error", "Hubo un error al guardar los cambios", "error");
+    Swal.fire(
+      this.translate.instant("SWAL.GENERIC_ERROR_TITLE"),
+      this.translate.instant("SWAL.GENERIC_ERROR_TEXT"),
+      "error"
+    );
   }
 }

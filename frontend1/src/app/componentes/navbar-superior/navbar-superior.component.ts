@@ -1,3 +1,4 @@
+// src/app/componentes/navbar-superior/navbar-superior.component.ts
 import {
   Component,
   OnInit,
@@ -9,17 +10,22 @@ import {
   ElementRef,
   CUSTOM_ELEMENTS_SCHEMA,
 } from "@angular/core";
-import { isPlatformBrowser, CommonModule } from "@angular/common";
+import { CommonModule, isPlatformBrowser } from "@angular/common";
 import { Router } from "@angular/router";
 import anime from "animejs/lib/anime.es.js";
+import { Subscription } from "rxjs";
 import { AuthService } from "../../services/auth.service";
 import { SalonService, Salon } from "../../services/salon.service";
-import { Subscription } from "rxjs";
+import {
+  TranslateModule,
+  TranslateService,
+  LangChangeEvent,
+} from "@ngx-translate/core";
 
 @Component({
   selector: "app-navbar-superior",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: "./navbar-superior.component.html",
   styleUrls: ["./navbar-superior.component.scss"],
@@ -35,27 +41,37 @@ export class NavbarSuperiorComponent
 
   private userSub!: Subscription;
   private salonSub!: Subscription;
+  private langSub!: Subscription;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
     private router: Router,
     private authSvc: AuthService,
-    private salonService: SalonService
+    private salonService: SalonService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
+    // Sin .addLangs ni .setDefaultLang aquí:
+    // El idioma ya viene de AppComponent/main.ts
+    this.idiomaActual = this.translate.currentLang as "es" | "en";
+
+    // Mantener sincronizado si cambia en otro sitio
+    this.langSub = this.translate.onLangChange.subscribe(
+      (evt: LangChangeEvent) => {
+        this.idiomaActual = evt.lang as "es" | "en";
+      }
+    );
+
+    // Lógica de usuario / salón (igual que antes)…
     this.userSub = this.authSvc.currentUser$.subscribe((u) => {
       this.usuarioActual = u;
-      if (u && u.id_usuario) {
+      if (u?.id_usuario) {
         this.salonSub = this.salonService
           .getSalonesPorUsuario(u.id_usuario)
           .subscribe({
-            next: (salones: Salon[]) => {
-              this.tieneSalon = salones.length > 0;
-            },
-            error: () => {
-              this.tieneSalon = false;
-            },
+            next: (salones: Salon[]) => (this.tieneSalon = salones.length > 0),
+            error: () => (this.tieneSalon = false),
           });
       } else {
         this.tieneSalon = false;
@@ -88,6 +104,7 @@ export class NavbarSuperiorComponent
   ngOnDestroy(): void {
     this.userSub?.unsubscribe();
     this.salonSub?.unsubscribe();
+    this.langSub?.unsubscribe();
   }
 
   goHome(): void {
@@ -102,10 +119,6 @@ export class NavbarSuperiorComponent
     this.router.navigate(["/login"]);
   }
 
-  onRegister(): void {
-    this.router.navigate(["/register"]);
-  }
-
   onRegistrarNegocio(): void {
     if (!this.usuarioActual) {
       this.router.navigate(["/login"]);
@@ -114,8 +127,9 @@ export class NavbarSuperiorComponent
     }
   }
 
-  // Toggle de idioma
   toggleIdioma(): void {
-    this.idiomaActual = this.idiomaActual === "es" ? "en" : "es";
+    const nuevo = this.idiomaActual === "es" ? "en" : "es";
+    this.translate.use(nuevo);
+    localStorage.setItem("lang", nuevo);
   }
 }

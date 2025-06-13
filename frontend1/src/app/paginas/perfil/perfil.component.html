@@ -2,13 +2,15 @@
 
 <main class="max-w-2xl mx-auto px-4 py-12">
   <h2 class="text-2xl font-bold mb-6 text-center">
-    Perfil de {{ usuario?.nombre }}
+    {{ "PROFILE.HEADER" | translate : { name: usuario?.nombre } }}
   </h2>
 
   <div class="space-y-4" id="accordion">
     <!-- Sección Perfil -->
     <details open class="border rounded-md p-4">
-      <summary class="cursor-pointer font-semibold text-lg">Perfil</summary>
+      <summary class="cursor-pointer font-semibold text-lg">
+        {{ "PROFILE.SECTION_PERFIL" | translate }}
+      </summary>
 
       <form
         (ngSubmit)="guardarCambios()"
@@ -20,7 +22,7 @@
           <img
             [src]="previewUrlPerfil || '/assets/image/icono_empleados.png'"
             class="w-28 h-28 mx-auto rounded-full object-cover mb-4 transition-opacity duration-300 hover:opacity-80"
-            alt="Foto de perfil"
+            alt="{{ 'PROFILE.LABEL_FOTO_PERFIL' | translate }}"
           />
 
           <label
@@ -48,7 +50,9 @@
                 stroke-linejoin="round"
               />
             </svg>
-            <span class="ml-2">Cambiar foto</span>
+            <span class="ml-2">{{
+              "PROFILE.BUTTON_CAMBIAR_FOTO" | translate
+            }}</span>
           </label>
           <input
             id="perfilUpload"
@@ -61,7 +65,9 @@
 
         <!-- Nombre -->
         <div>
-          <label class="block text-sm font-medium text-gray-700">Nombre</label>
+          <label class="block text-sm font-medium text-gray-700">
+            {{ "PROFILE.LABEL_NOMBRE" | translate }}
+          </label>
           <input
             type="text"
             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
@@ -73,7 +79,9 @@
 
         <!-- Correo -->
         <div>
-          <label class="block text-sm font-medium text-gray-700">Correo</label>
+          <label class="block text-sm font-medium text-gray-700">{{
+            "PROFILE.LABEL_CORREO" | translate
+          }}</label>
           <input
             type="email"
             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
@@ -85,9 +93,9 @@
 
         <!-- Teléfono -->
         <div>
-          <label class="block text-sm font-medium text-gray-700"
-            >Teléfono</label
-          >
+          <label class="block text-sm font-medium text-gray-700">{{
+            "PROFILE.LABEL_TELEFONO" | translate
+          }}</label>
           <input
             type="text"
             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
@@ -103,17 +111,18 @@
           class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition"
           [disabled]="perfilForm.invalid"
         >
-          Guardar Cambios
+          {{ "PROFILE.BUTTON_GUARDAR" | translate }}
         </button>
       </form>
     </details>
 
     <!-- Sección Citas -->
-    <!-- Sección Citas -->
     <details class="border rounded-md p-4 shadow-sm">
-      <summary class="cursor-pointer font-semibold text-lg">Citas</summary>
+      <summary class="cursor-pointer font-semibold text-lg">
+        {{ "PROFILE.SECTION_CITAS" | translate }}
+      </summary>
       <h3 class="text-xl font-semibold my-4 text-center text-[#117B95]">
-        Mis Citas
+        {{ "PROFILE.MIS_CITAS" | translate }}
       </h3>
 
       <div *ngIf="citas.length > 0; else sinCitas" class="space-y-6">
@@ -122,38 +131,57 @@
           class="p-5 bg-gray-50 border border-gray-200 rounded-lg shadow hover:shadow-md transition-shadow"
         >
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <p><strong>📅 Fecha:</strong> {{ cita.fecha }}</p>
-            <p><strong>⏰ Hora:</strong> {{ cita.hora }}</p>
             <p>
-              <strong>💈 Servicio:</strong>
-              {{ serviciosMap[cita.id_servicio] || "Cargando..." }}
+              <strong>📅 {{ "PROFILE.LABEL_FECHA" | translate }}:</strong>
+              {{ cita.fecha }}
+            </p>
+            <p>
+              <strong>⏰ {{ "PROFILE.LABEL_HORA" | translate }}:</strong>
+              {{ cita.hora }}
+            </p>
+            <p>
+              <strong>💈 {{ "PROFILE.LABEL_SERVICIO" | translate }}</strong>
+              {{
+                serviciosMap[cita.id_servicio] ||
+                  ("PROFILE.LOADING" | translate)
+              }}
             </p>
 
             <ng-container *ngIf="esDuenoOSuper(cita); else mostrarSoloEstado">
               <div>
-                <label class="block text-sm font-medium text-gray-700"
-                  >Estado:</label
-                >
+                <label class="block text-sm font-medium text-gray-700">
+                  {{ "PROFILE.LABEL_ESTADO" | translate }} :
+                </label>
                 <select
                   [(ngModel)]="cita.estado"
                   (change)="onCambiarEstado(cita, $any($event.target).value)"
                   class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[#117B95] focus:outline-none"
                   name="estadoCita{{ cita.id_cita }}"
                 >
-                  <option value="pendiente">Pendiente</option>
-                  <option value="confirmada">Confirmada</option>
-                  <option value="cancelada">Cancelada</option>
+                  <option value="pendiente">
+                    {{ "PROFILE.ESTADO.PENDIENTE" | translate }}
+                  </option>
+                  <option value="confirmada">
+                    {{ "PROFILE.ESTADO.CONFIRMADA" | translate }}
+                  </option>
+                  <option value="cancelada">
+                    {{ "PROFILE.ESTADO.CANCELADA" | translate }}
+                  </option>
                 </select>
               </div>
             </ng-container>
             <ng-template #mostrarSoloEstado>
-              <p><strong>Estado:</strong> {{ cita.estado }}</p>
+              <p>
+                <strong>{{ "PROFILE.LABEL_ESTADO" | translate }}:</strong>
+                {{ "PROFILE.ESTADO." + (cita.estado | uppercase) | translate }}
+              </p>
             </ng-template>
 
             <ng-container *ngIf="esDuenoOSuper(cita); else mostrarSoloEmpleado">
               <div>
-                <label class="block text-sm font-medium text-gray-700"
-                  >Empleado asignado:</label
+                <label class="block text-sm font-medium text-gray-700">
+                  {{ "PROFILE.LABEL_EMPLEADO_ASIGNADO" | translate }}
+                  :</label
                 >
                 <select
                   (change)="onCambiarEmpleado(cita, +$any($event.target).value)"
@@ -174,8 +202,11 @@
             </ng-container>
             <ng-template #mostrarSoloEmpleado>
               <p>
-                <strong>Empleado:</strong>
-                {{ empleadosMap[cita.id_empleado] || "Cargando..." }}
+                <strong>{{ "PROFILE.LABEL_EMPLEADO" | translate }}:</strong>
+                {{
+                  empleadosMap[cita.id_empleado] ||
+                    ("PROFILE.LOADING" | translate)
+                }}
               </p>
             </ng-template>
           </div>
@@ -186,7 +217,7 @@
               class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm transition"
               (click)="onEliminarCita(cita)"
             >
-              🗑 Eliminar Cita
+              🗑 {{ "PROFILE.BUTTON_ELIMINAR_CITA" | translate }}
             </button>
           </div>
         </div>
@@ -194,7 +225,7 @@
 
       <ng-template #sinCitas>
         <p class="text-center text-gray-500 italic mt-4">
-          No tienes citas registradas aún.
+          {{ "PROFILE.NO_CITAS" | translate }}
         </p>
       </ng-template>
     </details>
@@ -203,10 +234,12 @@
     <details
       class="border rounded-md p-4 shadow-sm transition-all duration-300 ease-in-out"
     >
-      <summary class="cursor-pointer font-semibold text-lg">Mi Salón</summary>
+      <summary class="cursor-pointer font-semibold text-lg">
+        {{ "PROFILE.SECTION_SALON" | translate }}
+      </summary>
 
       <h3 class="text-xl font-semibold my-6 text-center text-[#117B95]">
-        Mis Salones
+        {{ "PROFILE.MIS_SALONES" | translate }}
       </h3>
 
       <div *ngIf="misSalones.length > 0; else sinSalon" class="space-y-6">
@@ -215,15 +248,25 @@
           class="p-6 bg-white border border-gray-200 rounded-xl shadow hover:shadow-md transition animate-fade-in"
         >
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <p><strong>Nombre:</strong> {{ salon.nombre }}</p>
-            <p><strong>Dirección:</strong> {{ salon.direccion }}</p>
-            <p><strong>Teléfono:</strong> {{ salon.telefono }}</p>
             <p>
-              <strong>Horario:</strong> {{ salon.horario_apertura }} -
-              {{ salon.horario_cierre }}
+              <strong>{{ "PROFILE.LABEL_NOMBRE_SALON" | translate }}:</strong>
+              {{ salon.nombre }}
+            </p>
+            <p>
+              <strong>{{ "PROFILE.LABEL_DIRECCION" | translate }}:</strong>
+              {{ salon.direccion }}
+            </p>
+            <p>
+              <strong>{{ "PROFILE.LABEL_TELEFONO_SALON" | translate }}:</strong>
+              {{ salon.telefono }}
+            </p>
+            <p>
+              <strong>{{ "PROFILE.LABEL_HORARIO" | translate }}:</strong>
+              {{ salon.horario_apertura }} - {{ salon.horario_cierre }}
             </p>
             <p class="md:col-span-2">
-              <strong>Descripción:</strong> {{ salon.descripcion }}
+              <strong>{{ "PROFILE.LABEL_DESCRIPCION" | translate }}:</strong>
+              {{ salon.descripcion }}
             </p>
           </div>
 
@@ -236,7 +279,7 @@
               class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition"
               (click)="editarSalon(salon)"
             >
-              ✏️ Editar
+              {{ "PROFILE.BUTTON_EDITAR_SALON" | translate }}
             </button>
             <button
               *ngIf="
@@ -246,7 +289,7 @@
               class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition"
               (click)="borrarSalon(salon)"
             >
-              🗑 Eliminar
+              {{ "PROFILE.BUTTON_BORRAR_SALON" | translate }}
             </button>
             <button
               *ngIf="
@@ -256,13 +299,15 @@
               class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition"
               (click)="abrirFormularioCrearServicio(salon.id_salon)"
             >
-              + Agregar servicio
+              {{ "PROFILE.BUTTON_AGREGAR_SERVICIO" | translate }}
             </button>
           </div>
 
           <!-- LISTA DE SERVICIOS -->
           <div class="mt-6">
-            <h4 class="text-lg font-semibold mb-2">Servicios</h4>
+            <h4 class="text-lg font-semibold mb-2">
+              {{ "PROFILE.LABEL_SERVICIOS" | translate }}
+            </h4>
             <div
               *ngIf="
                 serviciosPorSalon[salon.id_salon] &&
@@ -289,27 +334,29 @@
                     class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
                     (click)="abrirFormularioEditarServicio(serv)"
                   >
-                    Editar
+                    {{ "PROFILE.BUTTON_EDITAR_SERVICIO" | translate }}
                   </button>
                   <button
                     class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
                     (click)="borrarServicio(serv)"
                   >
-                    Eliminar
+                    {{ "PROFILE.BUTTON_BORRAR_SERVICIO" | translate }}
                   </button>
                 </div>
               </div>
             </div>
             <ng-template #sinServicios>
               <p class="text-gray-500 italic">
-                No hay servicios para este salón.
+                {{ "PROFILE.SIN_SERVICIOS" | translate }}
               </p>
             </ng-template>
           </div>
 
           <!-- LISTA DE EMPLEADOS -->
           <div class="mt-6">
-            <h4 class="text-lg font-semibold mb-2">Empleados</h4>
+            <h4 class="text-lg font-semibold mb-2">
+              {{ "PROFILE.LABEL_EMPLEADOS" | translate }}
+            </h4>
             <button
               *ngIf="
                 usuario.rol === 'administrador' ||
@@ -318,7 +365,7 @@
               class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1 rounded mb-3"
               (click)="abrirFormularioCrearEmpleado(salon.id_salon)"
             >
-              + Agregar empleado
+              {{ "PROFILE.BUTTON_AGREGAR_EMPLEADO" | translate }}
             </button>
 
             <div
@@ -352,20 +399,20 @@
                     class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
                     (click)="abrirFormularioEditarEmpleado(emp)"
                   >
-                    Editar
+                    {{ "PROFILE.BUTTON_EDITAR_EMPLEADO" | translate }}
                   </button>
                   <button
                     class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
                     (click)="borrarEmpleado(emp)"
                   >
-                    Eliminar
+                    {{ "PROFILE.BUTTON_BORRAR_EMPLEADO" | translate }}
                   </button>
                 </div>
               </div>
             </div>
             <ng-template #sinEmpleados>
               <p class="text-gray-500 italic">
-                No hay empleados para este salón.
+                {{ "PROFILE.SIN_EMPLEADOS" | translate }}
               </p>
             </ng-template>
           </div>
@@ -374,7 +421,7 @@
 
       <ng-template #sinSalon>
         <p class="text-center text-gray-500 italic mt-4">
-          No tienes ningún salón registrado.
+          {{ "PROFILE.NO_SALON" | translate }}
         </p>
       </ng-template>
     </details>
@@ -384,19 +431,18 @@
       class="border rounded-md p-4 shadow-sm transition-all duration-300 ease-in-out animate-fade-in-up"
     >
       <summary class="cursor-pointer font-semibold text-lg text-red-600">
-        🔒 Cerrar Sesión
+        🔒 {{ "PROFILE.SECTION_CERRAR_SESION" | translate }}
       </summary>
       <div class="mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
         <p class="text-sm text-gray-700 mb-4 text-center">
-          ¿Seguro que quieres cerrar sesión? Esta acción cerrará tu sesión
-          actual.
+          {{ "PROFILE.TEXT_CONFIRMAR_CERRAR" | translate }}
         </p>
         <div class="flex justify-center">
           <button
             (click)="logout()"
             class="bg-red-600 hover:bg-red-700 active:scale-95 text-white px-6 py-2 rounded-lg font-semibold transition transform"
           >
-            🚪 Salir ahora
+            {{ "PROFILE.BUTTON_SALIR_AHORA" | translate }}
           </button>
         </div>
       </div>
@@ -413,17 +459,17 @@
 >
   <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
     <h3 class="text-xl font-semibold mb-4 text-red-600">
-      Confirmar Eliminación
+      {{ "PROFILE.MODAL_CONFIRM_TITULO" | translate }}
     </h3>
     <p class="mb-4">
-      Para confirmar, escribe el nombre del salón:
+      {{ "PROFILE.MODAL_CONFIRM_TEXTO" | translate }}:
       <strong>{{ salonAEliminar.nombre }}</strong>
     </p>
 
     <input
       type="text"
       [(ngModel)]="nombreConfirmacion"
-      placeholder="Nombre del salón"
+      placeholder="{{ 'PROFILE.MODAL_CONFIRM_PLACEHOLDER' | translate }}"
       class="w-full border p-2 rounded mb-4"
       name="confirmacion"
     />
@@ -434,14 +480,14 @@
         class="bg-gray-500 text-white px-4 py-2 rounded"
         (click)="cancelarEliminacion()"
       >
-        Cancelar
+        {{ "PROFILE.BUTTON_CANCELAR" | translate }}
       </button>
       <button
         class="bg-red-600 text-white px-4 py-2 rounded"
         [disabled]="nombreConfirmacion !== salonAEliminar.nombre"
         (click)="confirmarEliminacion()"
       >
-        Eliminar
+        {{ "PROFILE.BUTTON_ELIMINAR" | translate }}
       </button>
     </div>
   </div>
@@ -454,64 +500,80 @@
 >
   <div class="bg-white rounded-lg p-6 w-full max-w-lg shadow-lg">
     <h3 class="text-xl font-semibold mb-4">
-      {{ salonEditando.id_salon ? "Editar Salón" : "Agregar Salón" }}
+      {{
+        salonEditando.id_salon
+          ? ("PROFILE.MODAL_EDITAR_SALON_TITULO" | translate)
+          : ("PROFILE.MODAL_NUEVO_SALON_TITULO" | translate)
+      }}
     </h3>
     <form (ngSubmit)="guardarCambiosSalon()" class="space-y-4">
       <div>
-        <label class="block text-sm font-medium">Nombre</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_NOMBRE_SALON" | translate }}
+        </label>
         <input
           type="text"
           [(ngModel)]="salonEditando.nombre"
           name="nombreSalon"
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          placeholder="Nombre del salón"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_NOMBRE_SALON' | translate }}"
         />
       </div>
       <div>
-        <label class="block text-sm font-medium">Dirección</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_DIRECCION" | translate }}
+        </label>
         <input
           type="text"
           [(ngModel)]="salonEditando.direccion"
           name="direccionSalon"
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          placeholder="Dirección del salón"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_DIRECCION' | translate }}"
         />
       </div>
       <div>
-        <label class="block text-sm font-medium">Teléfono</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_TELEFONO_SALON" | translate }}
+        </label>
         <input
           type="text"
           [(ngModel)]="salonEditando.telefono"
           name="telefonoSalon"
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          placeholder="Teléfono del salón"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_TELEFONO_SALON' | translate }}"
         />
       </div>
       <div>
-        <label class="block text-sm font-medium">Descripción</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_DESCRIPCION" | translate }}
+        </label>
         <textarea
           [(ngModel)]="salonEditando.descripcion"
           name="descripcionSalon"
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
           rows="2"
-          placeholder="Descripción del salón"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_DESCRIPCION' | translate }}"
         ></textarea>
       </div>
       <div>
-        <label class="block text-sm font-medium">Especialización</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_ESPECIALIZACION" | translate }}
+        </label>
         <input
           type="text"
           [(ngModel)]="salonEditando.especializacion"
           name="especializacionSalon"
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          placeholder="Especialización del salón"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_ESPECIALIZACION' | translate }}"
         />
       </div>
       <div>
-        <label class="block text-sm font-medium">Foto</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_FOTO_SALON" | translate }}
+        </label>
         <input
           type="file"
           (change)="onFileSelected($event, 'salon')"
@@ -532,10 +594,14 @@
           class="bg-gray-500 text-white px-4 py-2 rounded"
           (click)="cerrarModalSalon()"
         >
-          Cancelar
+          {{ "PROFILE.BUTTON_CANCELAR" | translate }}
         </button>
         <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
-          {{ salonEditando.id_salon ? "Actualizar" : "Guardar" }}
+          {{
+            salonEditando.id_salon
+              ? ("PROFILE.BUTTON_ACTUALIZAR_SALON" | translate)
+              : ("PROFILE.BUTTON_GUARDAR_SALON" | translate)
+          }}
         </button>
       </div>
     </form>
@@ -548,49 +614,63 @@
   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
 >
   <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-    <h3 class="text-xl font-semibold mb-4">Agregar Servicio</h3>
+    <h3 class="text-xl font-semibold mb-4">
+      {{ "PROFILE.MODAL_NUEVO_SERVICIO_TITULO" | translate }}
+    </h3>
     <form (ngSubmit)="guardarServicioNuevo()" class="space-y-4">
       <div>
-        <label class="block text-sm font-medium">Nombre</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_SERVICIO_NOMBRE" | translate }}
+        </label>
         <input
           type="text"
           [(ngModel)]="servicioNuevo.nombre"
           name="nombreNuevo"
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          placeholder="Nombre del servicio"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_SERVICIO_NOMBRE' | translate }}"
         />
       </div>
       <div>
-        <label class="block text-sm font-medium">Descripción</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_SERVICIO_DESCRIPCION" | translate }}
+        </label>
         <textarea
           [(ngModel)]="servicioNuevo.descripcion"
           name="descripcionNuevo"
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
           rows="2"
-          placeholder="Describe el servicio"
+          placeholder="{{
+            'PROFILE.PLACEHOLDER_SERVICIO_DESCRIPCION' | translate
+          }}"
         ></textarea>
       </div>
       <div>
-        <label class="block text-sm font-medium">Precio (€)</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_SERVICIO_PRECIO" | translate }}
+        </label>
         <input
           type="number"
           [(ngModel)]="servicioNuevo.precio"
           name="precioNuevo"
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          placeholder="Ej: 25.00"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_SERVICIO_PRECIO' | translate }}"
         />
       </div>
       <div>
-        <label class="block text-sm font-medium">Duración (min)</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_SERVICIO_DURACION" | translate }}
+        </label>
         <input
           type="number"
           [(ngModel)]="servicioNuevo.duracion_minutos"
           name="duracionNuevo"
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          placeholder="Ej: 30"
+          placeholder="{{
+            'PROFILE.PLACEHOLDER_SERVICIO_DURACION' | translate
+          }}"
         />
       </div>
       <div class="flex justify-end space-x-2 pt-4">
@@ -599,10 +679,10 @@
           class="bg-gray-500 text-white px-4 py-2 rounded"
           (click)="cerrarFormularioServicio()"
         >
-          Cancelar
+          {{ "PROFILE.BUTTON_CANCELAR" | translate }}
         </button>
         <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
-          Guardar
+          {{ "PROFILE.BUTTON_GUARDAR_SERVICIO" | translate }}
         </button>
       </div>
     </form>
@@ -615,49 +695,63 @@
   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
 >
   <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-    <h3 class="text-xl font-semibold mb-4">Editar Servicio</h3>
+    <h3 class="text-xl font-semibold mb-4">
+      {{ "PROFILE.MODAL_EDITAR_SERVICIO_TITULO" | translate }}
+    </h3>
     <form (ngSubmit)="guardarCambiosServicio()" class="space-y-4">
       <div>
-        <label class="block text-sm font-medium">Nombre</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_SERVICIO_NOMBRE" | translate }}
+        </label>
         <input
           type="text"
           [(ngModel)]="servicioEditando.nombre"
           name="nombreEdit"
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          placeholder="Nombre del servicio"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_SERVICIO_NOMBRE' | translate }}"
         />
       </div>
       <div>
-        <label class="block text-sm font-medium">Descripción</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_SERVICIO_DESCRIPCION" | translate }}
+        </label>
         <textarea
           [(ngModel)]="servicioEditando.descripcion"
           name="descripcionEdit"
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
           rows="2"
-          placeholder="Describe el servicio"
+          placeholder="{{
+            'PROFILE.PLACEHOLDER_SERVICIO_DESCRIPCION' | translate
+          }}"
         ></textarea>
       </div>
       <div>
-        <label class="block text-sm font-medium">Precio (€)</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_SERVICIO_PRECIO" | translate }}
+        </label>
         <input
           type="number"
           [(ngModel)]="servicioEditando.precio"
           name="precioEdit"
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          placeholder="Ej: 25.00"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_SERVICIO_PRECIO' | translate }}"
         />
       </div>
       <div>
-        <label class="block text-sm font-medium">Duración (min)</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_SERVICIO_DURACION" | translate }}
+        </label>
         <input
           type="number"
           [(ngModel)]="servicioEditando.duracion_minutos"
           name="duracionEdit"
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          placeholder="Ej: 30"
+          placeholder="{{
+            'PROFILE.PLACEHOLDER_SERVICIO_DURACION' | translate
+          }}"
         />
       </div>
       <div class="flex justify-end space-x-2 pt-4">
@@ -666,10 +760,10 @@
           class="bg-gray-500 text-white px-4 py-2 rounded"
           (click)="cerrarFormularioServicio()"
         >
-          Cancelar
+          {{ "PROFILE.BUTTON_CANCELAR" | translate }}
         </button>
         <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
-          Actualizar
+          {{ "PROFILE.BUTTON_ACTUALIZAR_SERVICIO" | translate }}
         </button>
       </div>
     </form>
@@ -682,32 +776,42 @@
   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
 >
   <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-    <h3 class="text-xl font-semibold mb-4">Agregar Empleado</h3>
+    <h3 class="text-xl font-semibold mb-4">
+      {{ "PROFILE.MODAL_NUEVO_EMPLEADO_TITULO" | translate }}
+    </h3>
     <form (ngSubmit)="guardarEmpleadoNuevo()" class="space-y-4">
       <div>
-        <label class="block text-sm font-medium">Nombre</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_EMPLEADO_NOMBRE" | translate }}
+        </label>
         <input
           type="text"
           [(ngModel)]="empleadoNuevo.nombre"
           name="nombreEmpleadoNuevo"
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          placeholder="Nombre del empleado"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_EMPLEADO_NOMBRE' | translate }}"
         />
       </div>
       <div>
-        <label class="block text-sm font-medium">Teléfono</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_EMPLEADO_TELEFONO" | translate }}
+        </label>
         <input
           type="text"
           [(ngModel)]="empleadoNuevo.telefono"
           name="telefonoEmpleadoNuevo"
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          placeholder="Ej: 600123456"
+          placeholder="{{
+            'PROFILE.PLACEHOLDER_EMPLEADO_TELEFONO' | translate
+          }}"
         />
       </div>
       <div>
-        <label class="block text-sm font-medium">Foto</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_EMPLEADO_FOTO" | translate }}
+        </label>
         <input
           type="file"
           (change)="onFileSelected($event, 'empleado')"
@@ -718,7 +822,7 @@
       <div *ngIf="previewUrlEmpleado" class="mt-2">
         <img
           [src]="previewUrlEmpleado"
-          alt="Vista previa del empleado"
+          alt="{{ 'PROFILE.ALT_EMPLEADO_PREVIEW' | translate }}"
           class="rounded-xl w-full object-cover h-48 max-h-48 shadow-md"
         />
       </div>
@@ -728,10 +832,10 @@
           class="bg-gray-500 text-white px-4 py-2 rounded"
           (click)="cerrarFormularioEmpleado()"
         >
-          Cancelar
+          {{ "PROFILE.BUTTON_CANCELAR" | translate }}
         </button>
         <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
-          Guardar
+          {{ "PROFILE.BUTTON_GUARDAR_EMPLEADO" | translate }}
         </button>
       </div>
     </form>
@@ -744,32 +848,42 @@
   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
 >
   <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-    <h3 class="text-xl font-semibold mb-4">Editar Empleado</h3>
+    <h3 class="text-xl font-semibold mb-4">
+      {{ "PROFILE.MODAL_EDITAR_EMPLEADO_TITULO" | translate }}
+    </h3>
     <form (ngSubmit)="guardarCambiosEmpleado()" class="space-y-4">
       <div>
-        <label class="block text-sm font-medium">Nombre</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_EMPLEADO_NOMBRE" | translate }}
+        </label>
         <input
           type="text"
           [(ngModel)]="empleadoEditando.nombre"
           name="nombreEmpleadoEdit"
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          placeholder="Nombre del empleado"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_EMPLEADO_NOMBRE' | translate }}"
         />
       </div>
       <div>
-        <label class="block text-sm font-medium">Teléfono</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_EMPLEADO_TELEFONO" | translate }}
+        </label>
         <input
           type="text"
           [(ngModel)]="empleadoEditando.telefono"
           name="telefonoEmpleadoEdit"
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          placeholder="Ej: 600123456"
+          placeholder="{{
+            'PROFILE.PLACEHOLDER_EMPLEADO_TELEFONO' | translate
+          }}"
         />
       </div>
       <div>
-        <label class="block text-sm font-medium">Foto</label>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_EMPLEADO_FOTO" | translate }}
+        </label>
         <input
           type="file"
           (change)="onFileSelected($event, 'empleado')"
@@ -780,7 +894,7 @@
       <div *ngIf="previewUrlEmpleado" class="mt-2">
         <img
           [src]="previewUrlEmpleado"
-          alt="Vista previa del empleado"
+          alt="{{ 'PROFILE.ALT_EMPLEADO_PREVIEW' | translate }}"
           class="w-24 h-24 rounded-full object-cover mx-auto"
         />
       </div>
@@ -790,10 +904,10 @@
           class="bg-gray-500 text-white px-4 py-2 rounded"
           (click)="cerrarFormularioEmpleado()"
         >
-          Cancelar
+          {{ "PROFILE.BUTTON_CANCELAR" | translate }}
         </button>
         <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
-          Actualizar
+          {{ "PROFILE.BUTTON_ACTUALIZAR_EMPLEADO" | translate }}
         </button>
       </div>
     </form>

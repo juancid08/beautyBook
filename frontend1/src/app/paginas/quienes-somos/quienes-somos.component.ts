@@ -3,14 +3,20 @@ import { RouterModule } from "@angular/router";
 import { NavbarComponent } from "../../componentes/navbar/navbar.component";
 import { FooterComponent } from "../../componentes/footer/footer.component";
 import { AccordionComponent } from "../../componentes/accordion/accordion.component";
-
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 @Component({
   selector: "app-quienes-somos",
   standalone: true,
-  imports: [RouterModule, NavbarComponent, FooterComponent, AccordionComponent],
+  imports: [
+    RouterModule,
+    NavbarComponent,
+    FooterComponent,
+    AccordionComponent,
+    TranslateModule,
+  ],
   templateUrl: "./quienes-somos.component.html",
   styleUrls: ["./quienes-somos.component.scss"],
 })

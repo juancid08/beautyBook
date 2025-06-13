@@ -4,6 +4,7 @@ import {
   provideHttpClient,
   withInterceptorsFromDi,
   HTTP_INTERCEPTORS,
+  HttpClient,
 } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 
@@ -11,23 +12,33 @@ import { AppComponent } from "./app/app.component";
 import { appConfig } from "./app/app.config";
 import { AuthInterceptor } from "./app/services/auth-interceptor.service";
 
+import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
+}
+
 bootstrapApplication(AppComponent, {
   ...appConfig,
   providers: [
-    // 1) Proveedor global de HttpClient + interceptores
     provideHttpClient(withInterceptorsFromDi()),
-
-    // 2) Registrar FormsModule (para poder usar [(ngModel)])
     importProvidersFrom(FormsModule),
-
-    // 3) Nuestro interceptor de autenticación
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
     },
-
-    // 4) Otros providers de appConfig
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        defaultLanguage: "es",
+        loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient],
+        },
+      })
+    ),
     ...(appConfig.providers || []),
   ],
-}).catch((err) => console.error(err));
+});

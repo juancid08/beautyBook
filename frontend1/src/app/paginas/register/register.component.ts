@@ -3,11 +3,12 @@ import { CommonModule } from "@angular/common";
 import { FormsModule, NgForm } from "@angular/forms";
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-register",
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: "./register.component.html",
   styleUrls: ["./register.component.scss"],
   encapsulation: ViewEncapsulation.None,
@@ -18,50 +19,50 @@ export class RegisterComponent {
   email = "";
   password = "";
   password_confirmation = "";
-  validationErrors: string[] = []; // Aquí guardamos todos los errores
+  validationErrorKeys: string[] = []; // guardamos claves de traducción
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private translate: TranslateService
+  ) {}
 
   onRegister(form: NgForm) {
     // Limpiar errores previos
-    this.validationErrors = [];
+    this.validationErrorKeys = [];
 
     // Validación cliente
     if (!this.nombre) {
-      this.validationErrors.push("El nombre es obligatorio.");
+      this.validationErrorKeys.push("REGISTER.ERROR_NAME_REQUIRED");
     }
     if (!this.apellidos) {
-      this.validationErrors.push("Los apellidos son obligatorios.");
+      this.validationErrorKeys.push("REGISTER.ERROR_LASTNAME_REQUIRED");
     }
     if (!this.email) {
-      this.validationErrors.push("El correo electrónico es obligatorio.");
+      this.validationErrorKeys.push("REGISTER.ERROR_EMAIL_REQUIRED");
     } else if (form.form.controls["email"].errors?.["email"]) {
-      this.validationErrors.push("Debe ingresar un correo electrónico válido.");
+      this.validationErrorKeys.push("REGISTER.ERROR_EMAIL_INVALID");
     }
     if (!this.password) {
-      this.validationErrors.push("La contraseña es obligatoria.");
+      this.validationErrorKeys.push("REGISTER.ERROR_PASSWORD_REQUIRED");
     } else if (this.password.length < 7) {
-      this.validationErrors.push(
-        "La contraseña debe tener al menos 7 caracteres."
-      );
+      this.validationErrorKeys.push("REGISTER.ERROR_PASSWORD_MINLENGTH");
     }
     if (!this.password_confirmation) {
-      this.validationErrors.push("Debe repetir la contraseña.");
+      this.validationErrorKeys.push("REGISTER.ERROR_CONFIRM_REQUIRED");
     } else if (this.password_confirmation.length < 7) {
-      this.validationErrors.push(
-        "La confirmación debe tener al menos 7 caracteres."
-      );
+      this.validationErrorKeys.push("REGISTER.ERROR_CONFIRM_MINLENGTH");
     }
     if (
       this.password &&
       this.password_confirmation &&
       this.password !== this.password_confirmation
     ) {
-      this.validationErrors.push("Las contraseñas no coinciden.");
+      this.validationErrorKeys.push("REGISTER.ERROR_PASSWORD_MISMATCH");
     }
 
     // Si hay errores de cliente, detenerse aquí
-    if (this.validationErrors.length) {
+    if (this.validationErrorKeys.length) {
       return;
     }
 
@@ -82,10 +83,12 @@ export class RegisterComponent {
             | undefined;
           if (errors) {
             for (const msgs of Object.values(errors)) {
-              msgs.forEach((m) => this.validationErrors.push(m));
+              msgs.forEach((m) => {
+                this.validationErrorKeys.push("REGISTER.ERROR_SERVER");
+              });
             }
           } else {
-            this.validationErrors.push("Error en el registro.");
+            this.validationErrorKeys.push("REGISTER.ERROR_SERVER");
           }
         },
       });

@@ -5,14 +5,18 @@
 
   <div class="register-form">
     <div class="form-inner">
-      <button class="back-button" (click)="goBack()">← Volver</button>
+      <button class="back-button" (click)="goBack()">
+        ← {{ "REGISTER.BACK" | translate }}
+      </button>
       <h1 class="logo">Beauty<span>Book</span></h1>
-      <h2>Crear Cuenta</h2>
+      <h2>{{ "REGISTER.TITLE" | translate }}</h2>
 
       <form (ngSubmit)="onRegister(registerForm)" #registerForm="ngForm">
         <!-- Nombre -->
         <div class="input-group">
-          <label for="nombre">Nombre</label>
+          <label for="nombre">{{
+            "REGISTER.FIELD_FIRSTNAME" | translate
+          }}</label>
           <input
             type="text"
             id="nombre"
@@ -25,7 +29,9 @@
 
         <!-- Apellidos -->
         <div class="input-group">
-          <label for="apellidos">Apellidos</label>
+          <label for="apellidos">{{
+            "REGISTER.FIELD_LASTNAME" | translate
+          }}</label>
           <input
             type="text"
             id="apellidos"
@@ -38,7 +44,7 @@
 
         <!-- Email -->
         <div class="input-group">
-          <label for="email">Correo Electrónico</label>
+          <label for="email">{{ "REGISTER.FIELD_EMAIL" | translate }}</label>
           <input
             type="email"
             id="email"
@@ -51,7 +57,9 @@
 
         <!-- Contraseña -->
         <div class="input-group">
-          <label for="password">Contraseña</label>
+          <label for="password">{{
+            "REGISTER.FIELD_PASSWORD" | translate
+          }}</label>
           <input
             type="password"
             id="password"
@@ -65,7 +73,9 @@
 
         <!-- Confirmar Contraseña -->
         <div class="input-group">
-          <label for="password_confirmation">Repetir Contraseña</label>
+          <label for="password_confirmation">{{
+            "REGISTER.FIELD_CONFIRM_PASSWORD" | translate
+          }}</label>
           <input
             type="password"
             id="password_confirmation"
@@ -78,13 +88,17 @@
         </div>
 
         <!-- Recuadro único de errores -->
-        <div class="error-summary" *ngIf="validationErrors.length">
+        <div class="error-summary" *ngIf="validationErrorKeys.length">
           <ul>
-            <li *ngFor="let err of validationErrors">{{ err }}</li>
+            <li *ngFor="let key of validationErrorKeys">
+              {{ key | translate }}
+            </li>
           </ul>
         </div>
 
-        <button type="submit">Registrarse</button>
+        <button type="submit">
+          {{ "REGISTER.BUTTON_SUBMIT" | translate }}
+        </button>
       </form>
     </div>
   </div>

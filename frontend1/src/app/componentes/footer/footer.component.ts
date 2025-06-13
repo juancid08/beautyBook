@@ -4,20 +4,28 @@ import {
   ElementRef,
   Renderer2,
   ViewChild,
+  Inject,
+  PLATFORM_ID,
 } from "@angular/core";
 import { Router } from "@angular/router";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-footer",
   standalone: true,
-  imports: [],
+  imports: [TranslateModule],
   templateUrl: "./footer.component.html",
   styleUrls: ["./footer.component.scss"],
 })
 export class FooterComponent implements AfterViewInit {
   @ViewChild("footer") footerElement!: ElementRef;
+  currentYear = new Date().getFullYear();
 
-  constructor(private router: Router, private renderer: Renderer2) {}
+  constructor(
+    private router: Router,
+    private renderer: Renderer2,
+    private translate: TranslateService
+  ) {}
 
   navigateTo(path: string) {
     this.router.navigate(["/" + path]);
@@ -29,11 +37,8 @@ export class FooterComponent implements AfterViewInit {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             this.renderer.addClass(this.footerElement.nativeElement, "visible");
-
-            // Si solo quieres mostrarlo una vez, paras de observar:
             obs.unobserve(entry.target);
           } else {
-            // (opcional) para que desaparezca si vuelves a subir
             this.renderer.removeClass(
               this.footerElement.nativeElement,
               "visible"
@@ -43,7 +48,6 @@ export class FooterComponent implements AfterViewInit {
       },
       { threshold: 0.2 }
     );
-
     observer.observe(this.footerElement.nativeElement);
   }
 

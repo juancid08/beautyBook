@@ -1,7 +1,7 @@
 <div class="navbar-container fade-in">
   <video #bgVideo autoplay muted loop class="navbar-video zoom-in">
     <source src="/assets/video/hero_section.mp4" type="video/mp4" />
-    Tu navegador no soporta videos HTML5.
+    {{ "PAGE.VIDEO_NOT_SUPPORTED" | translate }}
   </video>
 
   <app-navbar-superior></app-navbar-superior>
@@ -11,8 +11,8 @@
       <button class="login-btn" (click)="onLogin()">
         <i class="fas fa-sign-in-alt"></i>
         <div class="text-lines">
-          <span>Iniciar</span>
-          <span>Sesión/Registrarse</span>
+          <span>{{ "NAV.LOGIN_PART1" | translate }}</span>
+          <span>{{ "NAV.LOGIN_PART2" | translate }}</span>
         </div>
       </button>
       <button
@@ -20,12 +20,15 @@
         *ngIf="!tieneSalon"
         (click)="onRegistrarNegocio()"
       >
-        Registra tu negocio
+        {{ "NAV.REGISTRAR_NEGOCIO" | translate }}
       </button>
     </ng-template>
   </div>
 
-  <div class="navbar-medio slide-in-down">
+  <div
+    class="navbar-medio slide-in-down"
+    [class.sugerencias-activas]="mostrarSugerencias"
+  >
     <div class="frases-container">
       <p class="frases typewriter">
         {{ displayedText }}<span class="cursor">|</span>
@@ -39,7 +42,7 @@
           [(ngModel)]="searchTerm"
           (input)="onSearchSuggest()"
           (keyup.enter)="onSearch()"
-          placeholder="Consultar negocios y servicios disponibles"
+          [placeholder]="'PAGE.SEARCH_PLACEHOLDER' | translate"
         />
         <button class="buscar" (click)="onSearch()">
           <i class="fas fa-search"></i>
@@ -66,29 +69,32 @@
       >
         <i class="fas fa-exclamation-circle no-results-icon"></i>
         <p class="no-results-text">
-          No se encontraron resultados para <strong>"{{ searchTerm }}"</strong>
+          {{ "PAGE.NO_RESULTS" | translate }}
+          <strong>"{{ searchTerm }}"</strong>
         </p>
       </div>
     </div>
   </div>
 
-  <div class="navbar-inferior fade-in-delay">
+  <div
+    class="navbar-inferior fade-in-delay"
+    [class.sugerencias-activas]="mostrarSugerencias"
+  >
     <div class="categorias">
       <a
         *ngFor="let cat of categories"
-        (click)="filterBy(cat)"
-        [class.active]="cat === selectedCategory"
+        (click)="filterBy(cat.value, cat.labelKey)"
+        [class.active]="cat.value === selectedCategory"
         href="javascript:void(0)"
       >
-        {{ cat }}
+        {{ cat.labelKey | translate }}
       </a>
     </div>
   </div>
 </div>
 
 <div class="contenido-pagina fade-container">
-  <h1>{{ tituloCategoria }}</h1>
-
+  <h1>{{ tituloCategoria | translate }}</h1>
   <div class="slider-wrapper">
     <button class="nav-arrow left" (click)="scrollLeft()">
       <i class="fas fa-chevron-left"></i>
@@ -105,7 +111,7 @@
             [src]="salon.foto || '/assets/image/default-salon.png'"
             [alt]="salon.nombre"
           />
-          <div class="rating">{{ salon.rating?.toFixed(1) || "N/A" }} ★</div>
+          <div class="rating">{{ salon.mediaResena.toFixed(1) }} ★</div>
         </div>
 
         <div class="card-body">
@@ -133,23 +139,20 @@
 <div class="pre-footer fade-in-up">
   <div class="pre-footer-content">
     <div class="texto">
-      <h4><strong>Tu cita de belleza, más fácil que nunca</strong></h4>
+      <h4>
+        <strong>{{ "PAGE.PREFOOTER_TITLE" | translate }}</strong>
+      </h4>
       <p>
-        ¿Buscas a un barbero, peluquero, masajista o manicurista cerca de ti?
-        ¿Te gustaría agendar una sesión para darle forma a tu barba, definir tus
-        cejas o disfrutar de un masaje profundo?
-        <br /><br />
-        Con BeautyBook podrás agendar tu cita en segundos.
-        <br /><br />
-        <strong
-          >Descubre los mejores profesionales de tu zona y agenda al
-          instante.</strong
-        >
+        {{ "PAGE.PREFOOTER_TEXT1" | translate }}<br /><br />
+        {{ "PAGE.PREFOOTER_TEXT2" | translate }}<br /><br />
+        <strong>{{ "PAGE.PREFOOTER_TEXT3" | translate }}</strong>
       </p>
     </div>
-
     <div class="imagen">
-      <img src="/assets/image/pagina1.webp" alt="Foto de contenido principal" />
+      <img
+        src="/assets/image/pagina1.webp"
+        alt="{{ 'PAGE.PREFOOTER_IMAGE_ALT' | translate }}"
+      />
     </div>
   </div>
 </div>

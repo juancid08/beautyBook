@@ -15,20 +15,25 @@
     data-aos-duration="1000"
   >
     <!-- TÍTULO -->
-    <h2 class="text-4xl font-extrabold text-gray-900">Contáctanos</h2>
-    <p class="text-lg text-gray-700 max-w-prose">
-      En <strong>BeautyBook</strong> queremos asegurar que tu experiencia sea
-      perfecta. Si tienes dudas, sugerencias o necesitas ayuda, escríbenos y te
-      responderemos en un abrir y cerrar de ojos.
-    </p>
+    <h2 class="text-4xl font-extrabold text-gray-900">
+      {{ "CONTACT.TITLE" | translate }}
+    </h2>
+
+    <!-- INTRO -->
+    <p
+      class="text-lg text-gray-700 max-w-prose"
+      [innerHTML]="'CONTACT.INTRO' | translate"
+    ></p>
 
     <!-- TARJETAS DE CONTACTO -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Correo de soporte -->
       <div
-        class="flex items-start gap-3 p-4 md:p-6 bg-blue-50 rounded-2xl hover:shadow-lg transition-shadow"
+        class="flex flex-col sm:flex-row items-start gap-3 p-4 md:p-6 bg-blue-50 rounded-2xl hover:shadow-lg transition-shadow"
       >
-        <div class="p-2 md:p-3 bg-blue-600 rounded-full text-white">
+        <div
+          class="p-2 md:p-3 bg-blue-600 rounded-full text-white flex-shrink-0"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 md:h-6 md:w-6"
@@ -44,13 +49,15 @@
             />
           </svg>
         </div>
-        <div>
-          <h3 class="text-lg md:text-2xl font-semibold text-gray-900">
-            Correo de soporte
+        <div class="flex-1">
+          <h3
+            class="text-lg md:text-2xl font-semibold text-gray-900 max-[320px]:text-base"
+          >
+            {{ "CONTACT.EMAIL_TITLE" | translate }}
           </h3>
           <a
             href="mailto:help.es&#64;beauty.com"
-            class="mt-1 inline-block text-base md:text-lg text-blue-600 hover:underline"
+            class="mt-1 inline-block text-base md:text-lg text-blue-600 hover:underline max-[320px]:text-sm break-words"
           >
             help.es&#64;beauty.com
           </a>
@@ -59,9 +66,11 @@
 
       <!-- Soporte en redes sociales -->
       <div
-        class="flex items-start gap-3 p-4 md:p-6 bg-pink-50 rounded-2xl hover:shadow-lg transition-shadow"
+        class="flex flex-col sm:flex-row items-start gap-3 p-4 md:p-6 bg-pink-50 rounded-2xl hover:shadow-lg transition-shadow"
       >
-        <div class="p-2 md:p-3 bg-pink-500 rounded-full text-white">
+        <div
+          class="p-2 md:p-3 bg-pink-500 rounded-full text-white flex-shrink-0"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 md:h-6 md:w-6"
@@ -73,30 +82,37 @@
             />
           </svg>
         </div>
-        <div>
-          <h3 class="text-lg md:text-2xl font-semibold text-gray-900">
-            Redes Sociales
+        <div class="flex-1">
+          <h3
+            class="text-lg md:text-2xl font-semibold text-gray-900 max-[320px]:text-base"
+          >
+            {{ "CONTACT.SOCIAL_TITLE" | translate }}
           </h3>
-          <p class="mt-1 text-base md:text-lg text-gray-700 leading-relaxed">
-            Síguenos en
+          <p
+            class="mt-1 text-base md:text-lg text-gray-700 leading-relaxed max-[320px]:text-sm break-words"
+          >
+            {{ "CONTACT.SOCIAL_TEXT" | translate }}
             <a
               href="https://facebook.com/BeautyBook"
               target="_blank"
               class="text-blue-600 hover:underline"
-              >Facebook</a
+            >
+              {{ "CONTACT.FACEBOOK" | translate }} </a
             >,
             <a
               href="https://instagram.com/BeautyBook"
               target="_blank"
               class="text-pink-500 hover:underline"
-              >Instagram</a
             >
+              {{ "CONTACT.INSTAGRAM" | translate }}
+            </a>
             y
             <a
               href="https://twitter.com/BeautyBook"
               target="_blank"
               class="text-blue-400 hover:underline"
-              >Twitter</a
+            >
+              {{ "CONTACT.TWITTER" | translate }} </a
             >.
           </p>
         </div>
@@ -105,8 +121,7 @@
 
     <!-- MENSAJE FINAL -->
     <p class="text-gray-500 text-base">
-      Nuestro objetivo es ofrecerte una experiencia ágil y personalizada.
-      Escríbenos sin compromiso: ¡estamos aquí para ayudarte a crecer!
+      {{ "CONTACT.FOOTER" | translate }}
     </p>
   </div>
 </div>

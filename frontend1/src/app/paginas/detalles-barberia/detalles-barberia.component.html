@@ -1,4 +1,3 @@
-<!-- NAVBAR COMPLETA -->
 <app-navbar></app-navbar>
 
 <main
@@ -9,17 +8,19 @@
     <div class="relative">
       <img
         [src]="salon.foto || '/assets/image/default-salon.png'"
-        alt="Imagen local"
+        [alt]="'DETAILS.LOCAL_IMAGE_ALT' | translate"
         class="salon-imagen rounded-lg w-full shadow"
       />
       <!-- Botones izquierda/derecha para slider -->
       <button
         class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow"
+        [attr.aria-label]="'DETAILS.PREV_BUTTON' | translate"
       >
         <i class="fas fa-chevron-left"></i>
       </button>
       <button
         class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow"
+        [attr.aria-label]="'DETAILS.NEXT_BUTTON' | translate"
       >
         <i class="fas fa-chevron-right"></i>
       </button>
@@ -33,7 +34,9 @@
 
     <!-- Sección de Servicios -->
     <section class="mt-6 section">
-      <h3 class="text-lg font-semibold mb-2">Servicios</h3>
+      <h3 class="text-lg font-semibold mb-2">
+        {{ "DETAILS.SERVICES_TITLE" | translate }}
+      </h3>
 
       <ng-container *ngIf="servicios && servicios.length > 0; else noServicios">
         <div class="mb-4" *ngFor="let servicio of servicios">
@@ -47,7 +50,7 @@
                   class="text-sm text-white px-3 py-1 rounded"
                   style="background-color: #46796b"
                 >
-                  {{ servicio.precio }}€ Reservar
+                  {{ servicio.precio }}€ {{ "DETAILS.BOOK_BUTTON" | translate }}
                 </button>
               </li>
             </ul>
@@ -56,13 +59,17 @@
       </ng-container>
 
       <ng-template #noServicios>
-        <p class="text-gray-600 italic">No hay servicios actualmente.</p>
+        <p class="text-gray-600 italic">
+          {{ "DETAILS.NO_SERVICES" | translate }}
+        </p>
       </ng-template>
     </section>
 
     <!-- Sección de Reseñas Existentes -->
     <section class="mt-6 section">
-      <h3 class="text-lg font-semibold mb-2">Reseñas</h3>
+      <h3 class="text-lg font-semibold mb-2">
+        {{ "DETAILS.REVIEWS_TITLE" | translate }}
+      </h3>
       <ng-container *ngIf="resenas && resenas.length > 0; else noResenas">
         <div class="space-y-4">
           <div
@@ -78,13 +85,17 @@
         </div>
       </ng-container>
       <ng-template #noResenas>
-        <p class="text-gray-600 italic">Aún no hay reseñas para este salón.</p>
+        <p class="text-gray-600 italic">
+          {{ "DETAILS.NO_REVIEWS" | translate }}
+        </p>
       </ng-template>
     </section>
 
     <!-- Sección para Dejar una Reseña -->
     <section class="mt-8 section" *ngIf="usuarioActual">
-      <h3 class="text-lg font-semibold mb-4">Dejar una Reseña</h3>
+      <h3 class="text-lg font-semibold mb-4">
+        {{ "DETAILS.LEAVE_REVIEW_TITLE" | translate }}
+      </h3>
 
       <div
         *ngIf="citasPasadasSinResenar.length > 0; else noElegibles"
@@ -94,15 +105,23 @@
           *ngFor="let cita of citasPasadasSinResenar"
           class="p-4 border rounded shadow-sm"
         >
-          <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
-          <p><strong>Hora:</strong> {{ cita.hora }}</p>
           <p>
-            <strong>Servicio:</strong>
+            <strong>{{ "DETAILS.DATE_LABEL" | translate }}:</strong>
+            {{ cita.fecha }}
+          </p>
+          <p>
+            <strong>{{ "DETAILS.TIME_LABEL" | translate }}:</strong>
+            {{ cita.hora }}
+          </p>
+          <p>
+            <strong>{{ "DETAILS.SERVICE_LABEL" | translate }}:</strong>
             {{ getNombreServicioPorId(cita.id_servicio) }}
           </p>
 
           <div class="mt-2">
-            <label class="block text-sm font-medium">Puntuación (1–5):</label>
+            <label class="block text-sm font-medium">{{
+              "DETAILS.RATING_LABEL" | translate
+            }}</label>
             <select #selRating class="border px-2 py-1 rounded mb-2">
               <option [value]="1">1</option>
               <option [value]="2">2</option>
@@ -111,12 +130,14 @@
               <option [value]="5" selected>5</option>
             </select>
 
-            <label class="block text-sm font-medium">Comentario:</label>
+            <label class="block text-sm font-medium">{{
+              "DETAILS.COMMENT_LABEL" | translate
+            }}</label>
             <textarea
               #txtComentario
               rows="3"
               class="w-full border rounded px-2 py-1 mb-2"
-              placeholder="Escribe aquí tu opinión…"
+              placeholder="{{ 'DETAILS.COMMENT_PLACEHOLDER' | translate }}"
             ></textarea>
 
             <button
@@ -125,7 +146,7 @@
               "
               class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
             >
-              Enviar Reseña
+              {{ "DETAILS.SUBMIT_REVIEW" | translate }}
             </button>
           </div>
         </div>
@@ -133,7 +154,7 @@
 
       <ng-template #noElegibles>
         <p class="text-gray-600 italic">
-          No tienes citas pendientes de reseñar.
+          {{ "DETAILS.NO_ELIGIBLE" | translate }}
         </p>
       </ng-template>
     </section>
@@ -163,7 +184,9 @@
 
     <!-- Empleados -->
     <div class="bg-white rounded shadow p-4">
-      <h4 class="font-semibold mb-2">Empleados</h4>
+      <h4 class="font-semibold mb-2">
+        {{ "DETAILS.EMPLOYEES_TITLE" | translate }}
+      </h4>
       <div class="flex flex-wrap gap-2">
         <img
           [src]="empleado.foto || '/assets/image/icono_empleados.png'"
@@ -177,13 +200,15 @@
 
     <!-- Horario -->
     <div class="bg-white rounded shadow p-4">
-      <h4 class="font-semibold mb-2">Horario de apertura</h4>
+      <h4 class="font-semibold mb-2">
+        {{ "DETAILS.HOURS_TITLE" | translate }}
+      </h4>
       <ul class="text-sm">
         <li
           *ngFor="let d of diasSemana"
           class="flex justify-between border-b py-1"
         >
-          <span>{{ d.nombre }}</span>
+          <span>{{ d.dayKey | translate }}</span>
           <span>{{ d.horario }}</span>
         </li>
       </ul>
@@ -203,6 +228,7 @@
     <button
       (click)="cerrarPopup()"
       class="absolute top-4 right-4 text-gray-500 hover:text-black text-3xl"
+      [attr.aria-label]="'DETAILS.CLOSE_POPUP' | translate"
     >
       &times;
     </button>
@@ -216,31 +242,35 @@
         [class.bg-gray-900]="dia === diaSeleccionado"
         [class.text-white]="dia === diaSeleccionado"
       >
-        <span class="text-sm capitalize">{{ dia.dia }}</span>
+        <span class="text-sm capitalize">{{ dia.diaKey | translate }}</span>
         <span class="text-4xl font-bold">{{ dia.numero }}</span>
-        <span class="text-sm uppercase">{{ dia.mes }}</span>
+        <span class="text-sm uppercase">{{ dia.mesKey | translate }}</span>
       </div>
     </div>
 
     <!-- Turnos -->
     <div class="text-center mb-6">
-      <h3 class="text-lg font-semibold mb-4">Selecciona un turno</h3>
+      <h3 class="text-lg font-semibold mb-4">
+        {{ "DETAILS.SELECT_SHIFT" | translate }}
+      </h3>
       <div class="flex justify-center gap-6">
         <button
-          *ngFor="let turno of turnosDisponibles"
-          (click)="seleccionarTurno(turno)"
+          *ngFor="let t of turnos"
+          (click)="seleccionarTurno(t.key)"
           class="px-5 py-2 border rounded-full hover:bg-gray-100"
-          [class.bg-black]="turno === turnoSeleccionado"
-          [class.text-white]="turno === turnoSeleccionado"
+          [class.bg-black]="t.key === turnoSeleccionado"
+          [class.text-white]="t.key === turnoSeleccionado"
         >
-          {{ turno }}
+          {{ t.labelKey | translate }}
         </button>
       </div>
     </div>
 
     <!-- Horas -->
     <div *ngIf="horasDisponibles.length" class="text-center mb-8">
-      <h3 class="text-lg font-semibold mb-4">Horas disponibles</h3>
+      <h3 class="text-lg font-semibold mb-4">
+        {{ "DETAILS.AVAILABLE_HOURS" | translate }}
+      </h3>
       <div class="flex flex-wrap justify-center gap-3">
         <button
           *ngFor="let hora of horasDisponibles"
@@ -256,7 +286,9 @@
 
     <!-- Empleados -->
     <div class="text-center mb-8">
-      <h3 class="text-lg font-semibold mb-4">Selecciona al empleado</h3>
+      <h3 class="text-lg font-semibold mb-4">
+        {{ "DETAILS.SELECT_EMPLOYEE" | translate }}
+      </h3>
       <div class="flex flex-wrap justify-center gap-6">
         <div
           *ngFor="let empleado of empleados"
@@ -282,7 +314,7 @@
         [disabled]="!horaSeleccionada || !empleadoSeleccionado || !servicio"
         (click)="confirmarReserva()"
       >
-        Confirmar Reserva
+        {{ "DETAILS.CONFIRM_RESERVATION" | translate }}
       </button>
     </div>
   </div>

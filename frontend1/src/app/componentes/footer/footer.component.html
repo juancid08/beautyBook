@@ -1,11 +1,18 @@
 <div class="footer" #footer>
   <div class="preguntas">
-    <a (click)="navigateTo('quienesSomos')">Quiénes Somos</a>
-    <a (click)="navigateTo('preguntasFrecuentes')">Preguntas Frecuentes</a>
-    <a (click)="navigateTo('politicaDePrivacidad')">Política de privacidad</a>
-    <a (click)="navigateTo('contacto')">Contacto</a>
+    <a (click)="navigateTo('quienesSomos')">
+      {{ "FOOTER.QUIENES_SOMOS" | translate }}
+    </a>
+    <a (click)="navigateTo('preguntasFrecuentes')">
+      {{ "FOOTER.PREGUNTAS_FRECUENTES" | translate }}
+    </a>
+    <a (click)="navigateTo('politicaDePrivacidad')">
+      {{ "FOOTER.POLITICA_PRIVACIDAD" | translate }}
+    </a>
+    <a (click)="navigateTo('contacto')">
+      {{ "FOOTER.CONTACTO" | translate }}
+    </a>
   </div>
-
   <div class="footer-inferior">
     <div class="logo-svg" (click)="goHome()">
       <svg
@@ -46,8 +53,9 @@
       </svg>
     </div>
 
-    <p>&copy; 2025 BeautyBook. Todos los derechos reservados.</p>
-
+    <p>
+      {{ "FOOTER.COPYRIGHT" | translate : { year: currentYear } }}
+    </p>
     <div class="redes-sociales">
       <a href="https://www.facebook.com/BeautyBook" target="_blank"
         ><i class="fab fa-facebook-f"></i

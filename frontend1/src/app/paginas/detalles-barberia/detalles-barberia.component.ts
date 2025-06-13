@@ -12,14 +12,27 @@ import { Empleado, EmpleadoService } from "../../services/empleado.service";
 import { Cita, CitaService } from "../../services/cita.service";
 import { AuthService } from "../../services/auth.service";
 import { Resena, ResenaService } from "../../services/resena.service";
-
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import Swal from "sweetalert2";
-
+interface Turno {
+  key: "Mañana" | "Tarde" | "Noche";
+  labelKey: string;
+}
+interface DiaSemanal {
+  dayKey: string;
+  horario: string;
+}
 @Component({
   selector: "app-detalles-barberia",
   standalone: true,
-  imports: [NavbarComponent, FooterComponent, CommonModule, FormsModule],
+  imports: [
+    NavbarComponent,
+    FooterComponent,
+    CommonModule,
+    TranslateModule,
+    FormsModule,
+  ],
   templateUrl: "./detalles-barberia.component.html",
   styleUrls: ["./detalles-barberia.component.scss"],
 })
@@ -35,19 +48,25 @@ export class DetallesBarberiaComponent implements OnInit {
   todayIso: string = new Date().toISOString().split("T")[0];
 
   mostrarPopup = false;
-  diasDisponibles: { dia: string; numero: number; mes: string; fecha: Date }[] =
-    [];
-  turnosDisponibles: Array<"Mañana" | "Tarde" | "Noche"> = [
-    "Mañana",
-    "Tarde",
-    "Noche",
-  ];
-  diasSemana: Array<{ nombre: string; horario: string }> = [];
+  diasDisponibles: {
+    diaKey: string;
+    numero: number;
+    mesKey: string;
+    fecha: Date;
+  }[] = [];
+
+  diasSemana: DiaSemanal[] = [];
+  turnos: Turno[] = [];
 
   turnoSeleccionado: "Mañana" | "Tarde" | "Noche" | null = null;
   horasDisponibles: string[] = [];
   horaSeleccionada: string | null = null;
-  diaSeleccionado: { dia: string; numero: number; mes: string; fecha: Date };
+  diaSeleccionado: {
+    diaKey: string;
+    numero: number;
+    mesKey: string;
+    fecha: Date;
+  };
   servicio: Servicio | undefined;
   empleadoSeleccionado: Empleado | undefined;
   mapUrl!: SafeResourceUrl | null;
@@ -55,21 +74,26 @@ export class DetallesBarberiaComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private authSvc: AuthService,   
+    private authSvc: AuthService,
     private salonService: SalonService,
     private servicioService: ServicioService,
     private empleadoService: EmpleadoService,
     private citaService: CitaService,
     private resenaService: ResenaService,
     private sanitizer: DomSanitizer,
+    private translate: TranslateService
   ) {
+    this.turnos = [
+      { key: "Mañana", labelKey: "DETAILS.TURNO_MANANA" },
+      { key: "Tarde", labelKey: "DETAILS.TURNO_TARDE" },
+      { key: "Noche", labelKey: "DETAILS.TURNO_NOCHE" },
+    ];
     this.generarFechas();
     this.diaSeleccionado = this.diasDisponibles[0];
   }
 
   ngOnInit(): void {
-
-    if(this.authSvc.currentUser$) {
+    if (this.authSvc.currentUser$) {
       this.authSvc.currentUser$.subscribe((usuario) => {
         this.usuarioActual = usuario;
         if (usuario && this.salon) {
@@ -107,7 +131,8 @@ export class DetallesBarberiaComponent implements OnInit {
           );
         }
       },
-      error: (err) => console.error("Error al cargar el salón", err),
+      error: (err) =>
+        console.error(this.translate.instant("DETAILS.ERROR_LOAD_SALON"), err),
     });
   }
 
@@ -152,7 +177,6 @@ export class DetallesBarberiaComponent implements OnInit {
     this.turnoSeleccionado = null;
     this.horaSeleccionada = null;
     this.horasDisponibles = [];
-    
   }
 
   cerrarPopup() {
@@ -168,20 +192,24 @@ export class DetallesBarberiaComponent implements OnInit {
       return;
     }
     const nombresDias = [
-      "Lunes",
-      "Martes",
-      "Miércoles",
-      "Jueves",
-      "Viernes",
-      "Sábado",
-      "Domingo",
+      "DETAILS.DAY_MONDAY",
+      "DETAILS.DAY_TUESDAY",
+      "DETAILS.DAY_WEDNESDAY",
+      "DETAILS.DAY_THURSDAY",
+      "DETAILS.DAY_FRIDAY",
+      "DETAILS.DAY_SATURDAY",
+      "DETAILS.DAY_SUNDAY",
     ];
+
     const apertura = this.salon.horario_apertura;
     const cierre = this.salon.horario_cierre;
     const textoHorario =
-      apertura && cierre ? `${apertura} - ${cierre}` : "Cerrado";
-    this.diasSemana = nombresDias.map((dia) => ({
-      nombre: dia,
+      apertura && cierre
+        ? `${apertura} - ${cierre}`
+        : this.translate.instant("DETAILS.CLOSED");
+
+    this.diasSemana = nombresDias.map((nombre) => ({
+      dayKey: nombre,
       horario: textoHorario,
     }));
   }
@@ -211,8 +239,8 @@ export class DetallesBarberiaComponent implements OnInit {
       next: () => {
         Swal.fire({
           icon: "success",
-          title: "¡Cita reservada!",
-          text: "Tu cita ha sido reservada con éxito.",
+          title: this.translate.instant("DETAILS.SUCCESS_BOOKING_TITLE"),
+          text: this.translate.instant("DETAILS.SUCCESS_BOOKING_TEXT"),
         });
         this.cerrarPopup();
       },
@@ -220,30 +248,53 @@ export class DetallesBarberiaComponent implements OnInit {
         console.error("Error al crear la cita", err);
         Swal.fire({
           icon: "error",
-          title: "Error",
-          text: "Ocurrió un error al reservar la cita.",
+          title: this.translate.instant("DETAILS.ERROR_TITLE"),
+          text: this.translate.instant("DETAILS.ERROR_BOOKING"),
         });
       },
     });
   }
 
   generarFechas() {
+    const dayKeys = [
+      "DETAILS.DAY_SUNDAY",
+      "DETAILS.DAY_MONDAY",
+      "DETAILS.DAY_TUESDAY",
+      "DETAILS.DAY_WEDNESDAY",
+      "DETAILS.DAY_THURSDAY",
+      "DETAILS.DAY_FRIDAY",
+      "DETAILS.DAY_SATURDAY",
+    ];
+    const monthKeys = [
+      "DETAILS.MONTH_JANUARY",
+      "DETAILS.MONTH_FEBRUARY",
+      "DETAILS.MONTH_MARCH",
+      "DETAILS.MONTH_APRIL",
+      "DETAILS.MONTH_MAY",
+      "DETAILS.MONTH_JUNE",
+      "DETAILS.MONTH_JULY",
+      "DETAILS.MONTH_AUGUST",
+      "DETAILS.MONTH_SEPTEMBER",
+      "DETAILS.MONTH_OCTOBER",
+      "DETAILS.MONTH_NOVEMBER",
+      "DETAILS.MONTH_DECEMBER",
+    ];
     for (let i = 0; i < 30; i++) {
       const fecha = new Date();
       fecha.setDate(fecha.getDate() + i);
       this.diasDisponibles.push({
-        dia: fecha.toLocaleDateString("es-ES", { weekday: "long" }),
+        diaKey: dayKeys[fecha.getDay()],
         numero: fecha.getDate(),
-        mes: fecha.toLocaleDateString("es-ES", { month: "long" }),
+        mesKey: monthKeys[fecha.getMonth()],
         fecha,
       });
     }
   }
 
   seleccionarDia(dia: {
-    dia: string;
+    diaKey: string;
     numero: number;
-    mes: string;
+    mesKey: string;
     fecha: Date;
   }) {
     this.diaSeleccionado = dia;
@@ -288,7 +339,15 @@ export class DetallesBarberiaComponent implements OnInit {
       console.error("Falta información de salón o empleado");
       return;
     }
-
+    const dayKeys = [
+      "DETAILS.DAY_MONDAY",
+      "DETAILS.DAY_TUESDAY",
+      "DETAILS.DAY_WEDNESDAY",
+      "DETAILS.DAY_THURSDAY",
+      "DETAILS.DAY_FRIDAY",
+      "DETAILS.DAY_SATURDAY",
+      "DETAILS.DAY_SUNDAY",
+    ];
     const apertura = this.salon.horario_apertura;
     const cierre = this.salon.horario_cierre;
     let inicioTurno: string;
@@ -367,8 +426,8 @@ export class DetallesBarberiaComponent implements OnInit {
     if (!this.usuarioActual) {
       Swal.fire({
         icon: "info",
-        title: "Inicia sesión",
-        text: "Debes iniciar sesión para dejar una reseña.",
+        title: this.translate.instant("DETAILS.LOGIN_TITLE"),
+        text: this.translate.instant("DETAILS.LOGIN_TEXT"),
       });
       return;
     }
@@ -385,8 +444,8 @@ export class DetallesBarberiaComponent implements OnInit {
       next: (nuevaResena) => {
         Swal.fire({
           icon: "success",
-          title: "¡Gracias!",
-          text: "Gracias por tu reseña.",
+          title: this.translate.instant("DETAILS.REVIEW_THANKS_TITLE"),
+          text: this.translate.instant("DETAILS.REVIEW_THANKS_TEXT"),
         });
         if (this.salon) {
           this.fetchResenas(this.salon.id_salon);
@@ -397,20 +456,20 @@ export class DetallesBarberiaComponent implements OnInit {
         if (err.status === 403) {
           Swal.fire({
             icon: "warning",
-            title: "Acceso denegado",
-            text: "No puedes crear una reseña si no has asistido a ese servicio.",
+            title: this.translate.instant("DETAILS.REVIEW_FORBIDDEN_TITLE"),
+            text: this.translate.instant("DETAILS.REVIEW_FORBIDDEN"),
           });
         } else if (err.status === 422) {
           Swal.fire({
             icon: "warning",
-            title: "Datos inválidos",
-            text: "Datos inválidos o ya existe reseña para este servicio.",
+            title: this.translate.instant("DETAILS.REVIEW_INVALID_TITLE"),
+            text: this.translate.instant("DETAILS.REVIEW_INVALID"),
           });
         } else {
           Swal.fire({
             icon: "error",
-            title: "Error",
-            text: "Ocurrió un error al enviar tu reseña.",
+            title: this.translate.instant("DETAILS.ERROR_TITLE"),
+            text: this.translate.instant("DETAILS.REVIEW_ERROR"),
           });
         }
       },

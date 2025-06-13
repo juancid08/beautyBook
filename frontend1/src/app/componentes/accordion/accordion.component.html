@@ -16,7 +16,7 @@
             [class.opacity-100]="isActive(link.path)"
             [class.opacity-0]="!isActive(link.path)"
           ></div>
-          {{ link.label }}
+          {{ link.labelKey | translate }}
         </a>
       </ng-container>
     </nav>
