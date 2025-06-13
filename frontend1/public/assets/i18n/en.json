@@ -170,18 +170,22 @@
     "PROFILE_UPDATED_SUCCESS": "Profile updated",
     "GENERIC_ERROR_TITLE": "Error",
     "GENERIC_ERROR_TEXT": "There was an error saving changes",
-    "DELETE_SERVICE_TITLE": "¿Eliminar servicio?",
-    "DELETE_SERVICE_TEXT": "Esta acción no se puede deshacer.",
-    "DELETE_SERVICE_CONFIRM": "Sí, eliminar",
-    "DELETE_SERVICE_CANCEL": "Cancelar",
-    "SERVICE_CREATED_SUCCESS": "Servicio creado correctamente",
-    "SERVICE_UPDATED_SUCCESS": "Servicio actualizado correctamente",
-    "SERVICE_DELETED_SUCCESS": "Servicio eliminado correctamente",
+    "DELETE_SERVICE_TITLE": "Delete service?",
+    "DELETE_SERVICE_TEXT": "This action cannot be undone.",
+    "DELETE_SERVICE_CONFIRM": "Yes, delete",
+    "DELETE_SERVICE_CANCEL": "Cancel",
 
-    "EMPLOYEE_CREATED_SUCCESS": "Empleado creado correctamente",
-    "EMPLOYEE_CREATED_ERROR": "Hubo un error al crear el empleado",
-    "EMPLOYEE_UPDATED_SUCCESS": "Empleado actualizado correctamente",
-    "EMPLOYEE_UPDATED_ERROR": "Hubo un error al actualizar el empleado"
+    "SERVICE_CREATED_SUCCESS": "Service created successfully",
+    "SERVICE_UPDATED_SUCCESS": "Service updated successfully",
+    "SERVICE_DELETED_SUCCESS": "Service deleted successfully",
+
+    "EMPLOYEE_CREATED_SUCCESS": "Employee created successfully",
+    "EMPLOYEE_CREATED_ERROR": "There was an error creating the employee",
+    "EMPLOYEE_UPDATED_SUCCESS": "Employee updated successfully",
+    "EMPLOYEE_UPDATED_ERROR": "There was an error updating the employee",
+    "DELETE_EMPLOYEE_TITLE": "Delete \"{{name}}\"?",
+    "DELETE_EMPLOYEE_CONFIRM": "Yes, delete",
+    "DELETE_EMPLOYEE_CANCEL": "Cancel"
   },
   "ACCORDION": {
     "QUIENES_SOMOS": "About Us",

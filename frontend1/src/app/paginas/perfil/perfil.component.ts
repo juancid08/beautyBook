@@ -486,7 +486,6 @@ export class PerfilComponent implements OnInit {
     });
   }
 
-  // Métodos de confirmación de eliminación
   cancelarEliminacion(): void {
     this.salonAEliminar = null;
     this.nombreConfirmacion = "";
@@ -785,11 +784,13 @@ export class PerfilComponent implements OnInit {
 
   borrarEmpleado(emp: Empleado): void {
     Swal.fire({
-      title: `¿Eliminar a "${emp.nombre}"?`,
+      title: this.translate.instant("SWAL.DELETE_EMPLOYEE_TITLE", {
+        name: emp.nombre,
+      }),
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: this.translate.instant("SWAL.DELETE_EMPLOYEE_CONFIRM"),
+      cancelButtonText: this.translate.instant("SWAL.DELETE_EMPLOYEE_CANCEL"),
     }).then((result) => {
       if (result.isConfirmed) {
         this.empleadoService.eliminarEmpleado(emp.id_empleado).subscribe({

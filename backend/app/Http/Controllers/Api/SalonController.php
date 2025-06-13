@@ -80,31 +80,24 @@ class SalonController extends Controller
 
         // Si existe foto y es base64, procesamos para guardarla en disco
         if (!empty($validated['foto']) && str_starts_with($validated['foto'], 'data:image')) {
-            // Extraer la parte base64 (después de la coma)
             $base64str = explode(',', $validated['foto'])[1] ?? null;
             if ($base64str) {
                 $imageData = base64_decode($base64str);
 
-                // Generar nombre único para la imagen
-                $filename = uniqid('salon_') . '.webp'; // o png, jpg según la imagen
+                $filename = uniqid('salon_') . '.webp'; 
 
-                // Guardar imagen en disco public/storage/salones
                 \Storage::disk('public')->put('salones/' . $filename, $imageData);
 
-                // Reemplazar el campo foto con la ruta relativa
                 $validated['foto'] = 'salones/' . $filename;
             } else {
-                // Si no se pudo extraer base64, eliminar el campo para evitar guardar mal
                 unset($validated['foto']);
             }
         } else {
-            // No hay imagen o no es base64, eliminar para evitar guardar texto inútil
             unset($validated['foto']);
         }
 
         $salon = Salon::create($validated);
 
-        // Para la respuesta puedes añadir la URL completa de la foto si quieres
         if ($salon->foto) {
             $salon->foto = asset('storage/' . $salon->foto);
         }
@@ -144,7 +137,6 @@ class SalonController extends Controller
             'id_usuario'      => 'required|exists:usuario,id_usuario',
         ]);
 
-        // Procesar imagen si viene como archivo (solo si la petición es POST/multipart)
         if ($request->hasFile('foto')) {
             $file     = $request->file('foto');
             $filename = time() . '_' . $file->getClientOriginalName();

@@ -170,7 +170,12 @@
 
     "PROFILE_UPDATED_SUCCESS": "Perfil actualizado",
     "GENERIC_ERROR_TITLE": "Error",
-    "GENERIC_ERROR_TEXT": "Hubo un error al guardar los cambios"
+    "GENERIC_ERROR_TEXT": "Hubo un error al guardar los cambios",
+    "SERVICE_CREATED_SUCCESS": "Servicio creado con éxito",
+    "SERVICE_DELETED_SUCCESS": "Servicio eliminado correctamente",
+    "DELETE_EMPLOYEE_TITLE": "¿Eliminar a \"{{name}}\"?",
+    "DELETE_EMPLOYEE_CONFIRM": "Sí, eliminar",
+    "DELETE_EMPLOYEE_CANCEL": "Cancelar"
   },
   "ACCORDION": {
     "QUIENES_SOMOS": "Quiénes Somos",

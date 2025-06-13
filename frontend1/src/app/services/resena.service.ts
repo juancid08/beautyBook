@@ -63,7 +63,6 @@ export class ResenaService {
     return this.http.get<Resena[]>(`${this.baseUrl}?id_servicio=${idServicio}`);
   }
 
-  // Si tuvieras ruta GET /api/salones/{id}/resenas:
   getResenasPorSalon(idSalon: number): Observable<Resena[]> {
     return this.http.get<Resena[]>(
       `http://localhost/api/salones/${idSalon}/resenas`

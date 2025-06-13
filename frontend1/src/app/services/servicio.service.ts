@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { map, Observable } from "rxjs";
 
 export interface Servicio {
   id_servicio: number;
@@ -9,14 +9,14 @@ export interface Servicio {
   descripcion: string;
   precio: number;
   duracion_minutos: number;
-  salon_nombre?: string; // opcional si quieres expandir luego
+  salon_nombre?: string;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ServicioService {
-  private baseUrl = 'http://localhost/api/servicios';
+  private baseUrl = "http://localhost/api/servicios";
 
   constructor(private http: HttpClient) {}
 
@@ -36,7 +36,10 @@ export class ServicioService {
   }
 
   // Actualizar servicio
-  actualizarServicio(id: number, data: Partial<Servicio>): Observable<Servicio> {
+  actualizarServicio(
+    id: number,
+    data: Partial<Servicio>
+  ): Observable<Servicio> {
     return this.http.put<Servicio>(`${this.baseUrl}/${id}`, data);
   }
 
@@ -49,6 +52,4 @@ export class ServicioService {
   getServiciosPorSalon(salonId: number): Observable<Servicio[]> {
     return this.http.get<Servicio[]>(`${this.baseUrl}?id_salon=${salonId}`);
   }
-
-  
 }

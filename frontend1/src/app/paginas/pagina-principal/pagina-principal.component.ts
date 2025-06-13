@@ -1,4 +1,3 @@
-// src/app/pages/pagina-principal/pagina-principal.component.ts
 import {
   Component,
   OnInit,
@@ -28,7 +27,6 @@ import { AuthService } from "../../services/auth.service";
 import { ResenaService } from "../../services/resena.service";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
-// Tipo extendido para incluir la media de reseñas
 type SalonConMedia = Salon & { mediaResena: number };
 
 @Component({
@@ -108,13 +106,10 @@ export class PaginaPrincipalComponent
           },
         });
       }
-      this.translate
-        .get(this.phrases) // ['PAGE.PHRASE1', 'PAGE.PHRASE2', ...]
-        .subscribe((res: any) => {
-          // res es { 'PAGE.PHRASE1': 'Encuentra tu estilista…', … }
-          this.phrases = this.phrases.map((key) => res[key]);
-          this.startTyping();
-        });
+      this.translate.get(this.phrases).subscribe((res: any) => {
+        this.phrases = this.phrases.map((key) => res[key]);
+        this.startTyping();
+      });
     });
 
     this.fetchSalones();
@@ -233,19 +228,16 @@ export class PaginaPrincipalComponent
 
   filterBy(value: string, labelKey: string) {
     if (this.selectedCategory === value) {
-      // deseleccionamos
       this.selectedCategory = null;
       this.selectedCategoryLabelKey = null;
       this.fetchSalones();
     } else {
-      // seleccionamos
       this.selectedCategory = value;
       this.selectedCategoryLabelKey = labelKey;
       this.fetchSalones(value);
     }
   }
 
-  // y para el título:
   get tituloCategoria(): string {
     if (this.selectedCategoryLabelKey) {
       return this.translate.instant(this.selectedCategoryLabelKey);

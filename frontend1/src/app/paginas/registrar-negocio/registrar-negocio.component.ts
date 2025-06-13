@@ -118,7 +118,6 @@ export class RegistrarNegocioComponent implements OnInit {
   }
 
   registrarSalon() {
-    // reset
     this.mensajeErrorKey = "";
     this.mensajeExitoKey = "";
     this.mensajeErrorParams = [];
@@ -136,7 +135,6 @@ export class RegistrarNegocioComponent implements OnInit {
       foto,
     } = this.datosNegocio;
 
-    // 2️⃣ Validaciones con claves:
     if (
       !nombre ||
       !direccion ||
