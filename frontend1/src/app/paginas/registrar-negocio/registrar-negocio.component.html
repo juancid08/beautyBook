@@ -79,10 +79,10 @@
               }"
             />
             <div *ngIf="nombre.touched && nombre.invalid" class="text-red-600 mt-1 text-sm">
-              <div *ngIf="nombre.errors?.[required]">
+              <div *ngIf="nombre.errors?.['required']">
                 {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
               </div>
-              <div *ngIf="nombre.errors?.[minlength]">
+              <div *ngIf="nombre.errors?.['minlength']">
                 {{ "REGISTER_BUSINESS.ERROR_MIN_LENGTH" | translate:{ min: 3 } }}
               </div>
             </div>
@@ -107,7 +107,9 @@
               }"
             />
             <div *ngIf="direccion.touched && direccion.invalid" class="text-red-600 mt-1 text-sm">
-              {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
+              <div *ngIf="direccion.errors?.['required']">
+                {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
+              </div>
             </div>
           </div>
 
@@ -122,7 +124,7 @@
               [(ngModel)]="datosNegocio.cif"
               #cif="ngModel"
               required
-              pattern="[A-Za-z]\\d{7}[A-Za-z0-9]"
+              pattern="[A-Za-z]\d{7}[A-Za-z0-9]"
               placeholder="{{ 'REGISTER_BUSINESS.PLACEHOLDER_CIF' | translate }}"
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
               [ngClass]="{
@@ -131,10 +133,10 @@
               }"
             />
             <div *ngIf="cif.touched && cif.invalid" class="text-red-600 mt-1 text-sm">
-              <div *ngIf="cif.errors?.[required]">
+              <div *ngIf="cif.errors?.['required']">
                 {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
               </div>
-              <div *ngIf="cif.errors?.[pattern]">
+              <div *ngIf="cif.errors?.['pattern']">
                 {{ "REGISTER_BUSINESS.ERROR_CIF_PATTERN" | translate }}
               </div>
             </div>
@@ -160,16 +162,16 @@
               }"
             />
             <div *ngIf="telefono.touched && telefono.invalid" class="text-red-600 mt-1 text-sm">
-              <div *ngIf="telefono.errors?.[required]">
+              <div *ngIf="telefono.errors?.['required']">
                 {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
               </div>
-              <div *ngIf="telefono.errors?.[pattern]">
+              <div *ngIf="telefono.errors?.['pattern']">
                 {{ "REGISTER_BUSINESS.ERROR_PHONE_PATTERN" | translate }}
               </div>
             </div>
           </div>
 
-          <!-- Email (ocupa las 2 columnas) -->
+          <!-- Email (ocupa 2 columnas) -->
           <div class="md:col-span-2">
             <label class="block text-sm font-medium text-gray-700 mb-1">
               {{ "REGISTER_BUSINESS.FIELD_EMAIL" | translate }}
@@ -189,10 +191,10 @@
               }"
             />
             <div *ngIf="email.touched && email.invalid" class="text-red-600 mt-1 text-sm">
-              <div *ngIf="email.errors?.[required]">
+              <div *ngIf="email.errors?.['required']">
                 {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
               </div>
-              <div *ngIf="email.errors?.[email]">
+              <div *ngIf="email.errors?.['email']">
                 {{ "REGISTER_BUSINESS.ERROR_EMAIL_INVALID" | translate }}
               </div>
             </div>
@@ -231,7 +233,9 @@
               }"
             />
             <div *ngIf="horarioA.touched && horarioA.invalid" class="text-red-600 mt-1 text-sm">
-              {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
+              <div *ngIf="horarioA.errors?.['required']">
+                {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
+              </div>
             </div>
           </div>
           <div>
@@ -252,7 +256,9 @@
               }"
             />
             <div *ngIf="horarioC.touched && horarioC.invalid" class="text-red-600 mt-1 text-sm">
-              {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
+              <div *ngIf="horarioC.errors?.['required']">
+                {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
+              </div>
             </div>
           </div>
         </div>
