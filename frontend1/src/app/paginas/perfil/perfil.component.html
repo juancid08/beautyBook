@@ -69,10 +69,10 @@
           }"
         />
         <div *ngIf="email.touched && email.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="email.errors?.required">
+          <div *ngIf="email.errors?.['required']">
             {{ "PROFILE.ERROR_EMAIL_REQUIRED" | translate }}
           </div>
-          <div *ngIf="email.errors?.email">
+          <div *ngIf="email.errors?.['email']">
             {{ "PROFILE.ERROR_EMAIL_INVALID" | translate }}
           </div>
         </div>
@@ -98,10 +98,10 @@
           }"
         />
         <div *ngIf="telefono.touched && telefono.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="telefono.errors?.required">
+          <div *ngIf="telefono.errors?.['required']">
             {{ "PROFILE.ERROR_TELEFONO_REQUIRED" | translate }}
           </div>
-          <div *ngIf="telefono.errors?.pattern">
+          <div *ngIf="telefono.errors?.['pattern']">
             {{ "PROFILE.ERROR_TELEFONO_PATTERN" | translate }}
           </div>
         </div>
