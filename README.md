@@ -79,11 +79,6 @@ Ante proyecto: <a href="https://www.notion.so/Anteproyecto-Plataforma-de-Gesti-n
 
 [Ver Esquema E/R](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfZKJugRTIQ2X_z4-ga5htm2zgtZ4KEEOQboX_J5-cpc8dIZB-2cOpY--BwJO55WZK6sy5LGZlwlo0mrPixwj_4s0An2-GNMFhgCizY0-vR-G49SC7na6S5tVZqn43f03DSgwXw?key=y6UAGo-R7D4r28DTmYvIw_dS)
 
----
-
-## 🧪 Tutorial de Uso
-
-hacer
 
 ---
 
@@ -112,8 +107,8 @@ hacer
 
 ---
 
-## 🎥 Vídeo de Presentación
+## 🎥 Vídeo de funcionamiento de página
 
-**URL:** [https://youtube.com/beautybook-demo](lo tenemos que subir todavía)
+**URL:** [Video de funcionamiento de página](https://youtube.com/beautybook-demo)
 
 ---
