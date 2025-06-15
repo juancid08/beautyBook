@@ -16,7 +16,7 @@ export interface Resena {
   providedIn: "root",
 })
 export class ResenaService {
-  private baseUrl = "http://52.202.205.94/api/resenas";
+  private baseUrl = "https://beautybookadmin.duckdns.org/api/resenas";
 
   constructor(private http: HttpClient, private authSvc: AuthService) {}
 
@@ -65,7 +65,7 @@ export class ResenaService {
 
   getResenasPorSalon(idSalon: number): Observable<Resena[]> {
     return this.http.get<Resena[]>(
-      `http://52.202.205.94/api/salones/${idSalon}/resenas`
+      `https://beautybookadmin.duckdns.org/api/salones/${idSalon}/resenas`
     );
   }
 }

@@ -23,7 +23,7 @@ export interface Salon {
   providedIn: "root",
 })
 export class SalonService {
-  private baseUrl = "http://52.202.205.94/api/salones";
+  private baseUrl = "https://beautybookadmin.duckdns.org/api/salones";
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -33,7 +33,7 @@ export class SalonService {
 
   getSalonesPorUsuario(idUsuario: number): Observable<Salon[]> {
     return this.http.get<Salon[]>(
-      `http://52.202.205.94/api/usuarios/${idUsuario}/salones`
+      `https://beautybookadmin.duckdns.org/api/usuarios/${idUsuario}/salones`
     );
   }
 
@@ -50,7 +50,7 @@ export class SalonService {
 
           if (salon.foto) {
             const fileName = salon.foto.split("/").pop() || salon.foto;
-            fotoUrl = `http://52.202.205.94/storage/salones/${fileName}`;
+            fotoUrl = `https://beautybookadmin.duckdns.org/storage/salones/${fileName}`;
           }
 
           return {
@@ -74,7 +74,7 @@ export class SalonService {
 
           if (salon.foto) {
             const fileName = salon.foto.split("/").pop() || salon.foto;
-            fotoUrl = `http://52.202.205.94/storage/salones/${fileName}`;
+            fotoUrl = `https://beautybookadmin.duckdns.org/storage/salones/${fileName}`;
           }
 
           return {
@@ -102,7 +102,7 @@ export class SalonService {
 
           if (salon.foto) {
             const fileName = salon.foto.split("/").pop() || salon.foto;
-            fotoUrl = `http://52.202.205.94/storage/salones/${fileName}`;
+            fotoUrl = `https://beautybookadmin.duckdns.org/storage/salones/${fileName}`;
           }
 
           return {
@@ -121,7 +121,7 @@ export class SalonService {
 
     if (salon.foto) {
       const fileName = salon.foto.split("/").pop() || salon.foto;
-      fotoUrl = `http://52.202.205.94/storage/salones/${fileName}`;
+      fotoUrl = `https://beautybookadmin.duckdns.org/storage/salones/${fileName}`;
     }
 
     return {
@@ -137,7 +137,7 @@ export class SalonService {
   }
 
   crearSalon(data: any): Observable<Salon> {
-    const token = this.authService.getToken(); // o como guardes el token
+    const token = this.authService.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });

@@ -15,7 +15,7 @@ export interface Empleado {
   providedIn: "root",
 })
 export class EmpleadoService {
-  private baseUrl = "http://52.202.205.94/api";
+  private baseUrl = "https://beautybookadmin.duckdns.org/api";
 
   constructor(private http: HttpClient) {}
 

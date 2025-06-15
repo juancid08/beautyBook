@@ -17,7 +17,7 @@ export interface Cita {
   providedIn: "root",
 })
 export class CitaService {
-  private baseUrl = "http://52.202.205.94/api/citas";
+  private baseUrl = "https://beautybookadmin.duckdns.org/api/citas";
 
   constructor(private http: HttpClient) {}
 
@@ -54,7 +54,7 @@ export class CitaService {
   // Obtener todas las citas de un usuario
   getCitasPorUsuario(idUsuario: number): Observable<Cita[]> {
     return this.http.get<Cita[]>(
-      `http://52.202.205.94/api/usuarios/${idUsuario}/citas`
+      `https://beautybookadmin.duckdns.org/api/usuarios/${idUsuario}/citas`
     );
   }
 
@@ -76,14 +76,14 @@ export class CitaService {
   // Obtener nombre de un servicio
   getNombreServicio(id: number): Observable<string> {
     return this.http
-      .get<any>(`http://52.202.205.94/api/servicios/${id}`)
+      .get<any>(`https://beautybookadmin.duckdns.org/api/servicios/${id}`)
       .pipe(map((servicio) => servicio.nombre));
   }
 
   // Obtener nombre de un empleado
   getNombreEmpleado(id: number): Observable<string> {
     return this.http
-      .get<any>(`http://52.202.205.94/api/empleados/${id}`)
+      .get<any>(`https://beautybookadmin.duckdns.org/api/empleados/${id}`)
       .pipe(map((empleado) => empleado.nombre));
   }
 }

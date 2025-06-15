@@ -35,30 +35,32 @@ export class RegistrarNegocioComponent implements OnInit {
   especializaciones: Especializacion[] = [
     {
       valor: "Salón de uñas",
-      imagen: "http://52.202.205.94/storage/especializacion_salon/uñas.png",
+      imagen:
+        "https://beautybookadmin.duckdns.org/storage/especializacion_salon/uñas.png",
       labelKey: "REGISTER_BUSINESS.SPEC_SALON_UNAS",
     },
     {
       valor: "Peluquería",
       imagen:
-        "http://52.202.205.94/storage/especializacion_salon/peluqueria.png",
+        "https://beautybookadmin.duckdns.org/storage/especializacion_salon/peluqueria.png",
       labelKey: "REGISTER_BUSINESS.SPEC_PELUQUERIA",
     },
     {
       valor: "Cejas y pestañas",
       imagen:
-        "http://52.202.205.94/storage/especializacion_salon/cejas_pestañas.png",
+        "https://beautybookadmin.duckdns.org/storage/especializacion_salon/cejas_pestañas.png",
       labelKey: "REGISTER_BUSINESS.SPEC_CEJAS",
     },
     {
       valor: "Barbería",
-      imagen: "http://52.202.205.94/storage/especializacion_salon/barberia.png",
+      imagen:
+        "https://beautybookadmin.duckdns.org/storage/especializacion_salon/barberia.png",
       labelKey: "REGISTER_BUSINESS.SPEC_BARBERIA",
     },
     {
       valor: "Depilación",
       imagen:
-        "http://52.202.205.94/storage/especializacion_salon/depilacion.png",
+        "https://beautybookadmin.duckdns.org/storage/especializacion_salon/depilacion.png",
       labelKey: "REGISTER_BUSINESS.SPEC_DEPILACION",
     },
   ];
