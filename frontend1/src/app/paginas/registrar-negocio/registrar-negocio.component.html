@@ -39,9 +39,9 @@
           [alt]="item.labelKey | translate"
           class="w-16 h-16 rounded-full mb-2 object-cover"
         />
-        <span class="text-sm font-medium text-center">{{
-          item.labelKey | translate
-        }}</span>
+        <span class="text-sm font-medium text-center">
+          {{ item.labelKey | translate }}
+        </span>
       </button>
     </div>
   </ng-container>
@@ -52,8 +52,12 @@
         {{ "REGISTER_BUSINESS.STEP2_TITLE" | translate }}
       </h2>
 
-      <form (ngSubmit)="registrarSalon()" novalidate class="space-y-6">
-        <!-- Grid de inputs: 1 columna en móvil, 2 en md+ -->
+      <form
+        #registroForm="ngForm"
+        (ngSubmit)="registrarSalon()"
+        novalidate
+        class="space-y-6"
+      >
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Nombre del salón -->
           <div>
@@ -62,14 +66,26 @@
               <span class="text-red-500">*</span>
             </label>
             <input
-              [(ngModel)]="datosNegocio.nombre"
               name="nombre"
+              [(ngModel)]="datosNegocio.nombre"
+              #nombre="ngModel"
               required
-              placeholder="{{
-                'REGISTER_BUSINESS.PLACEHOLDER_NAME' | translate
-              }}"
+              minlength="3"
+              placeholder="{{ 'REGISTER_BUSINESS.PLACEHOLDER_NAME' | translate }}"
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
+              [ngClass]="{
+                'border-red-500': nombre.invalid && nombre.touched,
+                'border-green-400': nombre.valid && nombre.touched
+              }"
             />
+            <div *ngIf="nombre.touched && nombre.invalid" class="text-red-600 mt-1 text-sm">
+              <div *ngIf="nombre.errors?.required">
+                {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
+              </div>
+              <div *ngIf="nombre.errors?.minlength">
+                {{ "REGISTER_BUSINESS.ERROR_MIN_LENGTH" | translate:{ min: 3 } }}
+              </div>
+            </div>
           </div>
 
           <!-- Dirección -->
@@ -79,14 +95,20 @@
               <span class="text-red-500">*</span>
             </label>
             <input
-              [(ngModel)]="datosNegocio.direccion"
               name="direccion"
+              [(ngModel)]="datosNegocio.direccion"
+              #direccion="ngModel"
               required
-              placeholder="{{
-                'REGISTER_BUSINESS.PLACEHOLDER_ADDRESS' | translate
-              }}"
+              placeholder="{{ 'REGISTER_BUSINESS.PLACEHOLDER_ADDRESS' | translate }}"
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
+              [ngClass]="{
+                'border-red-500': direccion.invalid && direccion.touched,
+                'border-green-400': direccion.valid && direccion.touched
+              }"
             />
+            <div *ngIf="direccion.touched && direccion.invalid" class="text-red-600 mt-1 text-sm">
+              {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
+            </div>
           </div>
 
           <!-- CIF -->
@@ -96,14 +118,26 @@
               <span class="text-red-500">*</span>
             </label>
             <input
-              [(ngModel)]="datosNegocio.cif"
               name="cif"
+              [(ngModel)]="datosNegocio.cif"
+              #cif="ngModel"
               required
-              placeholder="{{
-                'REGISTER_BUSINESS.PLACEHOLDER_CIF' | translate
-              }}"
+              pattern="[A-Za-z]\\d{7}[A-Za-z0-9]"
+              placeholder="{{ 'REGISTER_BUSINESS.PLACEHOLDER_CIF' | translate }}"
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
+              [ngClass]="{
+                'border-red-500': cif.invalid && cif.touched,
+                'border-green-400': cif.valid && cif.touched
+              }"
             />
+            <div *ngIf="cif.touched && cif.invalid" class="text-red-600 mt-1 text-sm">
+              <div *ngIf="cif.errors?.required">
+                {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
+              </div>
+              <div *ngIf="cif.errors?.pattern">
+                {{ "REGISTER_BUSINESS.ERROR_CIF_PATTERN" | translate }}
+              </div>
+            </div>
           </div>
 
           <!-- Teléfono -->
@@ -113,14 +147,26 @@
               <span class="text-red-500">*</span>
             </label>
             <input
-              [(ngModel)]="datosNegocio.telefono"
               name="telefono"
+              [(ngModel)]="datosNegocio.telefono"
+              #telefono="ngModel"
               required
-              placeholder="{{
-                'REGISTER_BUSINESS.PLACEHOLDER_PHONE' | translate
-              }}"
+              pattern="^[0-9]{9}$"
+              placeholder="{{ 'REGISTER_BUSINESS.PLACEHOLDER_PHONE' | translate }}"
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
+              [ngClass]="{
+                'border-red-500': telefono.invalid && telefono.touched,
+                'border-green-400': telefono.valid && telefono.touched
+              }"
             />
+            <div *ngIf="telefono.touched && telefono.invalid" class="text-red-600 mt-1 text-sm">
+              <div *ngIf="telefono.errors?.required">
+                {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
+              </div>
+              <div *ngIf="telefono.errors?.pattern">
+                {{ "REGISTER_BUSINESS.ERROR_PHONE_PATTERN" | translate }}
+              </div>
+            </div>
           </div>
 
           <!-- Email (ocupa las 2 columnas) -->
@@ -130,29 +176,38 @@
               <span class="text-red-500">*</span>
             </label>
             <input
-              [(ngModel)]="datosNegocio.email"
               name="email"
               type="email"
+              [(ngModel)]="datosNegocio.email"
+              #email="ngModel"
               required
-              placeholder="{{
-                'REGISTER_BUSINESS.PLACEHOLDER_EMAIL' | translate
-              }}"
+              placeholder="{{ 'REGISTER_BUSINESS.PLACEHOLDER_EMAIL' | translate }}"
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
+              [ngClass]="{
+                'border-red-500': email.invalid && email.touched,
+                'border-green-400': email.valid && email.touched
+              }"
             />
+            <div *ngIf="email.touched && email.invalid" class="text-red-600 mt-1 text-sm">
+              <div *ngIf="email.errors?.required">
+                {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
+              </div>
+              <div *ngIf="email.errors?.email">
+                {{ "REGISTER_BUSINESS.ERROR_EMAIL_INVALID" | translate }}
+              </div>
+            </div>
           </div>
 
-          <!-- Descripción (ocupa las 2 columnas) -->
+          <!-- Descripción (opcional) -->
           <div class="md:col-span-2">
             <label class="block text-sm font-medium text-gray-700 mb-1">
               {{ "REGISTER_BUSINESS.FIELD_DESCRIPTION" | translate }}
             </label>
             <textarea
-              [(ngModel)]="datosNegocio.descripcion"
               name="descripcion"
+              [(ngModel)]="datosNegocio.descripcion"
+              placeholder="{{ 'REGISTER_BUSINESS.PLACEHOLDER_DESCRIPTION' | translate }}"
               rows="3"
-              placeholder="{{
-                'REGISTER_BUSINESS.PLACEHOLDER_DESCRIPTION' | translate
-              }}"
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none resize-none"
             ></textarea>
           </div>
@@ -164,12 +219,20 @@
               <span class="text-red-500">*</span>
             </label>
             <input
-              [(ngModel)]="datosNegocio.horario_apertura"
               name="horario_apertura"
               type="time"
+              [(ngModel)]="datosNegocio.horario_apertura"
+              #horarioA="ngModel"
               required
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
+              [ngClass]="{
+                'border-red-500': horarioA.invalid && horarioA.touched,
+                'border-green-400': horarioA.valid && horarioA.touched
+              }"
             />
+            <div *ngIf="horarioA.touched && horarioA.invalid" class="text-red-600 mt-1 text-sm">
+              {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
+            </div>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -177,30 +240,34 @@
               <span class="text-red-500">*</span>
             </label>
             <input
-              [(ngModel)]="datosNegocio.horario_cierre"
               name="horario_cierre"
               type="time"
+              [(ngModel)]="datosNegocio.horario_cierre"
+              #horarioC="ngModel"
               required
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
+              [ngClass]="{
+                'border-red-500': horarioC.invalid && horarioC.touched,
+                'border-green-400': horarioC.valid && horarioC.touched
+              }"
             />
+            <div *ngIf="horarioC.touched && horarioC.invalid" class="text-red-600 mt-1 text-sm">
+              {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
+            </div>
           </div>
         </div>
 
         <!-- Upload de foto -->
         <div class="space-y-2">
-          <!-- Etiqueta descriptiva -->
           <label class="block text-sm font-medium text-gray-700">
             {{ "REGISTER_BUSINESS.FIELD_PHOTO" | translate }}
           </label>
 
-          <!-- Botón personalizado con emoji -->
           <label
             class="inline-flex items-center px-4 py-2 bg-[#117b95] text-white rounded-lg cursor-pointer hover:bg-[#0e6378] transition"
           >
             <span class="mr-2 text-lg">📸</span>
-            <span>
-              {{ "REGISTER_BUSINESS.BUTTON_SELECT_FILE" | translate }}
-            </span>
+            <span>{{ "REGISTER_BUSINESS.BUTTON_SELECT_FILE" | translate }}</span>
 
             <input
               type="file"
@@ -211,7 +278,6 @@
             />
           </label>
 
-          <!-- Previsualización -->
           <div *ngIf="imagenPreview" class="mt-4">
             <p class="text-sm text-gray-500 mb-2">
               {{ "REGISTER_BUSINESS.LABEL_PREVIEW" | translate }}
@@ -228,7 +294,7 @@
         <div class="space-y-3">
           <button
             type="submit"
-            [disabled]="cargando"
+            [disabled]="registroForm.invalid || cargando"
             class="w-full py-3 rounded-lg text-white bg-[#117b95] hover:bg-[#0e6378] transition disabled:opacity-50"
           >
             {{
@@ -237,16 +303,10 @@
                 : ("REGISTER_BUSINESS.BUTTON_SUBMIT" | translate)
             }}
           </button>
-          <p
-            *ngIf="mensajeExitoKey"
-            class="text-center text-green-600 font-medium"
-          >
+          <p *ngIf="mensajeExitoKey" class="text-center text-green-600 font-medium">
             {{ mensajeExitoKey | translate }}
           </p>
-          <p
-            *ngIf="mensajeErrorKey"
-            class="text-center text-red-600 font-medium"
-          >
+          <p *ngIf="mensajeErrorKey" class="text-center text-red-600 font-medium">
             {{ mensajeErrorKey | translate : mensajeErrorParams }}
           </p>
         </div>
@@ -254,7 +314,5 @@
     </div>
   </ng-container>
 </main>
-<br /><br /><br />
-<br /><br /><br />
 
 <app-footer></app-footer>

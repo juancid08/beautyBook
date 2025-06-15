@@ -6,7 +6,8 @@ import { Cita, CitaService } from "../../services/cita.service";
 import { SalonService, Salon } from "../../services/salon.service";
 import { Servicio, ServicioService } from "../../services/servicio.service";
 import { CommonModule } from "@angular/common";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Empleado, EmpleadoService } from "../../services/empleado.service";
 import Swal from "sweetalert2";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -20,7 +21,9 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
     FooterComponent,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     TranslateModule,
+
   ],
 })
 export class PerfilComponent implements OnInit {
@@ -28,6 +31,7 @@ export class PerfilComponent implements OnInit {
   usuario: any = null;
   imagenPerfilSeleccionada: File | null = null;
   previewUrlPerfil: string | null = null;
+  perfilForm!: FormGroup;
 
   // --- Citas y salones ---
   citas: Cita[] = [];
@@ -71,6 +75,8 @@ export class PerfilComponent implements OnInit {
   servicioEditando: Servicio | null = null;
   showFormCrear: boolean = false;
   showFormEditar: boolean = false;
+  salonForm!: FormGroup;
+  servicioForm!: FormGroup;
 
   // --- Empleados por salón ---
   empleadosPorSalon: Record<number, Empleado[]> = {};
@@ -82,12 +88,13 @@ export class PerfilComponent implements OnInit {
   empleadoEditando: Empleado | null = null;
   showFormCrearEmpleado: boolean = false;
   showFormEditarEmpleado: boolean = false;
-
+  empleadoForm!: FormGroup;
   // --- Imagen del salón / empleado ---
   imagenSalonSeleccionada: File | null = null;
   previewUrlSalon: string | null = null;
   imagenEmpleadoSeleccionada: File | null = null;
   previewUrlEmpleado: string | null = null;
+
 
   constructor(
     private authSvc: AuthService,
@@ -95,12 +102,52 @@ export class PerfilComponent implements OnInit {
     private salonService: SalonService,
     private servicioService: ServicioService,
     private empleadoService: EmpleadoService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private fb: FormBuilder,
   ) {}
 
   ngOnInit(): void {
+    
+    // PERFIL
+    this.perfilForm = this.fb.group({
+      nombre:   ['', [Validators.required, Validators.minLength(3)]],
+      email:    ['', [Validators.required, Validators.email]],
+      telefono: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      foto_perfil: [null],
+    });
+
+    // SALÓN (editar/crear)
+    this.salonForm = this.fb.group({
+      nombre:         ['', [Validators.required, Validators.minLength(3)]],
+      direccion:      ['', Validators.required],
+      telefono:       ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      descripcion:    ['', [Validators.required, Validators.minLength(10)]],
+      especializacion:['', [Validators.required, Validators.minLength(3)]],
+      foto:           [null]
+    });
+
+    // SERVICIO
+    this.servicioForm = this.fb.group({
+      nombre:     ['', Validators.required],
+      descripcion:['', Validators.minLength(5)],
+      precio:     [null, [Validators.required, Validators.min(1)]],
+      duracion:   [null, [Validators.required, Validators.min(1)]],
+    });
+
+    // EMPLEADO
+    this.empleadoForm = this.fb.group({
+      nombre:   ['', [Validators.required, Validators.minLength(3)]],
+      telefono: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      foto:     [null],
+    });
+
     this.authSvc.currentUser$.subscribe((usuario) => {
       this.usuario = { ...usuario };
+      this.perfilForm.patchValue({
+        nombre: usuario.nombre,
+        email: usuario.email,
+        telefono: usuario.telefono
+      });
       this.previewUrlPerfil = usuario?.foto_perfil ?? null;
       if (this.usuario?.id_usuario) {
         this.fetchCitas(this.usuario.id_usuario);
@@ -239,11 +286,19 @@ export class PerfilComponent implements OnInit {
     const userId = this.usuario.id_usuario;
     if (!userId) return;
 
+    if (this.perfilForm.invalid) {
+      this.perfilForm.markAllAsTouched();
+      return;
+    }
+
+    const formValue = this.perfilForm.value;
+    const formData = new FormData();
+
     if (this.imagenPerfilSeleccionada) {
       const formData = new FormData();
-      formData.append("nombre", this.usuario.nombre);
-      formData.append("email", this.usuario.email);
-      formData.append("telefono", this.usuario.telefono);
+      formData.append('nombre', formValue.nombre);
+      formData.append('email',  formValue.email);
+      formData.append('telefono', formValue.telefono);
       formData.append("foto_perfil", this.imagenPerfilSeleccionada);
       this.authSvc.actualizarPerfilConImagen(userId, formData).subscribe({
         next: (res) => this.onPerfilActualizado(res),
@@ -366,6 +421,13 @@ export class PerfilComponent implements OnInit {
   // ————— Resto de métodos para CRUD de salón, servicios y empleados —————
   editarSalon(salon: Salon): void {
     this.salonEditando = { ...salon };
+    this.salonForm.patchValue({
+      nombre: salon.nombre,
+      direccion: salon.direccion,
+      telefono: salon.telefono,
+      descripcion: salon.descripcion,
+      especializacion: salon.especializacion,
+    });
   }
 
   guardarCambiosSalon(): void {
@@ -505,13 +567,8 @@ export class PerfilComponent implements OnInit {
   }
 
   abrirFormularioCrearServicio(id_salon: number): void {
-    this.servicioNuevo = {
-      id_salon,
-      nombre: "",
-      descripcion: "",
-      precio: 0,
-      duracion_minutos: 0,
-    };
+    this.servicioEditando = null;
+    this.servicioForm.reset({ nombre: '', descripcion: '', precio: null, duracion: null });
     this.showFormCrear = true;
   }
 
@@ -652,11 +709,7 @@ export class PerfilComponent implements OnInit {
   }
 
   abrirFormularioCrearEmpleado(id_salon: number): void {
-    this.empleadoNuevo = {
-      id_salon,
-      nombre: "",
-      telefono: "",
-    };
+    this.empleadoForm.reset({ nombre: '', telefono: '', foto: null });
     this.showFormCrearEmpleado = true;
   }
 
