@@ -143,38 +143,51 @@
     "LOGOUT_CONFIRM": "Sí, cerrar sesión",
     "LOGOUT_CANCEL": "Cancelar",
     "LOGOUT_SUCCESS": "Sesión cerrada",
-
+  
     "DELETE_BOOKING_TITLE": "¿Eliminar cita?",
     "DELETE_BOOKING_TEXT": "Esta acción no se puede deshacer.",
     "DELETE_BOOKING_CONFIRM": "Sí, eliminar",
     "DELETE_BOOKING_CANCEL": "Cancelar",
     "DELETE_BOOKING_SUCCESS": "Cita eliminada",
     "DELETE_BOOKING_ERROR": "No se pudo eliminar la cita",
-    "SERVICE_UPDATED_SUCCESS": "Servicio actualizado con éxito",
+  
     "UPDATE_STATUS_SUCCESS": "Estado actualizado",
     "UPDATE_STATUS_ERROR": "No se pudo actualizar el estado",
-
+  
     "UPDATE_EMPLOYEE_SUCCESS": "Empleado actualizado",
     "UPDATE_EMPLOYEE_ERROR": "No se pudo cambiar el empleado",
-
+  
     "INCOMPLETE_FIELDS": "Campos incompletos",
     "INCOMPLETE_FIELDS_SERVICE": "Completa todos los campos del servicio.",
     "INCOMPLETE_FIELDS_EMPLOYEE": "Completa todos los campos del empleado.",
-
+  
     "SERVICE_CREATED_ERROR": "Hubo un error al crear el servicio",
     "SERVICE_UPDATED_ERROR": "Hubo un error al actualizar el servicio",
     "SERVICE_DELETED_ERROR": "Hubo un error al eliminar el servicio",
-
+  
     "SALON_UPDATED_SUCCESS": "Salón actualizado correctamente",
     "SALON_UPDATED_ERROR": "Hubo un error al actualizar el salón",
     "SALON_DELETED_SUCCESS": "Salón eliminado correctamente",
     "SALON_DELETED_ERROR": "Hubo un error al eliminar el salón",
-
+  
     "PROFILE_UPDATED_SUCCESS": "Perfil actualizado",
     "GENERIC_ERROR_TITLE": "Error",
     "GENERIC_ERROR_TEXT": "Hubo un error al guardar los cambios",
+  
+    "DELETE_SERVICE_TITLE": "¿Eliminar servicio?",
+    "DELETE_SERVICE_TEXT": "Esta acción no se puede deshacer.",
+    "DELETE_SERVICE_CONFIRM": "Sí, eliminar",
+    "DELETE_SERVICE_CANCEL": "Cancelar",
+  
     "SERVICE_CREATED_SUCCESS": "Servicio creado con éxito",
+    "SERVICE_UPDATED_SUCCESS": "Servicio actualizado con éxito",
     "SERVICE_DELETED_SUCCESS": "Servicio eliminado correctamente",
+  
+    "EMPLOYEE_CREATED_SUCCESS": "Empleado creado con éxito",
+    "EMPLOYEE_CREATED_ERROR": "Hubo un error al crear el empleado",
+    "EMPLOYEE_UPDATED_SUCCESS": "Empleado actualizado con éxito",
+    "EMPLOYEE_UPDATED_ERROR": "Hubo un error al actualizar el empleado",
+  
     "DELETE_EMPLOYEE_TITLE": "¿Eliminar a \"{{name}}\"?",
     "DELETE_EMPLOYEE_CONFIRM": "Sí, eliminar",
     "DELETE_EMPLOYEE_CANCEL": "Cancelar"
