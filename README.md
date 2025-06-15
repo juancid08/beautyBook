@@ -94,7 +94,7 @@ hacer
 - Diseño de la aplicación: `https://www.figma.com/design/cIxAzKcOyFSaC7WxxsWdRj/BeautyBook?node-id=0-1&t=iLbDtBx6cyJsdMmd-1`
 - Prototype de fogma: `https://www.figma.com/proto/cIxAzKcOyFSaC7WxxsWdRj/BeautyBook?page-id=0%3A1&node-id=1-2&p=f&viewport=410%2C166%2C0.06&t=90P2JT6hzz8Ywc3V-1&scaling=scale-down-width&content-scaling=fixed&starting-point-node-id=1%3A2`
 - FigJam de la aplicación: `https://www.figma.com/board/O9BarioX01voAVcajNoNtp/proyecto-beautybook?node-id=0-1&t=3W1PqshtyE5VHZYx-1`
-- Documentación de figma PDF: `/docs/BeautyBook.pdf`
+- [📄 Ver presentación en PDF](docs/BeautyBook.pdf)
 
 ---
 
@@ -107,7 +107,7 @@ hacer
 - [Anime.js](https://animejs.com/)
 - En youtube vi estos videos:
 - [TailwindCss](https://www.youtube.com/watch?v=R5EXap3vNDA&t=1931s&ab_channel=midudev)
-- [Angular] (https://www.youtube.com/watch?v=bbaFNsqr4to&ab_channel=LeonardoJose)
+- [Angular](https://www.youtube.com/watch?v=bbaFNsqr4to&ab_channel=LeonardoJose)
 - [Laravel](https://www.youtube.com/watch?v=eLI8c_NtkBk&t=1400s&ab_channel=FaztCode)
 
 ---
