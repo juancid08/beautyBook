@@ -79,10 +79,10 @@
               }"
             />
             <div *ngIf="nombre.touched && nombre.invalid" class="text-red-600 mt-1 text-sm">
-              <div *ngIf="nombre.errors?.required">
+              <div *ngIf="nombre.errors?.[required]">
                 {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
               </div>
-              <div *ngIf="nombre.errors?.minlength">
+              <div *ngIf="nombre.errors?.[minlength]">
                 {{ "REGISTER_BUSINESS.ERROR_MIN_LENGTH" | translate:{ min: 3 } }}
               </div>
             </div>
@@ -131,10 +131,10 @@
               }"
             />
             <div *ngIf="cif.touched && cif.invalid" class="text-red-600 mt-1 text-sm">
-              <div *ngIf="cif.errors?.required">
+              <div *ngIf="cif.errors?.[required]">
                 {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
               </div>
-              <div *ngIf="cif.errors?.pattern">
+              <div *ngIf="cif.errors?.[pattern]">
                 {{ "REGISTER_BUSINESS.ERROR_CIF_PATTERN" | translate }}
               </div>
             </div>
@@ -160,10 +160,10 @@
               }"
             />
             <div *ngIf="telefono.touched && telefono.invalid" class="text-red-600 mt-1 text-sm">
-              <div *ngIf="telefono.errors?.required">
+              <div *ngIf="telefono.errors?.[required]">
                 {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
               </div>
-              <div *ngIf="telefono.errors?.pattern">
+              <div *ngIf="telefono.errors?.[pattern]">
                 {{ "REGISTER_BUSINESS.ERROR_PHONE_PATTERN" | translate }}
               </div>
             </div>
@@ -189,10 +189,10 @@
               }"
             />
             <div *ngIf="email.touched && email.invalid" class="text-red-600 mt-1 text-sm">
-              <div *ngIf="email.errors?.required">
+              <div *ngIf="email.errors?.[required]">
                 {{ "REGISTER_BUSINESS.ERROR_REQUIRED_FIELD" | translate }}
               </div>
-              <div *ngIf="email.errors?.email">
+              <div *ngIf="email.errors?.[email]">
                 {{ "REGISTER_BUSINESS.ERROR_EMAIL_INVALID" | translate }}
               </div>
             </div>

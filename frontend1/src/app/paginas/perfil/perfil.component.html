@@ -534,10 +534,10 @@
           }"
         />
         <div *ngIf="nombreSalon.touched && nombreSalon.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="nombreSalon.errors?.required">
+          <div *ngIf="nombreSalon.errors?.[required]">
             {{ "PROFILE.ERROR_NOMBRE_REQUIRED" | translate }}
           </div>
-          <div *ngIf="nombreSalon.errors?.minlength">
+          <div *ngIf="nombreSalon.errors?.[minlength]">
             {{ "PROFILE.ERROR_NOMBRE_MINLENGTH" | translate:{ min: 3 } }}
           </div>
         </div>
@@ -586,10 +586,10 @@
           }"
         />
         <div *ngIf="telefonoSalon.touched && telefonoSalon.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="telefonoSalon.errors?.required">
+          <div *ngIf="telefonoSalon.errors?.[required]">
             {{ "PROFILE.ERROR_TELEFONO_REQUIRED" | translate }}
           </div>
-          <div *ngIf="telefonoSalon.errors?.pattern">
+          <div *ngIf="telefonoSalon.errors?.[pattern]">
             {{ "PROFILE.ERROR_TELEFONO_PATTERN" | translate }}
           </div>
         </div>
@@ -615,10 +615,10 @@
           }"
         ></textarea>
         <div *ngIf="descripcionSalon.touched && descripcionSalon.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="descripcionSalon.errors?.required">
+          <div *ngIf="descripcionSalon.errors?.[required]">
             {{ "PROFILE.ERROR_DESCRIPCION_REQUIRED" | translate }}
           </div>
-          <div *ngIf="descripcionSalon.errors?.minlength">
+          <div *ngIf="descripcionSalon.errors?.[minlength]">
             {{ "PROFILE.ERROR_DESCRIPCION_MINLENGTH" | translate:{ min: 10 } }}
           </div>
         </div>
@@ -644,10 +644,10 @@
           }"
         />
         <div *ngIf="especializacionSalon.touched && especializacionSalon.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="especializacionSalon.errors?.required">
+          <div *ngIf="especializacionSalon.errors?.[required]">
             {{ "PROFILE.ERROR_ESPECIALIZACION_REQUIRED" | translate }}
           </div>
-          <div *ngIf="especializacionSalon.errors?.minlength">
+          <div *ngIf="especializacionSalon.errors?.[minlength]">
             {{ "PROFILE.ERROR_ESPECIALIZACION_MINLENGTH" | translate:{ min: 3 } }}
           </div>
         </div>
@@ -755,7 +755,7 @@
           }"
         ></textarea>
         <div *ngIf="descripcionNuevo.touched && descripcionNuevo.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="descripcionNuevo.errors?.minlength">
+          <div *ngIf="descripcionNuevo.errors?.[minlength]">
             {{ "PROFILE.ERROR_DESCRIPCION_MINLENGTH" | translate:{ min: 5 } }}
           </div>
         </div>
@@ -781,10 +781,10 @@
           }"
         />
         <div *ngIf="precioNuevo.touched && precioNuevo.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="precioNuevo.errors?.required">
+          <div *ngIf="precioNuevo.errors?.[required]">
             {{ "PROFILE.ERROR_PRECIO_REQUIRED" | translate }}
           </div>
-          <div *ngIf="precioNuevo.errors?.min">
+          <div *ngIf="precioNuevo.errors?.[min]">
             {{ "PROFILE.ERROR_PRECIO_MIN" | translate:{ min: 1 } }}
           </div>
         </div>
@@ -810,10 +810,10 @@
           }"
         />
         <div *ngIf="duracionNuevo.touched && duracionNuevo.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="duracionNuevo.errors?.required">
+          <div *ngIf="duracionNuevo.errors?.[required]">
             {{ "PROFILE.ERROR_DURACION_REQUIRED" | translate }}
           </div>
-          <div *ngIf="duracionNuevo.errors?.min">
+          <div *ngIf="duracionNuevo.errors?.[min]">
             {{ "PROFILE.ERROR_DURACION_MIN" | translate:{ min: 1 } }}
           </div>
         </div>
@@ -875,10 +875,10 @@
           }"
         />
         <div *ngIf="nombreEmpleadoNuevo.touched && nombreEmpleadoNuevo.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="nombreEmpleadoNuevo.errors?.required">
+          <div *ngIf="nombreEmpleadoNuevo.errors?.[required]">
             {{ "PROFILE.ERROR_NOMBRE_REQUIRED" | translate }}
           </div>
-          <div *ngIf="nombreEmpleadoNuevo.errors?.minlength">
+          <div *ngIf="nombreEmpleadoNuevo.errors?.[minlength]">
             {{ "PROFILE.ERROR_NOMBRE_MINLENGTH" | translate:{ min: 3 } }}
           </div>
         </div>
@@ -904,10 +904,10 @@
           }"
         />
         <div *ngIf="telefonoEmpleadoNuevo.touched && telefonoEmpleadoNuevo.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="telefonoEmpleadoNuevo.errors?.required">
+          <div *ngIf="telefonoEmpleadoNuevo.errors?.[required]">
             {{ "PROFILE.ERROR_TELEFONO_REQUIRED" | translate }}
           </div>
-          <div *ngIf="telefonoEmpleadoNuevo.errors?.pattern">
+          <div *ngIf="telefonoEmpleadoNuevo.errors?.[pattern]">
             {{ "PROFILE.ERROR_TELEFONO_PATTERN" | translate }}
           </div>
         </div>
