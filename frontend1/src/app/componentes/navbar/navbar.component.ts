@@ -47,18 +47,14 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    // Sin .addLangs ni .setDefaultLang aquí:
-    // El idioma ya viene de AppComponent/main.ts
     this.idiomaActual = this.translate.currentLang as "es" | "en";
 
-    // Mantener sincronizado si cambia en otro sitio
     this.langSub = this.translate.onLangChange.subscribe(
       (evt: LangChangeEvent) => {
         this.idiomaActual = evt.lang as "es" | "en";
       }
     );
 
-    // Lógica de usuario / salón (igual que antes)…
     this.userSub = this.authSvc.currentUser$.subscribe((u) => {
       this.usuarioActual = u;
       if (u?.id_usuario) {

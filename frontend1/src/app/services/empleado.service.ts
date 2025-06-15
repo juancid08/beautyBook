@@ -1,7 +1,7 @@
 // src/app/services/empleado.service.ts
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable } from "rxjs";
 
 export interface Empleado {
   id_empleado: number;
@@ -12,10 +12,10 @@ export interface Empleado {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class EmpleadoService {
-  private baseUrl = 'http://localhost/api';
+  private baseUrl = "http://52.202.205.94/api";
 
   constructor(private http: HttpClient) {}
 
@@ -31,7 +31,9 @@ export class EmpleadoService {
 
   // Obtener empleados de un salón específico
   getEmpleadosPorSalon(idSalon: number): Observable<Empleado[]> {
-    return this.http.get<Empleado[]>(`${this.baseUrl}/salones/${idSalon}/empleados`);
+    return this.http.get<Empleado[]>(
+      `${this.baseUrl}/salones/${idSalon}/empleados`
+    );
   }
 
   // Crear un nuevo empleado (sin imagen)
@@ -46,14 +48,23 @@ export class EmpleadoService {
   }
 
   // Actualizar un empleado existente (sin imagen)
-  actualizarEmpleado(id: number, data: Partial<Empleado>): Observable<Empleado> {
+  actualizarEmpleado(
+    id: number,
+    data: Partial<Empleado>
+  ): Observable<Empleado> {
     return this.http.put<Empleado>(`${this.baseUrl}/empleados/${id}`, data);
   }
 
   // Actualizar un empleado existente con imagen
-  actualizarEmpleadoConImagen(id: number, formData: FormData): Observable<Empleado> {
+  actualizarEmpleadoConImagen(
+    id: number,
+    formData: FormData
+  ): Observable<Empleado> {
     // Aquí incluimos el método _method=PUT dentro del FormData
-    return this.http.post<Empleado>(`${this.baseUrl}/empleados/${id}`, formData);
+    return this.http.post<Empleado>(
+      `${this.baseUrl}/empleados/${id}`,
+      formData
+    );
   }
 
   // Eliminar un empleado

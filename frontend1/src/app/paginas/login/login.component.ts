@@ -33,7 +33,6 @@ export class LoginComponent {
     this.authService.login(this.email, this.password).subscribe({
       next: () => this.router.navigate(["/"]),
       error: (err) => {
-        // Si viene un error específico de email, lo traducimos
         if (err.error?.email) {
           this.errorMsgKey = "LOGIN.ERROR_INVALID_EMAIL";
           this.errorMsgParams = { email: err.error.email };

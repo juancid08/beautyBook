@@ -19,7 +19,7 @@ export class RegisterComponent {
   email = "";
   password = "";
   password_confirmation = "";
-  validationErrorKeys: string[] = []; // guardamos claves de traducción
+  validationErrorKeys: string[] = [];
 
   constructor(
     private router: Router,
@@ -28,10 +28,8 @@ export class RegisterComponent {
   ) {}
 
   onRegister(form: NgForm) {
-    // Limpiar errores previos
     this.validationErrorKeys = [];
 
-    // Validación cliente
     if (!this.nombre) {
       this.validationErrorKeys.push("REGISTER.ERROR_NAME_REQUIRED");
     }
@@ -61,12 +59,10 @@ export class RegisterComponent {
       this.validationErrorKeys.push("REGISTER.ERROR_PASSWORD_MISMATCH");
     }
 
-    // Si hay errores de cliente, detenerse aquí
     if (this.validationErrorKeys.length) {
       return;
     }
 
-    // Petición al servidor
     this.authService
       .register(
         this.nombre,

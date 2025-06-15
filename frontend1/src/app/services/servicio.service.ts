@@ -16,7 +16,7 @@ export interface Servicio {
   providedIn: "root",
 })
 export class ServicioService {
-  private baseUrl = "http://localhost/api/servicios";
+  private baseUrl = "http://52.202.205.94/api/servicios";
 
   constructor(private http: HttpClient) {}
 

@@ -35,28 +35,30 @@ export class RegistrarNegocioComponent implements OnInit {
   especializaciones: Especializacion[] = [
     {
       valor: "Salón de uñas",
-      imagen: "http://localhost/storage/especializacion_salon/uñas.png",
+      imagen: "http://52.202.205.94/storage/especializacion_salon/uñas.png",
       labelKey: "REGISTER_BUSINESS.SPEC_SALON_UNAS",
     },
     {
       valor: "Peluquería",
-      imagen: "http://localhost/storage/especializacion_salon/peluqueria.png",
+      imagen:
+        "http://52.202.205.94/storage/especializacion_salon/peluqueria.png",
       labelKey: "REGISTER_BUSINESS.SPEC_PELUQUERIA",
     },
     {
       valor: "Cejas y pestañas",
       imagen:
-        "http://localhost/storage/especializacion_salon/cejas_pestañas.png",
+        "http://52.202.205.94/storage/especializacion_salon/cejas_pestañas.png",
       labelKey: "REGISTER_BUSINESS.SPEC_CEJAS",
     },
     {
       valor: "Barbería",
-      imagen: "http://localhost/storage/especializacion_salon/barberia.png",
+      imagen: "http://52.202.205.94/storage/especializacion_salon/barberia.png",
       labelKey: "REGISTER_BUSINESS.SPEC_BARBERIA",
     },
     {
       valor: "Depilación",
-      imagen: "http://localhost/storage/especializacion_salon/depilacion.png",
+      imagen:
+        "http://52.202.205.94/storage/especializacion_salon/depilacion.png",
       labelKey: "REGISTER_BUSINESS.SPEC_DEPILACION",
     },
   ];
@@ -74,7 +76,6 @@ export class RegistrarNegocioComponent implements OnInit {
     foto: null as string | null,
   };
 
-  // 1️⃣ Guardamos claves en lugar de textos:
   mensajeExitoKey = "";
   mensajeErrorKey = "";
   mensajeErrorParams: any[] = [];

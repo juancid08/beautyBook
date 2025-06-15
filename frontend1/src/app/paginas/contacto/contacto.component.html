@@ -1,14 +1,11 @@
 <!-- IMPORTO NAVBAR DE COMPONENTES -->
 <app-navbar></app-navbar>
 
-<!-- CONTENEDOR PRINCIPAL CON FLEX -->
 <div class="flex flex-col lg:flex-row gap-8 px-6 lg:px-20 py-10 bg-gray-50">
-  <!-- ACCORDION A LA IZQUIERDA -->
   <div class="w-full lg:w-1/3">
     <app-accordion></app-accordion>
   </div>
 
-  <!-- Sección “Contáctanos” mejorada -->
   <div
     class="flex-1 bg-white p-10 rounded-3xl shadow-xl text-gray-800 space-y-10"
     data-aos="fade-up"
@@ -19,13 +16,11 @@
       {{ "CONTACT.TITLE" | translate }}
     </h2>
 
-    <!-- INTRO -->
     <p
       class="text-lg text-gray-700 max-w-prose"
       [innerHTML]="'CONTACT.INTRO' | translate"
     ></p>
 
-    <!-- TARJETAS DE CONTACTO -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Correo de soporte -->
       <div
@@ -119,12 +114,10 @@
       </div>
     </div>
 
-    <!-- MENSAJE FINAL -->
     <p class="text-gray-500 text-base">
       {{ "CONTACT.FOOTER" | translate }}
     </p>
   </div>
 </div>
 
-<!-- IMPORTO FOOTER DE COMPONENTES -->
 <app-footer></app-footer>

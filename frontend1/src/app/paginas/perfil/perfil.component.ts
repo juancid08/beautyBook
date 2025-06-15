@@ -622,7 +622,7 @@ export class PerfilComponent implements OnInit {
   }
   borrarServicio(serv: Servicio): void {
     Swal.fire({
-      title: this.translate.instant("SWAL.DELETE_BOOKING_TITLE"), // o crea otra clave SWAL.DELETE_SERVICE_TITLE
+      title: this.translate.instant("SWAL.DELETE_BOOKING_TITLE"),
       text: this.translate.instant("SWAL.DELETE_BOOKING_TEXT"),
       icon: "warning",
       showCancelButton: true,
