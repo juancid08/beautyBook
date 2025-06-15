@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { FormsModule, NgForm } from "@angular/forms";
+import { FormsModule } from "@angular/forms";
 import { NavbarComponent } from "../../componentes/navbar/navbar.component";
 import { FooterComponent } from "../../componentes/footer/footer.component";
 import { AuthService } from "../../services/auth.service";
@@ -28,13 +28,12 @@ interface Especializacion {
   ],
 })
 export class RegistrarNegocioComponent implements OnInit {
-  @ViewChild('registroForm') registroForm!: NgForm;
-
   paso = 1;
   usuario: any = null;
   imagenPreview: string | null = null;
 
-  especializaciones: Especializacion[] = [     {
+  especializaciones: Especializacion[] = [
+    {
       valor: "Salón de uñas",
       imagen:
         "https://beautybookadmin.duckdns.org/storage/especializacion_salon/uñas.png",
@@ -63,10 +62,11 @@ export class RegistrarNegocioComponent implements OnInit {
       imagen:
         "https://beautybookadmin.duckdns.org/storage/especializacion_salon/depilacion.png",
       labelKey: "REGISTER_BUSINESS.SPEC_DEPILACION",
-    }, ];
+    },
+  ];
 
   datosNegocio = {
-    tipo: "",
+    tipo: "", // especializacion
     nombre: "",
     direccion: "",
     cif: "",
@@ -81,6 +81,7 @@ export class RegistrarNegocioComponent implements OnInit {
   mensajeExitoKey = "";
   mensajeErrorKey = "";
   mensajeErrorParams: any[] = [];
+
   cargando = false;
 
   constructor(
@@ -120,30 +121,10 @@ export class RegistrarNegocioComponent implements OnInit {
   }
 
   registrarSalon() {
-    // Limpia mensajes previos
     this.mensajeErrorKey = "";
     this.mensajeExitoKey = "";
     this.mensajeErrorParams = [];
 
-    // 1) Validación template-driven
-    if (this.registroForm.invalid) {
-      this.registroForm.form.markAllAsTouched();
-      return;
-    }
-
-    // 2) Asegurar usuario logueado
-    if (!this.usuario?.id_usuario) {
-      this.mensajeErrorKey = "REGISTER_BUSINESS.ERROR_USER";
-      return;
-    }
-
-    // 3) Comprobar imagen cargada
-    if (!this.datosNegocio.foto) {
-      this.mensajeErrorKey = "REGISTER_BUSINESS.ERROR_INVALID_IMAGE";
-      return;
-    }
-
-    // 4) Construir payload
     const {
       nombre,
       direccion,
@@ -156,6 +137,26 @@ export class RegistrarNegocioComponent implements OnInit {
       horario_cierre,
       foto,
     } = this.datosNegocio;
+
+    if (
+      !nombre ||
+      !direccion ||
+      !cif ||
+      !telefono ||
+      !email ||
+      !tipo ||
+      !horario_apertura ||
+      !horario_cierre ||
+      !this.usuario?.id_usuario
+    ) {
+      this.mensajeErrorKey = "REGISTER_BUSINESS.ERROR_REQUIRED";
+      return;
+    }
+
+    if (!foto || typeof foto !== "string") {
+      this.mensajeErrorKey = "REGISTER_BUSINESS.ERROR_INVALID_IMAGE";
+      return;
+    }
 
     const payload = {
       nombre,
@@ -171,7 +172,6 @@ export class RegistrarNegocioComponent implements OnInit {
       foto,
     };
 
-    // 5) Envío
     this.cargando = true;
     this.salonSvc.crearSalon(payload).subscribe({
       next: () => {
@@ -180,7 +180,7 @@ export class RegistrarNegocioComponent implements OnInit {
         this.router.navigate(["/"]);
       },
       error: (error) => {
-        const detalle = error.error?.message || "";
+        const detalle = error.error?.message || "Try again.";
         this.mensajeErrorKey = "REGISTER_BUSINESS.ERROR_REGISTER";
         this.mensajeErrorParams = [detalle];
         this.cargando = false;
@@ -188,5 +188,3 @@ export class RegistrarNegocioComponent implements OnInit {
     });
   }
 }
-
-

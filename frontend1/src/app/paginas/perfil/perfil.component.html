@@ -7,116 +7,114 @@
 
   <div class="space-y-4" id="accordion">
     <!-- Sección Perfil -->
-  <details open class="border rounded-md p-4">
-    <summary class="cursor-pointer font-semibold text-lg">
-      {{ "PROFILE.SECTION_PERFIL" | translate }}
-    </summary>
+    <details open class="border rounded-md p-4">
+      <summary class="cursor-pointer font-semibold text-lg">
+        {{ "PROFILE.SECTION_PERFIL" | translate }}
+      </summary>
 
-    <form
-      #perfilForm="ngForm"
-      (ngSubmit)="guardarCambios()"
-      class="space-y-6"
-      novalidate
-    >
-      <!-- Foto de perfil: sin cambios -->
-
-      <!-- Nombre -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700">
-          {{ "PROFILE.LABEL_NOMBRE" | translate }}
-        </label>
-        <input
-          type="text"
-          name="nombre"
-          [(ngModel)]="usuario.nombre"
-          #nombre="ngModel"
-          required
-          minlength="3"
-          class="w-full border rounded-lg px-4 py-2 focus:outline-none"
-          [ngClass]="{
-            'border-red-500': nombre.invalid && nombre.touched,
-            'focus:ring-green-400 focus:border-green-400':
-              nombre.valid && nombre.touched
-          }"
-        />
-        <div *ngIf="nombre.touched && nombre.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="nombre.errors?.required">
-            {{ "PROFILE.ERROR_NOMBRE_REQUIRED" | translate }}
-          </div>
-          <div *ngIf="nombre.errors?.minlength">
-            {{ "PROFILE.ERROR_NOMBRE_MINLENGTH" | translate:{ min: 3 } }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Correo -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700">
-          {{ "PROFILE.LABEL_CORREO" | translate }}
-        </label>
-        <input
-          type="email"
-          name="email"
-          [(ngModel)]="usuario.email"
-          #email="ngModel"
-          required
-          email
-          class="w-full border rounded-lg px-4 py-2 focus:outline-none"
-          [ngClass]="{
-            'border-red-500': email.invalid && email.touched,
-            'focus:ring-green-400 focus:border-green-400':
-              email.valid && email.touched
-          }"
-        />
-        <div *ngIf="email.touched && email.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="email.errors?.['required']">
-            {{ "PROFILE.ERROR_EMAIL_REQUIRED" | translate }}
-          </div>
-          <div *ngIf="email.errors?.['email']">
-            {{ "PROFILE.ERROR_EMAIL_INVALID" | translate }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Teléfono -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700">
-          {{ "PROFILE.LABEL_TELEFONO" | translate }}
-        </label>
-        <input
-          type="text"
-          name="telefono"
-          [(ngModel)]="usuario.telefono"
-          #telefono="ngModel"
-          required
-          pattern="^[0-9]{9}$"
-          class="w-full border rounded-lg px-4 py-2 focus:outline-none"
-          [ngClass]="{
-            'border-red-500': telefono.invalid && telefono.touched,
-            'focus:ring-green-400 focus:border-green-400':
-              telefono.valid && telefono.touched
-          }"
-        />
-        <div *ngIf="telefono.touched && telefono.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="telefono.errors?.['required']">
-            {{ "PROFILE.ERROR_TELEFONO_REQUIRED" | translate }}
-          </div>
-          <div *ngIf="telefono.errors?.['pattern']">
-            {{ "PROFILE.ERROR_TELEFONO_PATTERN" | translate }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Botón guardar: queda igual -->
-      <button
-        type="submit"
-        class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition"
-        [disabled]="perfilForm.invalid"
+      <form
+        (ngSubmit)="guardarCambios()"
+        #perfilForm="ngForm"
+        class="space-y-6"
       >
-        {{ "PROFILE.BUTTON_GUARDAR" | translate }}
-      </button>
-    </form>
-  </details>
+        <!-- Foto de perfil -->
+        <div class="text-center">
+          <img
+            [src]="previewUrlPerfil || '/assets/image/icono_empleados.png'"
+            class="w-28 h-28 mx-auto rounded-full object-cover mb-4 transition-opacity duration-300 hover:opacity-80"
+            alt="{{ 'PROFILE.LABEL_FOTO_PERFIL' | translate }}"
+          />
+
+          <label
+            for="perfilUpload"
+            class="inline-flex items-center bg-[#117B95] hover:bg-opacity-90 text-white font-medium px-5 py-2 rounded-lg shadow transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#117B95]"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 8l1.5-2h3l1.5-2h4l1.5 2h3L21 8m-1 0v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8h16z"
+              />
+              <circle
+                cx="12"
+                cy="13"
+                r="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span class="ml-2">{{
+              "PROFILE.BUTTON_CAMBIAR_FOTO" | translate
+            }}</span>
+          </label>
+          <input
+            id="perfilUpload"
+            type="file"
+            accept="image/*"
+            hidden
+            (change)="onFileSelected($event, 'perfil')"
+          />
+        </div>
+
+        <!-- Nombre -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">
+            {{ "PROFILE.LABEL_NOMBRE" | translate }}
+          </label>
+          <input
+            type="text"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            [(ngModel)]="usuario.nombre"
+            name="nombre"
+            required
+          />
+        </div>
+
+        <!-- Correo -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">{{
+            "PROFILE.LABEL_CORREO" | translate
+          }}</label>
+          <input
+            type="email"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            [(ngModel)]="usuario.email"
+            name="email"
+            required
+          />
+        </div>
+
+        <!-- Teléfono -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">{{
+            "PROFILE.LABEL_TELEFONO" | translate
+          }}</label>
+          <input
+            type="text"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            [(ngModel)]="usuario.telefono"
+            name="telefono"
+            required
+          />
+        </div>
+
+        <!-- Botón guardar -->
+        <button
+          type="submit"
+          class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition"
+          [disabled]="perfilForm.invalid"
+        >
+          {{ "PROFILE.BUTTON_GUARDAR" | translate }}
+        </button>
+      </form>
+    </details>
 
     <!-- Sección Citas -->
     <details class="border rounded-md p-4 shadow-sm">
@@ -501,159 +499,77 @@
   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
 >
   <div class="bg-white rounded-lg p-6 w-full max-w-lg shadow-lg">
-    <h3 class="text-xl font-semibold mb-4 text-center">
+    <h3 class="text-xl font-semibold mb-4">
       {{
         salonEditando.id_salon
-          ? ('PROFILE.MODAL_EDITAR_SALON_TITULO' | translate)
-          : ('PROFILE.MODAL_NUEVO_SALON_TITULO' | translate)
+          ? ("PROFILE.MODAL_EDITAR_SALON_TITULO" | translate)
+          : ("PROFILE.MODAL_NUEVO_SALON_TITULO" | translate)
       }}
     </h3>
-    <form
-      #salonForm="ngForm"
-      (ngSubmit)="guardarCambiosSalon()"
-      novalidate
-      class="space-y-4"
-    >
-      <!-- Nombre -->
+    <form (ngSubmit)="guardarCambiosSalon()" class="space-y-4">
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_NOMBRE_SALON" | translate }}
         </label>
         <input
           type="text"
-          name="nombreSalon"
           [(ngModel)]="salonEditando.nombre"
-          #nombreSalon="ngModel"
+          name="nombreSalon"
           required
-          minlength="3"
-          placeholder="{{ 'PROFILE.PLACEHOLDER_NOMBRE_SALON' | translate }}"
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          [ngClass]="{
-            'border-red-500': nombreSalon.invalid && nombreSalon.touched,
-            'border-green-400': nombreSalon.valid && nombreSalon.touched
-          }"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_NOMBRE_SALON' | translate }}"
         />
-        <div *ngIf="nombreSalon.touched && nombreSalon.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="nombreSalon.errors?.['required']">
-            {{ "PROFILE.ERROR_NOMBRE_REQUIRED" | translate }}
-          </div>
-          <div *ngIf="nombreSalon.errors?.['minlength']">
-            {{ "PROFILE.ERROR_NOMBRE_MINLENGTH" | translate:{ min: 3 } }}
-          </div>
-        </div>
       </div>
-
-      <!-- Dirección -->
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_DIRECCION" | translate }}
         </label>
         <input
           type="text"
-          name="direccionSalon"
           [(ngModel)]="salonEditando.direccion"
-          #direccionSalon="ngModel"
+          name="direccionSalon"
           required
-          placeholder="{{ 'PROFILE.PLACEHOLDER_DIRECCION' | translate }}"
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          [ngClass]="{
-            'border-red-500': direccionSalon.invalid && direccionSalon.touched,
-            'border-green-400': direccionSalon.valid && direccionSalon.touched
-          }"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_DIRECCION' | translate }}"
         />
-        <div *ngIf="direccionSalon.touched && direccionSalon.invalid" class="text-red-600 mt-1 text-sm">
-          {{ "PROFILE.ERROR_DIRECCION_REQUIRED" | translate }}
-        </div>
       </div>
-
-      <!-- Teléfono -->
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_TELEFONO_SALON" | translate }}
         </label>
         <input
           type="text"
-          name="telefonoSalon"
           [(ngModel)]="salonEditando.telefono"
-          #telefonoSalon="ngModel"
+          name="telefonoSalon"
           required
-          pattern="^[0-9]{9}$"
-          placeholder="{{ 'PROFILE.PLACEHOLDER_TELEFONO_SALON' | translate }}"
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          [ngClass]="{
-            'border-red-500': telefonoSalon.invalid && telefonoSalon.touched,
-            'border-green-400': telefonoSalon.valid && telefonoSalon.touched
-          }"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_TELEFONO_SALON' | translate }}"
         />
-        <div *ngIf="telefonoSalon.touched && telefonoSalon.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="telefonoSalon.errors?.['required']">
-            {{ "PROFILE.ERROR_TELEFONO_REQUIRED" | translate }}
-          </div>
-          <div *ngIf="telefonoSalon.errors?.['pattern']">
-            {{ "PROFILE.ERROR_TELEFONO_PATTERN" | translate }}
-          </div>
-        </div>
       </div>
-
-      <!-- Descripción -->
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_DESCRIPCION" | translate }}
         </label>
         <textarea
-          name="descripcionSalon"
           [(ngModel)]="salonEditando.descripcion"
-          #descripcionSalon="ngModel"
-          required
-          minlength="10"
-          placeholder="{{ 'PROFILE.PLACEHOLDER_DESCRIPCION' | translate }}"
-          rows="2"
+          name="descripcionSalon"
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          [ngClass]="{
-            'border-red-500': descripcionSalon.invalid && descripcionSalon.touched,
-            'border-green-400': descripcionSalon.valid && descripcionSalon.touched
-          }"
+          rows="2"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_DESCRIPCION' | translate }}"
         ></textarea>
-        <div *ngIf="descripcionSalon.touched && descripcionSalon.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="descripcionSalon.errors?.['required']">
-            {{ "PROFILE.ERROR_DESCRIPCION_REQUIRED" | translate }}
-          </div>
-          <div *ngIf="descripcionSalon.errors?.['minlength']">
-            {{ "PROFILE.ERROR_DESCRIPCION_MINLENGTH" | translate:{ min: 10 } }}
-          </div>
-        </div>
       </div>
-
-      <!-- Especialización -->
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_ESPECIALIZACION" | translate }}
         </label>
         <input
           type="text"
-          name="especializacionSalon"
           [(ngModel)]="salonEditando.especializacion"
-          #especializacionSalon="ngModel"
-          required
-          minlength="3"
-          placeholder="{{ 'PROFILE.PLACEHOLDER_ESPECIALIZACION' | translate }}"
+          name="especializacionSalon"
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
-          [ngClass]="{
-            'border-red-500': especializacionSalon.invalid && especializacionSalon.touched,
-            'border-green-400': especializacionSalon.valid && especializacionSalon.touched
-          }"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_ESPECIALIZACION' | translate }}"
         />
-        <div *ngIf="especializacionSalon.touched && especializacionSalon.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="especializacionSalon.errors?.['required']">
-            {{ "PROFILE.ERROR_ESPECIALIZACION_REQUIRED" | translate }}
-          </div>
-          <div *ngIf="especializacionSalon.errors?.['minlength']">
-            {{ "PROFILE.ERROR_ESPECIALIZACION_MINLENGTH" | translate:{ min: 3 } }}
-          </div>
-        </div>
       </div>
-
-      <!-- Foto -->
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_FOTO_SALON" | translate }}
@@ -662,18 +578,16 @@
           type="file"
           (change)="onFileSelected($event, 'salon')"
           accept="image/*"
-          class="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
+          class="px-4 py-2 rounded-xl border border-gray-300 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#117b95]"
         />
       </div>
-      <div *ngIf="previewUrlSalon" class="mt-2 text-center">
+      <div *ngIf="previewUrlSalon" class="mt-2">
         <img
           [src]="previewUrlSalon"
           alt="Vista previa del salón"
           class="rounded-xl w-full object-cover h-48 max-h-48 shadow-md"
         />
       </div>
-
-      <!-- Botones -->
       <div class="flex justify-end space-x-2 pt-4">
         <button
           type="button"
@@ -682,15 +596,11 @@
         >
           {{ "PROFILE.BUTTON_CANCELAR" | translate }}
         </button>
-        <button
-          type="submit"
-          [disabled]="salonForm.invalid"
-          class="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
-        >
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
           {{
             salonEditando.id_salon
-              ? ('PROFILE.BUTTON_ACTUALIZAR_SALON' | translate)
-              : ('PROFILE.BUTTON_GUARDAR_SALON' | translate)
+              ? ("PROFILE.BUTTON_ACTUALIZAR_SALON" | translate)
+              : ("PROFILE.BUTTON_GUARDAR_SALON" | translate)
           }}
         </button>
       </div>
@@ -698,128 +608,71 @@
   </div>
 </div>
 
-<!-- Modal CREAR SERVICIO -->
+<!-- Formulario emergente para CREAR SERVICIO -->
 <div
   *ngIf="showFormCrear"
   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
 >
   <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-    <h3 class="text-xl font-semibold mb-4 text-center">
+    <h3 class="text-xl font-semibold mb-4">
       {{ "PROFILE.MODAL_NUEVO_SERVICIO_TITULO" | translate }}
     </h3>
-    <form
-      #servicioForm="ngForm"
-      (ngSubmit)="guardarServicioNuevo()"
-      novalidate
-      class="space-y-4"
-    >
-      <!-- Nombre -->
+    <form (ngSubmit)="guardarServicioNuevo()" class="space-y-4">
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_SERVICIO_NOMBRE" | translate }}
         </label>
         <input
           type="text"
-          name="nombreNuevo"
           [(ngModel)]="servicioNuevo.nombre"
-          #nombreNuevo="ngModel"
+          name="nombreNuevo"
           required
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
           placeholder="{{ 'PROFILE.PLACEHOLDER_SERVICIO_NOMBRE' | translate }}"
-          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
-          [ngClass]="{
-            'border-red-500': nombreNuevo.invalid && nombreNuevo.touched,
-            'border-green-400': nombreNuevo.valid && nombreNuevo.touched
-          }"
         />
-        <div *ngIf="nombreNuevo.touched && nombreNuevo.invalid" class="text-red-600 mt-1 text-sm">
-          {{ "PROFILE.ERROR_NOMBRE_REQUIRED" | translate }}
-        </div>
       </div>
-
-      <!-- Descripción -->
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_SERVICIO_DESCRIPCION" | translate }}
         </label>
         <textarea
-          name="descripcionNuevo"
           [(ngModel)]="servicioNuevo.descripcion"
-          #descripcionNuevo="ngModel"
-          minlength="5"
-          placeholder="{{ 'PROFILE.PLACEHOLDER_SERVICIO_DESCRIPCION' | translate }}"
+          name="descripcionNuevo"
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
           rows="2"
-          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
-          [ngClass]="{
-            'border-red-500': descripcionNuevo.invalid && descripcionNuevo.touched,
-            'border-green-400': descripcionNuevo.valid && descripcionNuevo.touched
-          }"
+          placeholder="{{
+            'PROFILE.PLACEHOLDER_SERVICIO_DESCRIPCION' | translate
+          }}"
         ></textarea>
-        <div *ngIf="descripcionNuevo.touched && descripcionNuevo.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="descripcionNuevo.errors?.['minlength']">
-            {{ "PROFILE.ERROR_DESCRIPCION_MINLENGTH" | translate:{ min: 5 } }}
-          </div>
-        </div>
       </div>
-
-      <!-- Precio -->
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_SERVICIO_PRECIO" | translate }}
         </label>
         <input
           type="number"
-          name="precioNuevo"
           [(ngModel)]="servicioNuevo.precio"
-          #precioNuevo="ngModel"
+          name="precioNuevo"
           required
-          min="1"
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
           placeholder="{{ 'PROFILE.PLACEHOLDER_SERVICIO_PRECIO' | translate }}"
-          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
-          [ngClass]="{
-            'border-red-500': precioNuevo.invalid && precioNuevo.touched,
-            'border-green-400': precioNuevo.valid && precioNuevo.touched
-          }"
         />
-        <div *ngIf="precioNuevo.touched && precioNuevo.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="precioNuevo.errors?.['required']">
-            {{ "PROFILE.ERROR_PRECIO_REQUIRED" | translate }}
-          </div>
-          <div *ngIf="precioNuevo.errors?.['min']">
-            {{ "PROFILE.ERROR_PRECIO_MIN" | translate:{ min: 1 } }}
-          </div>
-        </div>
       </div>
-
-      <!-- Duración -->
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_SERVICIO_DURACION" | translate }}
         </label>
         <input
           type="number"
-          name="duracionNuevo"
           [(ngModel)]="servicioNuevo.duracion_minutos"
-          #duracionNuevo="ngModel"
+          name="duracionNuevo"
           required
-          min="1"
-          placeholder="{{ 'PROFILE.PLACEHOLDER_SERVICIO_DURACION' | translate }}"
-          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
-          [ngClass]="{
-            'border-red-500': duracionNuevo.invalid && duracionNuevo.touched,
-            'border-green-400': duracionNuevo.valid && duracionNuevo.touched
-          }"
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
+          placeholder="{{
+            'PROFILE.PLACEHOLDER_SERVICIO_DURACION' | translate
+          }}"
         />
-        <div *ngIf="duracionNuevo.touched && duracionNuevo.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="duracionNuevo.errors?.['required']">
-            {{ "PROFILE.ERROR_DURACION_REQUIRED" | translate }}
-          </div>
-          <div *ngIf="duracionNuevo.errors?.['min']">
-            {{ "PROFILE.ERROR_DURACION_MIN" | translate:{ min: 1 } }}
-          </div>
-        </div>
       </div>
-
-      <!-- Botones -->
       <div class="flex justify-end space-x-2 pt-4">
         <button
           type="button"
@@ -828,11 +681,7 @@
         >
           {{ "PROFILE.BUTTON_CANCELAR" | translate }}
         </button>
-        <button
-          type="submit"
-          [disabled]="servicioForm.invalid"
-          class="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
-        >
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
           {{ "PROFILE.BUTTON_GUARDAR_SERVICIO" | translate }}
         </button>
       </div>
@@ -840,80 +689,125 @@
   </div>
 </div>
 
-<!-- Modal CREAR EMPLEADO -->
+<!-- Formulario emergente para EDITAR SERVICIO -->
+<div
+  *ngIf="showFormEditar && servicioEditando"
+  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+>
+  <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
+    <h3 class="text-xl font-semibold mb-4">
+      {{ "PROFILE.MODAL_EDITAR_SERVICIO_TITULO" | translate }}
+    </h3>
+    <form (ngSubmit)="guardarCambiosServicio()" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_SERVICIO_NOMBRE" | translate }}
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="servicioEditando.nombre"
+          name="nombreEdit"
+          required
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_SERVICIO_NOMBRE' | translate }}"
+        />
+      </div>
+      <div>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_SERVICIO_DESCRIPCION" | translate }}
+        </label>
+        <textarea
+          [(ngModel)]="servicioEditando.descripcion"
+          name="descripcionEdit"
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
+          rows="2"
+          placeholder="{{
+            'PROFILE.PLACEHOLDER_SERVICIO_DESCRIPCION' | translate
+          }}"
+        ></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_SERVICIO_PRECIO" | translate }}
+        </label>
+        <input
+          type="number"
+          [(ngModel)]="servicioEditando.precio"
+          name="precioEdit"
+          required
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
+          placeholder="{{ 'PROFILE.PLACEHOLDER_SERVICIO_PRECIO' | translate }}"
+        />
+      </div>
+      <div>
+        <label class="block text-sm font-medium">
+          {{ "PROFILE.LABEL_SERVICIO_DURACION" | translate }}
+        </label>
+        <input
+          type="number"
+          [(ngModel)]="servicioEditando.duracion_minutos"
+          name="duracionEdit"
+          required
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
+          placeholder="{{
+            'PROFILE.PLACEHOLDER_SERVICIO_DURACION' | translate
+          }}"
+        />
+      </div>
+      <div class="flex justify-end space-x-2 pt-4">
+        <button
+          type="button"
+          class="bg-gray-500 text-white px-4 py-2 rounded"
+          (click)="cerrarFormularioServicio()"
+        >
+          {{ "PROFILE.BUTTON_CANCELAR" | translate }}
+        </button>
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
+          {{ "PROFILE.BUTTON_ACTUALIZAR_SERVICIO" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Formulario emergente para CREAR EMPLEADO -->
 <div
   *ngIf="showFormCrearEmpleado"
   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
 >
   <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-    <h3 class="text-xl font-semibold mb-4 text-center">
+    <h3 class="text-xl font-semibold mb-4">
       {{ "PROFILE.MODAL_NUEVO_EMPLEADO_TITULO" | translate }}
     </h3>
-    <form
-      #empleadoForm="ngForm"
-      (ngSubmit)="guardarEmpleadoNuevo()"
-      novalidate
-      class="space-y-4"
-    >
-      <!-- Nombre -->
+    <form (ngSubmit)="guardarEmpleadoNuevo()" class="space-y-4">
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_EMPLEADO_NOMBRE" | translate }}
         </label>
         <input
           type="text"
-          name="nombreEmpleadoNuevo"
           [(ngModel)]="empleadoNuevo.nombre"
-          #nombreEmpleadoNuevo="ngModel"
+          name="nombreEmpleadoNuevo"
           required
-          minlength="3"
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
           placeholder="{{ 'PROFILE.PLACEHOLDER_EMPLEADO_NOMBRE' | translate }}"
-          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
-          [ngClass]="{
-            'border-red-500': nombreEmpleadoNuevo.invalid && nombreEmpleadoNuevo.touched,
-            'border-green-400': nombreEmpleadoNuevo.valid && nombreEmpleadoNuevo.touched
-          }"
         />
-        <div *ngIf="nombreEmpleadoNuevo.touched && nombreEmpleadoNuevo.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="nombreEmpleadoNuevo.errors?.['required']">
-            {{ "PROFILE.ERROR_NOMBRE_REQUIRED" | translate }}
-          </div>
-          <div *ngIf="nombreEmpleadoNuevo.errors?.['minlength']">
-            {{ "PROFILE.ERROR_NOMBRE_MINLENGTH" | translate:{ min: 3 } }}
-          </div>
-        </div>
       </div>
-
-      <!-- Teléfono -->
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_EMPLEADO_TELEFONO" | translate }}
         </label>
         <input
           type="text"
-          name="telefonoEmpleadoNuevo"
           [(ngModel)]="empleadoNuevo.telefono"
-          #telefonoEmpleadoNuevo="ngModel"
+          name="telefonoEmpleadoNuevo"
           required
-          pattern="^[0-9]{9}$"
-          placeholder="{{ 'PROFILE.PLACEHOLDER_EMPLEADO_TELEFONO' | translate }}"
-          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
-          [ngClass]="{
-            'border-red-500': telefonoEmpleadoNuevo.invalid && telefonoEmpleadoNuevo.touched,
-            'border-green-400': telefonoEmpleadoNuevo.valid && telefonoEmpleadoNuevo.touched
-          }"
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
+          placeholder="{{
+            'PROFILE.PLACEHOLDER_EMPLEADO_TELEFONO' | translate
+          }}"
         />
-        <div *ngIf="telefonoEmpleadoNuevo.touched && telefonoEmpleadoNuevo.invalid" class="text-red-600 mt-1 text-sm">
-          <div *ngIf="telefonoEmpleadoNuevo.errors?.['required']">
-            {{ "PROFILE.ERROR_TELEFONO_REQUIRED" | translate }}
-          </div>
-          <div *ngIf="telefonoEmpleadoNuevo.errors?.['pattern']">
-            {{ "PROFILE.ERROR_TELEFONO_PATTERN" | translate }}
-          </div>
-        </div>
       </div>
-
-      <!-- Foto -->
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_EMPLEADO_FOTO" | translate }}
@@ -922,18 +816,16 @@
           type="file"
           (change)="onFileSelected($event, 'empleado')"
           accept="image/*"
-          class="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none"
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
         />
       </div>
-      <div *ngIf="previewUrlEmpleado" class="mt-2 text-center">
+      <div *ngIf="previewUrlEmpleado" class="mt-2">
         <img
           [src]="previewUrlEmpleado"
           alt="{{ 'PROFILE.ALT_EMPLEADO_PREVIEW' | translate }}"
           class="rounded-xl w-full object-cover h-48 max-h-48 shadow-md"
         />
       </div>
-
-      <!-- Botones -->
       <div class="flex justify-end space-x-2 pt-4">
         <button
           type="button"
@@ -942,11 +834,7 @@
         >
           {{ "PROFILE.BUTTON_CANCELAR" | translate }}
         </button>
-        <button
-          type="submit"
-          [disabled]="empleadoForm.invalid"
-          class="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
-        >
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
           {{ "PROFILE.BUTTON_GUARDAR_EMPLEADO" | translate }}
         </button>
       </div>
