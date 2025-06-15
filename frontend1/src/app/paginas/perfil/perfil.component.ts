@@ -6,7 +6,7 @@ import { Cita, CitaService } from "../../services/cita.service";
 import { SalonService, Salon } from "../../services/salon.service";
 import { Servicio, ServicioService } from "../../services/servicio.service";
 import { CommonModule } from "@angular/common";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, NgForm } from "@angular/forms";
 import { Empleado, EmpleadoService } from "../../services/empleado.service";
 import Swal from "sweetalert2";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -235,7 +235,10 @@ export class PerfilComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  guardarCambios(): void {
+  guardarCambios(form?: NgForm): void {
+    if (form?.invalid) {
+      return;
+    }
     const userId = this.usuario.id_usuario;
     if (!userId) return;
 
@@ -368,7 +371,9 @@ export class PerfilComponent implements OnInit {
     this.salonEditando = { ...salon };
   }
 
-  guardarCambiosSalon(): void {
+  guardarCambiosSalon(form?: NgForm): void {
+    if (form?.invalid) return;
+
     if (!this.salonEditando) return;
     const {
       id_salon,
@@ -674,7 +679,9 @@ export class PerfilComponent implements OnInit {
     this.previewUrlEmpleado = null;
   }
 
-  guardarEmpleadoNuevo(): void {
+  guardarEmpleadoNuevo(form?: NgForm): void {
+    if (form?.invalid) return;
+
     if (
       !this.empleadoNuevo.nombre ||
       !this.empleadoNuevo.telefono ||
@@ -727,7 +734,9 @@ export class PerfilComponent implements OnInit {
     }
   }
 
-  guardarCambiosEmpleado(): void {
+  guardarCambiosEmpleado(form?: NgForm): void {
+    if (form?.invalid) return;
+
     if (!this.empleadoEditando) return;
     const { id_empleado, nombre, telefono, id_salon } = this.empleadoEditando;
     if (!nombre || !telefono || id_salon == null) {

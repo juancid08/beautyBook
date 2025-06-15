@@ -45,6 +45,7 @@
     "LABEL_CORREO": "Correo",
     "LABEL_TELEFONO": "Teléfono",
     "BUTTON_GUARDAR": "Guardar cambios",
+    "ERROR_INVALID_EMAIL": "Debe ingresar un correo válido",
 
     "SECTION_CITAS": "Citas",
     "MIS_CITAS": "Mis citas",
@@ -54,6 +55,7 @@
     "LOADING": "Cargando...",
     "BUTTON_ELIMINAR_CITA": "Eliminar cita",
     "NO_CITAS": "No tienes citas registradas aún.",
+    "ERROR_INVALID_PHONE": "El teléfono debe tener 9 dígitos",
 
     "LABEL_ESTADO": "Estado",
     "ESTADO": {
@@ -148,7 +150,7 @@
     "DELETE_BOOKING_CANCEL": "Cancelar",
     "DELETE_BOOKING_SUCCESS": "Cita eliminada",
     "DELETE_BOOKING_ERROR": "No se pudo eliminar la cita",
-
+    "SERVICE_UPDATED_SUCCESS": "Servicio actualizado con éxito",
     "UPDATE_STATUS_SUCCESS": "Estado actualizado",
     "UPDATE_STATUS_ERROR": "No se pudo actualizar el estado",
 
@@ -383,7 +385,10 @@
     "SPEC_DEPILACION": "Depilación",
     "ERROR_REQUIRED": "Todos los campos obligatorios deben completarse",
     "SUCCESS_REGISTER": "Negocio registrado con éxito",
-    "ERROR_REGISTER": "Error al registrar el negocio: {{0}}"
+    "ERROR_REGISTER": "Error al registrar el negocio: {{0}}",
+    "ERROR_INVALID_CIF": "El CIF no tiene un formato válido",
+    "ERROR_INVALID_PHONE": "El teléfono debe tener 9 dígitos",
+    "ERROR_INVALID_EMAIL": "Debe introducir un correo electrónico válido"
   },
   "LOGIN": {
     "BACK": "← Volver",

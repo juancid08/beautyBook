@@ -1,5 +1,8 @@
+html,
 body {
   font-family: "Libre Baskerville", serif;
+  overscroll-behavior-y: contain;
+  overscroll-behavior: none;
 }
 
 h1,

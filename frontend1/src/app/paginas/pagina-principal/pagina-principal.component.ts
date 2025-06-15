@@ -317,6 +317,9 @@ export class PaginaPrincipalComponent
       );
 
       forkJoin(peticionesConResenas).subscribe((salonesConMedia) => {
+        if (!especializacion) {
+          salonesConMedia.sort((a, b) => b.mediaResena - a.mediaResena);
+        }
         this.salones = salonesConMedia;
       });
     });

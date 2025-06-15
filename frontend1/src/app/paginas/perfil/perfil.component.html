@@ -13,7 +13,7 @@
       </summary>
 
       <form
-        (ngSubmit)="guardarCambios()"
+        (ngSubmit)="guardarCambios(perfilForm)"
         #perfilForm="ngForm"
         class="space-y-6"
       >
@@ -79,16 +79,28 @@
 
         <!-- Correo -->
         <div>
-          <label class="block text-sm font-medium text-gray-700">{{
-            "PROFILE.LABEL_CORREO" | translate
-          }}</label>
+          <label class="block text-sm font-medium text-gray-700">
+            {{ "PROFILE.LABEL_CORREO" | translate }}
+          </label>
           <input
             type="email"
             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
             [(ngModel)]="usuario.email"
             name="email"
             required
+            #emailInput="ngModel"
+            pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
           />
+          <p
+            *ngIf="
+              (emailInput.hasError('email') ||
+                emailInput.hasError('pattern')) &&
+              (emailInput.dirty || emailInput.touched)
+            "
+            class="mt-1 text-sm text-red-600"
+          >
+            {{ "PROFILE.ERROR_INVALID_EMAIL" | translate }}
+          </p>
         </div>
 
         <!-- Teléfono -->
@@ -100,9 +112,17 @@
             type="text"
             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
             [(ngModel)]="usuario.telefono"
+            #telefonoInput="ngModel"
             name="telefono"
             required
+            pattern="^[0-9]{9}$"
           />
+          <p
+            *ngIf="telefonoInput.errors?.['pattern'] && (telefonoInput.dirty || telefonoInput.touched)"
+            class="mt-1 text-sm text-red-600"
+          >
+            {{ "PROFILE.ERROR_INVALID_PHONE" | translate }}
+          </p>
         </div>
 
         <!-- Botón guardar -->
@@ -506,7 +526,11 @@
           : ("PROFILE.MODAL_NUEVO_SALON_TITULO" | translate)
       }}
     </h3>
-    <form (ngSubmit)="guardarCambiosSalon()" class="space-y-4">
+    <form
+      #salonForm="ngForm"
+      (ngSubmit)="guardarCambiosSalon(salonForm)"
+      class="space-y-4"
+    >
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_NOMBRE_SALON" | translate }}
@@ -541,10 +565,18 @@
           type="text"
           [(ngModel)]="salonEditando.telefono"
           name="telefonoSalon"
+          #telefonoSalonInput="ngModel"
           required
+          pattern="^[0-9]{9}$"
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
           placeholder="{{ 'PROFILE.PLACEHOLDER_TELEFONO_SALON' | translate }}"
         />
+        <p
+          *ngIf="telefonoSalonInput.errors?.['pattern'] && (telefonoSalonInput.dirty || telefonoSalonInput.touched)"
+          class="mt-1 text-sm text-red-600"
+        >
+          {{ "PROFILE.ERROR_INVALID_PHONE" | translate }}
+        </p>
       </div>
       <div>
         <label class="block text-sm font-medium">
@@ -553,6 +585,7 @@
         <textarea
           [(ngModel)]="salonEditando.descripcion"
           name="descripcionSalon"
+          type="text"
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
           rows="2"
           placeholder="{{ 'PROFILE.PLACEHOLDER_DESCRIPCION' | translate }}"
@@ -779,7 +812,11 @@
     <h3 class="text-xl font-semibold mb-4">
       {{ "PROFILE.MODAL_NUEVO_EMPLEADO_TITULO" | translate }}
     </h3>
-    <form (ngSubmit)="guardarEmpleadoNuevo()" class="space-y-4">
+    <form
+      #empForm="ngForm"
+      (ngSubmit)="guardarEmpleadoNuevo(empForm)"
+      class="space-y-4"
+    >
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_EMPLEADO_NOMBRE" | translate }}
@@ -801,12 +838,20 @@
           type="text"
           [(ngModel)]="empleadoNuevo.telefono"
           name="telefonoEmpleadoNuevo"
+          #telefonoEmpleadoNuevoInput="ngModel"
+          pattern="^[0-9]{9}$"
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
           placeholder="{{
             'PROFILE.PLACEHOLDER_EMPLEADO_TELEFONO' | translate
           }}"
         />
+        <p
+          *ngIf="telefonoEmpleadoNuevoInput.errors?.['pattern'] && (telefonoEmpleadoNuevoInput.dirty || telefonoEmpleadoNuevoInput.touched)"
+          class="mt-1 text-sm text-red-600"
+        >
+          {{ "PROFILE.ERROR_INVALID_PHONE" | translate }}
+        </p>
       </div>
       <div>
         <label class="block text-sm font-medium">
@@ -851,7 +896,11 @@
     <h3 class="text-xl font-semibold mb-4">
       {{ "PROFILE.MODAL_EDITAR_EMPLEADO_TITULO" | translate }}
     </h3>
-    <form (ngSubmit)="guardarCambiosEmpleado()" class="space-y-4">
+    <form
+      #empForm="ngForm"
+      (ngSubmit)="guardarCambiosEmpleado(empForm)"
+      class="space-y-4"
+    >
       <div>
         <label class="block text-sm font-medium">
           {{ "PROFILE.LABEL_EMPLEADO_NOMBRE" | translate }}
@@ -874,11 +923,19 @@
           [(ngModel)]="empleadoEditando.telefono"
           name="telefonoEmpleadoEdit"
           required
+          pattern="^[0-9]{9}$"
+          #telefonoEmpleadoEditInput="ngModel"
           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#117b95] focus:outline-none text-gray-700"
           placeholder="{{
             'PROFILE.PLACEHOLDER_EMPLEADO_TELEFONO' | translate
           }}"
         />
+        <p
+          *ngIf="telefonoEmpleadoEditInput.errors?.['pattern'] && (telefonoEmpleadoEditInput.dirty || telefonoEmpleadoEditInput.touched)"
+          class="mt-1 text-sm text-red-600"
+        >
+          {{ "PROFILE.ERROR_INVALID_PHONE" | translate }}
+        </p>
       </div>
       <div>
         <label class="block text-sm font-medium">

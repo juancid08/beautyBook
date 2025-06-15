@@ -7,7 +7,7 @@ import { AuthService } from "../../services/auth.service";
 import { SalonService } from "../../services/salon.service";
 import { Router } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-
+import { NgForm } from "@angular/forms";
 interface Especializacion {
   valor: string;
   imagen: string;
@@ -120,7 +120,11 @@ export class RegistrarNegocioComponent implements OnInit {
     }
   }
 
-  registrarSalon() {
+  registrarSalon(form: NgForm) {
+    if (form.invalid) {
+      this.mensajeErrorKey = "REGISTER_BUSINESS.ERROR_REQUIRED";
+      return;
+    }
     this.mensajeErrorKey = "";
     this.mensajeExitoKey = "";
     this.mensajeErrorParams = [];

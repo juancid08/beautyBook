@@ -45,7 +45,8 @@
     "LABEL_CORREO": "Email",
     "LABEL_TELEFONO": "Phone",
     "BUTTON_GUARDAR": "Save changes",
-
+    "ERROR_INVALID_EMAIL": "Please enter a valid email address",
+    "ERROR_INVALID_PHONE": "Phone number must be 9 digits",
     "SECTION_CITAS": "Bookings",
     "MIS_CITAS": "My bookings",
     "LABEL_FECHA": "Date",
@@ -59,7 +60,8 @@
     "ESTADO": {
       "PENDIENTE": "Pending",
       "CONFIRMADA": "Confirmed",
-      "CANCELADA": "Canceled"
+      "CANCELADA": "Canceled",
+      "ERROR_INVALID_PHONE": "Phone number must be 9 digits"
     },
 
     "LABEL_EMPLEADO_ASIGNADO": "Assigned employee",
@@ -391,7 +393,10 @@
     "SPEC_DEPILACION": "Waxing",
     "ERROR_REQUIRED": "All required fields must be filled",
     "SUCCESS_REGISTER": "Business registered successfully",
-    "ERROR_REGISTER": "Error registering business: {{0}}"
+    "ERROR_REGISTER": "Error registering business: {{0}}",
+    "ERROR_INVALID_CIF": "Tax ID format is invalid",
+    "ERROR_INVALID_PHONE": "Phone number must be 9 digits",
+    "ERROR_INVALID_EMAIL": "Please enter a valid email address"
   },
   "LOGIN": {
     "BACK": "← Back",

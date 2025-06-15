@@ -80,7 +80,17 @@
               {{ usuarioActual.nombre }}
             </p>
             <p class="text-sm text-gray-700 italic">{{ resena.comentario }}</p>
-            <div class="text-yellow-400 text-xl">★★★★★</div>
+
+            <!-- Aquí pintamos dinámicamente las estrellas -->
+            <div class="text-yellow-400 text-xl">
+              <ng-container *ngFor="let s of estrellas">
+                <i
+                  [ngClass]="
+                    s <= resena.calificacion ? 'fas fa-star' : 'far fa-star'
+                  "
+                ></i>
+              </ng-container>
+            </div>
           </div>
         </div>
       </ng-container>

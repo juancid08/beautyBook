@@ -44,6 +44,7 @@ export class DetallesBarberiaComponent implements OnInit {
   resenas: Resena[] = [];
   citasDeUsuario: Cita[] = [];
   citasPasadasSinResenar: Cita[] = [];
+  readonly estrellas = [1, 2, 3, 4, 5];
 
   todayIso: string = new Date().toISOString().split("T")[0];
 
