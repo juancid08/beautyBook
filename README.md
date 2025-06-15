@@ -87,7 +87,7 @@ Ante proyecto: <a href="https://www.notion.so/Anteproyecto-Plataforma-de-Gesti-n
 - Aplicación desplegada: ``
 - Landing Page: ``
 - Diseño de la aplicación: `https://www.figma.com/design/cIxAzKcOyFSaC7WxxsWdRj/BeautyBook?node-id=0-1&t=iLbDtBx6cyJsdMmd-1`
-- Prototype de fogma: `https://www.figma.com/proto/cIxAzKcOyFSaC7WxxsWdRj/BeautyBook?page-id=0%3A1&node-id=1-2&p=f&viewport=410%2C166%2C0.06&t=90P2JT6hzz8Ywc3V-1&scaling=scale-down-width&content-scaling=fixed&starting-point-node-id=1%3A2`
+- Prototype de figma: `https://www.figma.com/proto/cIxAzKcOyFSaC7WxxsWdRj/BeautyBook?page-id=0%3A1&node-id=1-2&p=f&viewport=410%2C166%2C0.06&t=90P2JT6hzz8Ywc3V-1&scaling=scale-down-width&content-scaling=fixed&starting-point-node-id=1%3A2`
 - FigJam de la aplicación: `https://www.figma.com/board/O9BarioX01voAVcajNoNtp/proyecto-beautybook?node-id=0-1&t=3W1PqshtyE5VHZYx-1`
 - [📄 Ver presentación en PDF](docs/BeautyBook.pdf)
 
